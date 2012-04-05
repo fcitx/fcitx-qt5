@@ -1,0 +1,62 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.fcitx.Fcitx.InputContext">
+    <method name="EnableIC">
+    </method>
+    <method name="CloseIC">
+    </method>
+    <method name="FocusIn">
+    </method>
+    <method name="FocusOut">
+    </method>
+    <method name="Reset">
+    </method>
+    <method name="SetCursorLocation">
+      <arg name="x" direction="in" type="i"/>
+      <arg name="y" direction="in" type="i"/>
+    </method>
+    <method name="SetCapacity">
+       <arg name="caps" direction="in" type="u"/>
+    </method>
+    <method name="DestroyIC">
+    </method>
+    <method name="ProcessKeyEvent">
+      <arg name="keyval" direction="in" type="u"/>
+      <arg name="keycode" direction="in" type="u"/>
+      <arg name="state" direction="in" type="u"/>
+      <arg name="type" direction="in" type="i"/>
+      <arg name="time" direction="in" type="u"/>
+      <arg name="ret" direction="out" type="i"/>
+    </method>
+    <signal name="EnableIM">
+    </signal>
+    <signal name="CloseIM">
+    </signal>
+    <signal name="CommitString">
+      <arg name="str" type="s"/>
+    </signal>
+    <signal name="UpdatePreedit">
+      <arg name="str" type="s"/>
+      <arg name="cursorpos" type="i"/>
+    </signal>
+    <signal name="UpdateFormattedPreedit">
+      <arg name="str" type="a(si)" />
+      <arg name="cursorpos" type="i"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="FcitxFormattedPreeditList" />
+    </signal>
+    <signal name="UpdateClientSideUI">
+      <arg name="auxup" type="s"/>
+      <arg name="auxdown" type="s"/>
+      <arg name="preedit" type="s"/>
+      <arg name="candidateword" type="s"/>
+      <arg name="imname" type="s"/>
+      <arg name="cursorpos" type="i"/>
+    </signal>
+    <signal name="ForwardKey">
+      <arg name="keyval" type="u"/>
+      <arg name="state" type="u"/>
+      <arg name="type" type="i"/>
+    </signal>
+  </interface>
+</node>

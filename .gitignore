@@ -1,0 +1,8 @@
+*~
+build/*
+*.kdev4
+.kdev_include_paths
+.directory
+*.kate-swp
+*.orig
+tags
