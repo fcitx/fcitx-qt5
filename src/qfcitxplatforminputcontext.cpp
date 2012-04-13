@@ -173,9 +173,24 @@ void QFcitxPlatformInputContext::reset()
     m_icproxy->Reset();
 }
 
-void QFcitxPlatformInputContext::update(Qt::InputMethodQueries quries )
+void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
 {
-    QPlatformInputContext::update(quries);
+    QInputMethod *method = qApp->inputMethod();
+    QObject *input = method->inputItem();
+    if (!input)
+        return;
+
+    QInputMethodQueryEvent query(queries);
+    QGuiApplication::sendEvent(input, &query);
+
+    if (queries & Qt::ImHints) {
+        Qt::InputMethodHints hints = Qt::InputMethodHints(query.value(Qt::ImHints).toUInt());
+
+        if (hints & Qt::ImhHiddenText)
+            addCapacity(CAPACITY_PASSWORD);
+        else
+            removeCapacity(CAPACITY_PASSWORD);
+    }
 }
 
 void QFcitxPlatformInputContext::commit()
@@ -443,12 +458,6 @@ bool QFcitxPlatformInputContext::x11FilterEvent(uint keyval, uint keycode, uint 
 
     if (!input)
         return false;
-
-    QWidget* widget = qobject_cast< QWidget* >(input);
-    if (widget && widget->inputMethodHints() & (Qt::ImhExclusiveInputMask | Qt::ImhHiddenText))
-        addCapacity(CAPACITY_PASSWORD);
-    else
-        removeCapacity(CAPACITY_PASSWORD);
 
     if (!m_icproxy || !m_icproxy->isValid()) {
         return x11FilterEventFallback(keyval, keycode, state, press);
