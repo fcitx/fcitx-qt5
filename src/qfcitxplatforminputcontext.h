@@ -27,6 +27,8 @@ public:
     virtual void commit();
     virtual void update(Qt::InputMethodQueries quries );
 
+    Q_INVOKABLE bool x11FilterEvent(uint keyval, uint keycode, uint state, bool press);
+
 public Q_SLOTS:
     void inputItemChanged();
     void cursorRectChanged();
@@ -50,7 +52,6 @@ private:
     XEvent* createXEvent(Display* dpy, WId wid, uint keyval, uint state, int type);
 #endif // Q_WS_X11
     QKeyEvent* createKeyEvent(uint keyval, uint state, int type);
-    bool isValid();
 
     void addCapacity(QFlags<FcitxCapacityFlags> capacity, bool forceUpdage = false)
     {
@@ -71,6 +72,8 @@ private:
     }
 
     void updateCapacity();
+    
+    bool x11FilterEventFallback(uint keyval, uint keycode, uint state, bool press);
 
     QDBusConnection m_connection;
     QFreedesktopDBusProxy* m_dbusproxy;
