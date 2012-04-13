@@ -151,17 +151,26 @@ QFcitxPlatformInputContext::~QFcitxPlatformInputContext()
 
 bool QFcitxPlatformInputContext::isValid() const
 {
-    return QPlatformInputContext::isValid();
+    return true;
 }
 
 void QFcitxPlatformInputContext::invokeAction(QInputMethod::Action action, int cursorPosition)
 {
-    QPlatformInputContext::invokeAction(action, cursorPosition);
+    if (!m_icproxy || !m_icproxy->isValid())
+        return;
+
+    if (action == QInputMethod::Click)
+        commit();
 }
 
 void QFcitxPlatformInputContext::reset()
 {
     QPlatformInputContext::reset();
+
+    if (!m_icproxy || !m_icproxy->isValid())
+        return;
+
+    m_icproxy->Reset();
 }
 
 void QFcitxPlatformInputContext::update(Qt::InputMethodQueries quries )
@@ -172,6 +181,15 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries quries )
 void QFcitxPlatformInputContext::commit()
 {
     QPlatformInputContext::commit();
+
+    if (!m_icproxy || !m_icproxy->isValid())
+        return;
+
+    QObject *input = qApp->inputMethod()->inputItem();
+    if (!input) {
+        return;
+    }
+
 }
 
 void QFcitxPlatformInputContext::inputItemChanged()
@@ -223,7 +241,8 @@ void QFcitxPlatformInputContext::commitString(const QString& str)
 
 void QFcitxPlatformInputContext::createInputContext()
 {
-    m_improxy = new QFcitxInputMethodProxy(QString("org.fcitx.Fcitx-%1").arg(displayNumber()),
+    m_serviceName = QString("org.fcitx.Fcitx-%1").arg(displayNumber());
+    m_improxy = new QFcitxInputMethodProxy(m_serviceName,
                                             QLatin1String("/inputmethod"),
                                             m_connection,
                                             this);
@@ -244,14 +263,15 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
     if (result.isError())
         qWarning() << result.error();
     else {
-        this->m_id = qdbus_cast<int>(result.argumentAt(0));
-        this->m_enable = qdbus_cast<bool>(result.argumentAt(1));
+        m_id = qdbus_cast<int>(result.argumentAt(0));
+        m_enable = qdbus_cast<bool>(result.argumentAt(1));
         m_triggerKey[0].sym = (FcitxKeySym) qdbus_cast<uint>(result.argumentAt(2));
         m_triggerKey[0].state = qdbus_cast<uint>(result.argumentAt(3));
         m_triggerKey[1].sym = (FcitxKeySym) qdbus_cast<uint>(result.argumentAt(4));
         m_triggerKey[1].state = qdbus_cast<uint>(result.argumentAt(5));
-        this->m_path = QString("/inputcontext_%1").arg(m_id);
+        m_path = QString("/inputcontext_%1").arg(m_id);
         m_icproxy = new QFcitxInputContextProxy(m_serviceName, m_path, m_connection, this);
+        qDebug() << m_path << m_serviceName;
         connect(m_icproxy, SIGNAL(CloseIM()), this, SLOT(closeIM()));
         connect(m_icproxy, SIGNAL(CommitString(QString)), this, SLOT(commitString(QString)));
         connect(m_icproxy, SIGNAL(EnableIM()), this, SLOT(enableIM()));

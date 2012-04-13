@@ -26,6 +26,7 @@ set(plugin_MOC_HDRS
     qfcitxinputcontextproxy.h
     qfcitxinputmethodproxy.h
     qfreedesktopdbusproxy.h
+    main.h
 )
 
 qt5_wrap_cpp(plugin_MOCS ${plugin_MOC_HDRS})
