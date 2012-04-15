@@ -5,7 +5,6 @@
 #include <QTextCharFormat>
 #include <QPalette>
 #include <QWindow>
-#include <QWidget>
 
 #include <unicode/unorm.h>
 
@@ -229,7 +228,7 @@ void QFcitxPlatformInputContext::cursorRectChanged()
     if (!inputWindow)
         return;
     r.moveTopLeft(inputWindow->mapToGlobal(r.topLeft()));
-    m_icproxy->SetCursorLocation(r.x(), r.y() + r.height());
+    m_icproxy->SetCursorRect(r.x(), r.y(), r.width(), r.height());
 }
 
 void QFcitxPlatformInputContext::closeIM()
@@ -349,11 +348,7 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxFormattedPree
         if (preedit.format() & MSG_HIGHLIGHT) {
             QBrush brush;
             QPalette palette;
-            QWidget* widget = qobject_cast<QWidget*>(input);
-            if (widget)
-                palette = widget->palette();
-            else
-                palette = QGuiApplication::palette();
+            palette = QGuiApplication::palette();
             format.setBackground(QBrush(QColor(palette.color(QPalette::Active, QPalette::Highlight))));
             format.setForeground(QBrush(QColor(palette.color(QPalette::Active, QPalette::HighlightedText))));
         }

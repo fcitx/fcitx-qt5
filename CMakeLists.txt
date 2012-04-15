@@ -10,5 +10,6 @@ find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(Qt5PlatformSupport REQUIRED)
-find_package(Fcitx REQUIRED)
+find_package(Fcitx 4.2.3 REQUIRED)
+
 add_subdirectory(src)

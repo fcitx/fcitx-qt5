@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef QFCITXINPUTCONTEXTPROXY_H_1333595676
-#define QFCITXINPUTCONTEXTPROXY_H_1333595676
+#ifndef QFCITXINPUTCONTEXTPROXY_H_1334497066
+#define QFCITXINPUTCONTEXTPROXY_H_1334497066
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -92,6 +92,13 @@ public Q_SLOTS: // METHODS
         QList<QVariant> argumentList;
         argumentList << QVariant::fromValue(x) << QVariant::fromValue(y);
         return asyncCallWithArgumentList(QLatin1String("SetCursorLocation"), argumentList);
+    }
+
+    inline QDBusPendingReply<> SetCursorRect(int x, int y, int w, int h)
+    {
+        QList<QVariant> argumentList;
+        argumentList << QVariant::fromValue(x) << QVariant::fromValue(y) << QVariant::fromValue(w) << QVariant::fromValue(h);
+        return asyncCallWithArgumentList(QLatin1String("SetCursorRect"), argumentList);
     }
 
 Q_SIGNALS: // SIGNALS
