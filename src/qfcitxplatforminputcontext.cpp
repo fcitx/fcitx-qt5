@@ -15,6 +15,7 @@
 #include "qfcitxinputcontextproxy.h"
 #include "qfcitxinputmethodproxy.h"
 #include "qfreedesktopdbusproxy.h"
+#include "keyuni.h"
 
 typedef struct _FcitxComposeTableCompact FcitxComposeTableCompact;
 struct _FcitxComposeTableCompact {
@@ -32,27 +33,45 @@ static const FcitxComposeTableCompact fcitx_compose_table_compact = {
 };
 
 static const uint fcitx_compose_ignore[] = {
-    FcitxKey_Shift_L,
-    FcitxKey_Shift_R,
-    FcitxKey_Control_L,
-    FcitxKey_Control_R,
-    FcitxKey_Caps_Lock,
-    FcitxKey_Shift_Lock,
-    FcitxKey_Meta_L,
-    FcitxKey_Meta_R,
-    FcitxKey_Alt_L,
-    FcitxKey_Alt_R,
-    FcitxKey_Super_L,
-    FcitxKey_Super_R,
-    FcitxKey_Hyper_L,
-    FcitxKey_Hyper_R,
-    FcitxKey_Mode_switch,
-    FcitxKey_ISO_Level3_Shift,
-    FcitxKey_VoidSymbol
+    XK_Shift_L,
+    XK_Shift_R,
+    XK_Control_L,
+    XK_Control_R,
+    XK_Caps_Lock,
+    XK_Shift_Lock,
+    XK_Meta_L,
+    XK_Meta_R,
+    XK_Alt_L,
+    XK_Alt_R,
+    XK_Super_L,
+    XK_Super_R,
+    XK_Hyper_L,
+    XK_Hyper_R,
+    XK_Mode_switch,
+    XK_ISO_Level3_Shift,
+    XK_VoidSymbol
 };
 
 static bool key_filtered = false;
 
+static bool
+get_boolean_env(const char *name,
+                 bool defval)
+{
+    const char *value = getenv(name);
+
+    if (value == NULL)
+        return defval;
+
+    if (strcmp(value, "") == 0 ||
+        strcmp(value, "0") == 0 ||
+        strcmp(value, "false") == 0 ||
+        strcmp(value, "False") == 0 ||
+        strcmp(value, "FALSE") == 0)
+        return false;
+
+    return true;
+}
 
 static int
 compare_seq_index(const void *key, const void *value)
@@ -110,7 +129,10 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
     m_connection(QDBusConnection::sessionBus()),
     m_dbusproxy(0),
     m_improxy(0),
-    m_icproxy(0)
+    m_icproxy(0),
+    m_n_compose(0),
+    m_cursorPos(0),
+    m_useSurroundingText(false)
 {
     FcitxFormattedPreedit::registerMetaType();
 
@@ -125,8 +147,6 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
                                             m_connection,
                                             this
                                            );
-    m_triggerKey[0].sym = m_triggerKey[1].sym = (FcitxKeySym) 0;
-    m_triggerKey[0].state = m_triggerKey[1].state = 0;
     createInputContext();
 
     QInputPanel *p = qApp->inputPanel();
@@ -158,18 +178,34 @@ void QFcitxPlatformInputContext::invokeAction(QInputMethod::Action action, int c
     if (!m_icproxy || !m_icproxy->isValid())
         return;
 
-    if (action == QInputMethod::Click)
-        commit();
+    if (action == QInputMethod::Click
+        && (cursorPosition <= 0 || cursorPosition >= m_preedit.length())
+    )
+    {
+        qDebug() << action << cursorPosition;
+        commitPreedit();
+    }
 }
 
-void QFcitxPlatformInputContext::reset()
+void QFcitxPlatformInputContext::commitPreedit()
 {
-    QPlatformInputContext::reset();
-
+    QObject *input = qApp->inputMethod()->inputItem();
+    if (!input)
+        return;
+    QInputMethodEvent e;
+    e.setCommitString(m_commitPreedit);
+    QCoreApplication::sendEvent(input, &e);
     if (!m_icproxy || !m_icproxy->isValid())
         return;
 
     m_icproxy->Reset();
+}
+
+
+void QFcitxPlatformInputContext::reset()
+{
+    QPlatformInputContext::reset();
+    commitPreedit();
 }
 
 void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
@@ -189,6 +225,26 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
             addCapacity(CAPACITY_PASSWORD);
         else
             removeCapacity(CAPACITY_PASSWORD);
+    }
+
+    if (m_useSurroundingText) {
+        if (((queries & Qt::ImSurroundingText) && (queries & Qt::ImCursorPosition)) && !m_capacity.testFlag(CAPACITY_PASSWORD)) {
+            QVariant var = query.value(Qt::ImSurroundingText);
+            QVariant var1 = query.value(Qt::ImCursorPosition);
+            QVariant var2 = query.value(Qt::ImAnchorPosition);
+            addCapacity(CAPACITY_SURROUNDING_TEXT);
+            QString text = var.toString();
+            int cursor = var1.toInt();
+            int anchor;
+            if (var2.isValid())
+                anchor = var2.toInt();
+            else
+                anchor = cursor;
+            qDebug() << text << cursor << anchor;
+            m_icproxy->SetSurroundingText(text, cursor, anchor);
+        }
+        else
+            removeCapacity(CAPACITY_SURROUNDING_TEXT);
     }
 }
 
@@ -233,12 +289,10 @@ void QFcitxPlatformInputContext::cursorRectChanged()
 
 void QFcitxPlatformInputContext::closeIM()
 {
-    this->m_enable = false;
 }
 
 void QFcitxPlatformInputContext::enableIM()
 {
-    this->m_enable = true;
 }
 
 void QFcitxPlatformInputContext::commitString(const QString& str)
@@ -264,9 +318,8 @@ void QFcitxPlatformInputContext::createInputContext()
     if (!m_improxy->isValid())
         return;
 
-    char* name = fcitx_utils_get_process_name();
-    QDBusPendingReply< int, bool, uint, uint, uint, uint > result = m_improxy->CreateICv2(name);
-    free(name);
+    QFileInfo info(QCoreApplication::applicationFilePath());
+    QDBusPendingReply< int, bool, uint, uint, uint, uint > result = m_improxy->CreateICv3(info.fileName(), QCoreApplication::applicationPid());
     QDBusPendingCallWatcher* watcher = new QDBusPendingCallWatcher(result);
     connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(createInputContextFinished(QDBusPendingCallWatcher*)));
 }
@@ -278,11 +331,6 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         qWarning() << result.error();
     else {
         m_id = qdbus_cast<int>(result.argumentAt(0));
-        m_enable = qdbus_cast<bool>(result.argumentAt(1));
-        m_triggerKey[0].sym = (FcitxKeySym) qdbus_cast<uint>(result.argumentAt(2));
-        m_triggerKey[0].state = qdbus_cast<uint>(result.argumentAt(3));
-        m_triggerKey[1].sym = (FcitxKeySym) qdbus_cast<uint>(result.argumentAt(4));
-        m_triggerKey[1].state = qdbus_cast<uint>(result.argumentAt(5));
         m_path = QString("/inputcontext_%1").arg(m_id);
         m_icproxy = new QFcitxInputContextProxy(m_serviceName, m_path, m_connection, this);
         qDebug() << m_path << m_serviceName;
@@ -292,6 +340,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         connect(m_icproxy, SIGNAL(ForwardKey(uint, uint, int)), this, SLOT(forwardKey(uint, uint, int)));
         connect(m_icproxy, SIGNAL(UpdatePreedit(QString, int)), this, SLOT(updatePreedit(QString, int)));
         connect(m_icproxy, SIGNAL(UpdateFormattedPreedit(FcitxFormattedPreeditList,int)), this, SLOT(updateFormattedPreedit(FcitxFormattedPreeditList,int)));
+        connect(m_icproxy, SIGNAL(DeleteSurroundingText(int,uint)), this, SLOT(deleteSurroundingText(int,uint)));
 
         if (m_icproxy->isValid() && qApp->inputPanel()->inputItem())
             m_icproxy->FocusIn();
@@ -299,6 +348,9 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         QFlags<FcitxCapacityFlags> flag;
         flag |= CAPACITY_PREEDIT;
         flag |= CAPACITY_FORMATTED_PREEDIT;
+        m_useSurroundingText = get_boolean_env("FCITX_QT_ENABLE_SURROUNDING_TEXT", true);
+        if (m_useSurroundingText)
+             flag |= CAPACITY_SURROUNDING_TEXT;
 
         addCapacity(flag, true);
     }
@@ -319,9 +371,6 @@ void QFcitxPlatformInputContext::imChanged(const QString& service, const QString
                 delete m_icproxy;
                 m_icproxy = NULL;
             }
-            m_enable = false;
-            m_triggerKey[0].sym = m_triggerKey[1].sym = (FcitxKeySym) 0;
-            m_triggerKey[0].state = m_triggerKey[1].state = 0;
         }
 
         /* new rise */
@@ -335,12 +384,18 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxFormattedPree
     QObject *input = qApp->inputMethod()->inputItem();
     if (!input)
         return;
-    QString str;
+    if (cursorPos == m_cursorPos && preeditList == m_preeditList)
+        return;
+    m_preeditList = preeditList;
+    m_cursorPos = cursorPos;
+    QString str, commitStr;
     int pos = 0;
     QList<QInputMethodEvent::Attribute> attrList;
     Q_FOREACH(const FcitxFormattedPreedit& preedit, preeditList)
     {
         str += preedit.string();
+        if (!(preedit.format() & MSG_DONOT_COMMIT_WHEN_UNFOCUS))
+            commitStr += preedit.string();
         QTextCharFormat format;
         if ((preedit.format() & MSG_NOUNDERLINE) == 0) {
             format.setUnderlineStyle(QTextCharFormat::DashUnderline);
@@ -361,7 +416,20 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxFormattedPree
     cursorPos = QString::fromUtf8(array).length();
 
     attrList.append(QInputMethodEvent::Attribute(QInputMethodEvent::Cursor, cursorPos, 1, 0));
+    m_preedit = str;
+    m_commitPreedit = commitStr;
     QInputMethodEvent event(str, attrList);
+    QCoreApplication::sendEvent(input, &event);
+}
+
+void QFcitxPlatformInputContext::deleteSurroundingText(uint offset, uint nchar)
+{
+    QObject *input = qApp->inputMethod()->inputItem();
+    if (!input)
+        return;
+
+    QInputMethodEvent event;
+    event.setCommitString("", offset, nchar);
     QCoreApplication::sendEvent(input, &event);
 }
 
@@ -381,6 +449,8 @@ void QFcitxPlatformInputContext::updatePreedit(const QString& str, int cursorPos
     attrList.append(QInputMethodEvent::Attribute(QInputMethodEvent::Cursor, cursorPos, 1, 0));
     attrList.append(QInputMethodEvent::Attribute(QInputMethodEvent::TextFormat, 0, str.length(), format));
     QInputMethodEvent event(str, attrList);
+    m_preedit = str;
+    m_commitPreedit = str;
     QCoreApplication::sendEvent(input, &event);
 }
 
@@ -458,16 +528,6 @@ bool QFcitxPlatformInputContext::x11FilterEvent(uint keyval, uint keycode, uint 
         return x11FilterEventFallback(keyval, keycode, state, press);
     }
 
-
-    if (!m_enable) {
-        FcitxKeySym fcitxsym;
-        uint fcitxstate;
-        FcitxHotkeyGetKey((FcitxKeySym) keyval, state, &fcitxsym, &fcitxstate);
-        if (!FcitxHotkeyIsHotKey(fcitxsym, fcitxstate, m_triggerKey)) {
-            return x11FilterEventFallback(keyval, keycode, state, press);
-        }
-    }
-
     m_icproxy->FocusIn();
 
     QDBusPendingReply< int > result = this->m_icproxy->ProcessKeyEvent(
@@ -509,7 +569,7 @@ bool QFcitxPlatformInputContext::processCompose(uint keyval, uint state, FcitxKe
     if (event == FCITX_RELEASE_KEY)
         return false;
 
-    for (i = 0; fcitx_compose_ignore[i] != FcitxKey_VoidSymbol; i++) {
+    for (i = 0; fcitx_compose_ignore[i] != XK_VoidSymbol; i++) {
         if (keyval == fcitx_compose_ignore[i])
             return false;
     }
@@ -597,7 +657,7 @@ bool QFcitxPlatformInputContext::checkCompactTable(const struct _FcitxComposeTab
 }
 
 #define IS_DEAD_KEY(k) \
-    ((k) >= FcitxKey_dead_grave && (k) <= (FcitxKey_dead_dasia+1))
+    ((k) >= XK_dead_grave && (k) <= (XK_dead_dasia+1))
 
 bool QFcitxPlatformInputContext::checkAlgorithmically()
 {
@@ -612,13 +672,13 @@ bool QFcitxPlatformInputContext::checkAlgorithmically()
         return true;
 
     if (i > 0 && i == m_n_compose - 1) {
-        combination_buffer[0] = FcitxKeySymToUnicode((FcitxKeySym) m_compose_buffer[i]);
+        combination_buffer[0] = FcitxKeySymToUnicode(m_compose_buffer[i]);
         combination_buffer[m_n_compose] = 0;
         i--;
         while (i >= 0) {
             switch (m_compose_buffer[i]) {
 #define CASE(keysym, unicode) \
-case FcitxKey_dead_##keysym: combination_buffer[i + 1] = unicode; break
+case XK_dead_##keysym: combination_buffer[i + 1] = unicode; break
                 CASE(grave, 0x0300);
                 CASE(acute, 0x0301);
                 CASE(circumflex, 0x0302);
@@ -652,7 +712,7 @@ case FcitxKey_dead_##keysym: combination_buffer[i + 1] = unicode; break
                 /* CASE (psili, 0x343); */
 #undef CASE
             default:
-                combination_buffer[i + 1] = FcitxKeySymToUnicode((FcitxKeySym) m_compose_buffer[i]);
+                combination_buffer[i + 1] = FcitxKeySymToUnicode(m_compose_buffer[i]);
             }
             i--;
         }

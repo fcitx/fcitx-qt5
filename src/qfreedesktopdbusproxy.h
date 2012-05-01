@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef QFREEDESKTOPDBUSPROXY_H_1334497066
-#define QFREEDESKTOPDBUSPROXY_H_1334497066
+#ifndef QFREEDESKTOPDBUSPROXY_H_1335906469
+#define QFREEDESKTOPDBUSPROXY_H_1335906469
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>

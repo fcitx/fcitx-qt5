@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef QFCITXINPUTMETHODPROXY_H_1334497066
-#define QFCITXINPUTMETHODPROXY_H_1334497066
+#ifndef QFCITXINPUTMETHODPROXY_H_1335906469
+#define QFCITXINPUTMETHODPROXY_H_1335906469
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -36,35 +36,17 @@ public:
     ~QFcitxInputMethodProxy();
 
 public Q_SLOTS: // METHODS
-    inline QDBusPendingReply<int, uint, uint, uint, uint> CreateIC()
+    inline QDBusPendingReply<int, bool, uint, uint, uint, uint> CreateICv3(const QString &appname, int pid)
     {
         QList<QVariant> argumentList;
-        return asyncCallWithArgumentList(QLatin1String("CreateIC"), argumentList);
+        argumentList << QVariant::fromValue(appname) << QVariant::fromValue(pid);
+        return asyncCallWithArgumentList(QLatin1String("CreateICv3"), argumentList);
     }
-    inline QDBusReply<int> CreateIC(uint &keyval1, uint &state1, uint &keyval2, uint &state2)
+    inline QDBusReply<int> CreateICv3(const QString &appname, int pid, bool &enabled, uint &keyval1, uint &state1, uint &keyval2, uint &state2)
     {
         QList<QVariant> argumentList;
-        QDBusMessage reply = callWithArgumentList(QDBus::Block, QLatin1String("CreateIC"), argumentList);
-        if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 5) {
-            keyval1 = qdbus_cast<uint>(reply.arguments().at(1));
-            state1 = qdbus_cast<uint>(reply.arguments().at(2));
-            keyval2 = qdbus_cast<uint>(reply.arguments().at(3));
-            state2 = qdbus_cast<uint>(reply.arguments().at(4));
-        }
-        return reply;
-    }
-
-    inline QDBusPendingReply<int, bool, uint, uint, uint, uint> CreateICv2(const QString &appname)
-    {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(appname);
-        return asyncCallWithArgumentList(QLatin1String("CreateICv2"), argumentList);
-    }
-    inline QDBusReply<int> CreateICv2(const QString &appname, bool &enabled, uint &keyval1, uint &state1, uint &keyval2, uint &state2)
-    {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(appname);
-        QDBusMessage reply = callWithArgumentList(QDBus::Block, QLatin1String("CreateICv2"), argumentList);
+        argumentList << QVariant::fromValue(appname) << QVariant::fromValue(pid);
+        QDBusMessage reply = callWithArgumentList(QDBus::Block, QLatin1String("CreateICv3"), argumentList);
         if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 6) {
             enabled = qdbus_cast<bool>(reply.arguments().at(1));
             keyval1 = qdbus_cast<uint>(reply.arguments().at(2));

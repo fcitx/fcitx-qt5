@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef QFCITXINPUTCONTEXTPROXY_H_1334497066
-#define QFCITXINPUTCONTEXTPROXY_H_1334497066
+#ifndef QFCITXINPUTCONTEXTPROXY_H_1335906469
+#define QFCITXINPUTCONTEXTPROXY_H_1335906469
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -43,6 +43,12 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("CloseIC"), argumentList);
     }
 
+    inline QDBusPendingReply<> CommitPreedit()
+    {
+        QList<QVariant> argumentList;
+        return asyncCallWithArgumentList(QLatin1String("CommitPreedit"), argumentList);
+    }
+
     inline QDBusPendingReply<> DestroyIC()
     {
         QList<QVariant> argumentList;
@@ -65,6 +71,13 @@ public Q_SLOTS: // METHODS
     {
         QList<QVariant> argumentList;
         return asyncCallWithArgumentList(QLatin1String("FocusOut"), argumentList);
+    }
+
+    inline QDBusPendingReply<> MouseEvent(int x)
+    {
+        QList<QVariant> argumentList;
+        argumentList << QVariant::fromValue(x);
+        return asyncCallWithArgumentList(QLatin1String("MouseEvent"), argumentList);
     }
 
     inline QDBusPendingReply<int> ProcessKeyEvent(uint keyval, uint keycode, uint state, int type, uint time)
@@ -101,9 +114,17 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("SetCursorRect"), argumentList);
     }
 
+    inline QDBusPendingReply<> SetSurroundingText(const QString &text, uint cursor, uint anchor)
+    {
+        QList<QVariant> argumentList;
+        argumentList << QVariant::fromValue(text) << QVariant::fromValue(cursor) << QVariant::fromValue(anchor);
+        return asyncCallWithArgumentList(QLatin1String("SetSurroundingText"), argumentList);
+    }
+
 Q_SIGNALS: // SIGNALS
     void CloseIM();
     void CommitString(const QString &str);
+    void DeleteSurroundingText(int offset, uint nchar);
     void EnableIM();
     void ForwardKey(uint keyval, uint state, int type);
     void UpdateClientSideUI(const QString &auxup, const QString &auxdown, const QString &preedit, const QString &candidateword, const QString &imname, int cursorpos);

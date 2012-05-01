@@ -17,6 +17,7 @@ set(plugin_SRCS
     qfcitxinputmethodproxy.cpp
     qfreedesktopdbusproxy.cpp
     fcitxformattedpreedit.cpp
+    keyuni.cpp
     main.cpp
 )
 
@@ -41,8 +42,6 @@ target_link_libraries(fcitxplatforminputcontextplugin
                           ${Qt5Gui_LIBRARIES}
                           ${Qt5DBus_LIBRARIES}
                           ${Qt5PlatformSupport_LIBRARIES}
-                          ${FCITX4_FCITX_CONFIG_LIBRARIES}
-                          ${FCITX4_FCITX_UTILS_LIBRARIES}
                           ${ICU_LIBRARIES}
                          )
 
