@@ -150,7 +150,6 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
     createInputContext();
 
     QInputMethod *p = qApp->inputMethod();
-    connect(p, SIGNAL(inputItemChanged()), this, SLOT(inputItemChanged()));
     connect(p, SIGNAL(cursorRectangleChanged()), this, SLOT(cursorRectChanged()));
 }
 
@@ -262,13 +261,12 @@ void QFcitxPlatformInputContext::commit()
 
 }
 
-void QFcitxPlatformInputContext::inputItemChanged()
+void QFcitxPlatformInputContext::setFocusObject(QObject* object)
 {
     if (!m_icproxy || !m_icproxy->isValid())
         return;
 
-    QObject *input = qApp->focusObject();
-    if (input)
+    if (object)
         m_icproxy->FocusIn();
     else
         m_icproxy->FocusOut();
@@ -422,7 +420,7 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxFormattedPree
     QCoreApplication::sendEvent(input, &event);
 }
 
-void QFcitxPlatformInputContext::deleteSurroundingText(uint offset, uint nchar)
+void QFcitxPlatformInputContext::deleteSurroundingText(int offset, uint nchar)
 {
     QObject *input = qApp->focusObject();
     if (!input)
@@ -517,6 +515,9 @@ QKeyEvent* QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state, i
 bool QFcitxPlatformInputContext::x11FilterEvent(uint keyval, uint keycode, uint state, bool press)
 {
     if (key_filtered)
+        return false;
+
+    if (!inputMethodAccepted())
         return false;
 
     QObject *input = qApp->focusObject();

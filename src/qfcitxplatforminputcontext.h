@@ -82,12 +82,12 @@ public:
     virtual void reset();
     virtual void commit();
     virtual void update(Qt::InputMethodQueries quries );
+    virtual void setFocusObject(QObject* object);
 
     Q_INVOKABLE bool x11FilterEvent(uint keyval, uint keycode, uint state, bool press);
     
 
 public Q_SLOTS:
-    void inputItemChanged();
     void cursorRectChanged();
     void imChanged(const QString& service, const QString& oldowner, const QString& newowner);
     void closeIM();
@@ -95,7 +95,7 @@ public Q_SLOTS:
     void commitString(const QString& str);
     void updatePreedit(const QString& str, int cursorPos);
     void updateFormattedPreedit(const FcitxFormattedPreeditList& preeditList, int cursorPos);
-    void deleteSurroundingText(uint start, uint offset);
+    void deleteSurroundingText(int offset, uint nchar);
     void forwardKey(uint keyval, uint state, int type);
     void createInputContextFinished(QDBusPendingCallWatcher* watcher);
 
