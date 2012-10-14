@@ -1,5 +1,4 @@
-#include <QPlatformInputContext>
-#include <private/qplatforminputcontextplugin_qpa_p.h>
+#include <qpa/qplatforminputcontextplugin_p.h>
 #include <QtCore/QStringList>
 
 #include "qfcitxplatforminputcontext.h"

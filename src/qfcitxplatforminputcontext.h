@@ -1,7 +1,7 @@
 #ifndef QFCITXPLATFORMINPUTCONTEXT_H
 #define QFCITXPLATFORMINPUTCONTEXT_H
 
-#include <QPlatformInputContext>
+#include <qpa/qplatforminputcontext.h>
 #include <QDBusConnection>
 #include "fcitxformattedpreedit.h"
 

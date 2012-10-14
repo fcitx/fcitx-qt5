@@ -1,7 +1,7 @@
 #include <QKeyEvent>
 #include <QDBusConnection>
 #include <QGuiApplication>
-#include <QInputPanel>
+#include <QInputMethod>
 #include <QTextCharFormat>
 #include <QPalette>
 #include <QWindow>
@@ -149,7 +149,7 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
                                            );
     createInputContext();
 
-    QInputPanel *p = qApp->inputPanel();
+    QInputMethod *p = qApp->inputMethod();
     connect(p, SIGNAL(inputItemChanged()), this, SLOT(inputItemChanged()));
     connect(p, SIGNAL(cursorRectangleChanged()), this, SLOT(cursorRectChanged()));
 }
@@ -189,7 +189,7 @@ void QFcitxPlatformInputContext::invokeAction(QInputMethod::Action action, int c
 
 void QFcitxPlatformInputContext::commitPreedit()
 {
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (!input)
         return;
     QInputMethodEvent e;
@@ -211,7 +211,7 @@ void QFcitxPlatformInputContext::reset()
 void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
 {
     QInputMethod *method = qApp->inputMethod();
-    QObject *input = method->inputItem();
+    QObject *input = qApp->focusObject();
     if (!input)
         return;
 
@@ -255,7 +255,7 @@ void QFcitxPlatformInputContext::commit()
     if (!m_icproxy || !m_icproxy->isValid())
         return;
 
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (!input) {
         return;
     }
@@ -267,7 +267,7 @@ void QFcitxPlatformInputContext::inputItemChanged()
     if (!m_icproxy || !m_icproxy->isValid())
         return;
 
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (input)
         m_icproxy->FocusIn();
     else
@@ -280,7 +280,7 @@ void QFcitxPlatformInputContext::cursorRectChanged()
     if(!r.isValid())
         return;
 
-    QWindow *inputWindow = qApp->inputMethod()->inputWindow();
+    QWindow *inputWindow = qApp->focusWindow();
     if (!inputWindow)
         return;
     r.moveTopLeft(inputWindow->mapToGlobal(r.topLeft()));
@@ -297,7 +297,7 @@ void QFcitxPlatformInputContext::enableIM()
 
 void QFcitxPlatformInputContext::commitString(const QString& str)
 {
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (!input)
         return;
 
@@ -342,7 +342,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         connect(m_icproxy, SIGNAL(UpdateFormattedPreedit(FcitxFormattedPreeditList,int)), this, SLOT(updateFormattedPreedit(FcitxFormattedPreeditList,int)));
         connect(m_icproxy, SIGNAL(DeleteSurroundingText(int,uint)), this, SLOT(deleteSurroundingText(int,uint)));
 
-        if (m_icproxy->isValid() && qApp->inputPanel()->inputItem())
+        if (m_icproxy->isValid() && qApp->focusObject())
             m_icproxy->FocusIn();
 
         QFlags<FcitxCapacityFlags> flag;
@@ -381,7 +381,7 @@ void QFcitxPlatformInputContext::imChanged(const QString& service, const QString
 
 void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxFormattedPreeditList& preeditList, int cursorPos)
 {
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (!input)
         return;
     if (cursorPos == m_cursorPos && preeditList == m_preeditList)
@@ -424,7 +424,7 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxFormattedPree
 
 void QFcitxPlatformInputContext::deleteSurroundingText(uint offset, uint nchar)
 {
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (!input)
         return;
 
@@ -439,7 +439,7 @@ void QFcitxPlatformInputContext::updatePreedit(const QString& str, int cursorPos
     array.truncate(cursorPos);
     cursorPos = QString::fromUtf8(array).length();
 
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (!input)
         return;
 
@@ -469,7 +469,7 @@ void QFcitxPlatformInputContext::updateCapacity()
 
 void QFcitxPlatformInputContext::forwardKey(uint keyval, uint state, int type)
 {
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
     if (input != NULL) {
         key_filtered = true;
         QKeyEvent *keyevent = createKeyEvent(keyval, state, type);
@@ -519,7 +519,7 @@ bool QFcitxPlatformInputContext::x11FilterEvent(uint keyval, uint keycode, uint 
     if (key_filtered)
         return false;
 
-    QObject *input = qApp->inputMethod()->inputItem();
+    QObject *input = qApp->focusObject();
 
     if (!input)
         return false;

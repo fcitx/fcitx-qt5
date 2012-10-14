@@ -1,14 +1,13 @@
 include_directories(${Qt5Core_INCLUDE_DIRS}
                        ${Qt5Gui_INCLUDE_DIRS}
                        ${Qt5DBus_INCLUDE_DIRS}
-                       ${Qt5PlatformSupport_INCLUDE_DIRS}
 )
 
-find_path(Qt5PlatformSupport_INCLUDE_DIRECTORY
-           NAMES QtPlatformSupportVersion
-           HINTS ${Qt5PlatformSupport_INCLUDE_DIRS})
+find_path(Qt5Gui_INCLUDE_DIRECTORY
+           NAMES QtGuiVersion
+           HINTS ${Qt5Gui_INCLUDE_DIRS})
 
-include_directories(${Qt5PlatformSupport_INCLUDE_DIRECTORY}/${Qt5PlatformSupport_VERSION}/QtPlatformSupport)
+include_directories(${Qt5Gui_INCLUDE_DIRECTORY}/${Qt5Gui_VERSION}/QtGui)
 
 
 set(plugin_SRCS
@@ -41,8 +40,7 @@ target_link_libraries(fcitxplatforminputcontextplugin
                           ${Qt5Core_LIBRARIES}
                           ${Qt5Gui_LIBRARIES}
                           ${Qt5DBus_LIBRARIES}
-                          ${Qt5PlatformSupport_LIBRARIES}
                           ${ICU_LIBRARIES}
                          )
 
-install(TARGETS fcitxplatforminputcontextplugin DESTINATION ${_qt5_install_prefix}/plugins/platforminputcontexts/)
+install(TARGETS fcitxplatforminputcontextplugin DESTINATION ${_qt5_corelib_install_prefix}/plugins/platforminputcontexts/)
