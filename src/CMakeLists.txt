@@ -14,17 +14,16 @@ set(plugin_SRCS
     qfcitxplatforminputcontext.cpp
     qfcitxinputcontextproxy.cpp
     qfcitxinputmethodproxy.cpp
-    qfreedesktopdbusproxy.cpp
     fcitxformattedpreedit.cpp
     keyuni.cpp
     main.cpp
+    utils.cpp
 )
 
 set(plugin_MOC_HDRS
     qfcitxplatforminputcontext.h
     qfcitxinputcontextproxy.h
     qfcitxinputmethodproxy.h
-    qfreedesktopdbusproxy.h
     main.h
 )
 
@@ -40,7 +39,6 @@ target_link_libraries(fcitxplatforminputcontextplugin
                           ${Qt5Core_LIBRARIES}
                           ${Qt5Gui_LIBRARIES}
                           ${Qt5DBus_LIBRARIES}
-                          ${ICU_LIBRARIES}
                          )
 
 install(TARGETS fcitxplatforminputcontextplugin DESTINATION ${_qt5_corelib_install_prefix}/plugins/platforminputcontexts/)

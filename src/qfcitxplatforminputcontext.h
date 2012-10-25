@@ -3,16 +3,20 @@
 
 #include <qpa/qplatforminputcontext.h>
 #include <QDBusConnection>
+#include <QDBusServiceWatcher>
+#include <QPointer>
+#include <QFileSystemWatcher>
+#include <QRect>
 #include "fcitxformattedpreedit.h"
 
 #define MAX_COMPOSE_LEN 7
 
+class QFileSystemWatcher;
 enum FcitxKeyEventType {
     FCITX_PRESS_KEY,
     FCITX_RELEASE_KEY
 };
 
-/** fcitx input context capacity flags */
 enum FcitxCapacityFlags {
     CAPACITY_NONE = 0,
     CAPACITY_CLIENT_SIDE_UI = (1 << 0),
@@ -21,8 +25,24 @@ enum FcitxCapacityFlags {
     CAPACITY_PASSWORD = (1 << 3),
     CAPACITY_FORMATTED_PREEDIT = (1 << 4),
     CAPACITY_CLIENT_UNFOCUS_COMMIT = (1 << 5),
-    CAPACITY_SURROUNDING_TEXT = (1 << 6)
-};
+    CAPACITY_SURROUNDING_TEXT = (1 << 6),
+    CAPACITY_EMAIL = (1 << 7),
+    CAPACITY_DIGIT = (1 << 8),
+    CAPACITY_UPPERCASE = (1 << 9),
+    CAPACITY_LOWERCASE = (1 << 10),
+    CAPACITY_NOAUTOUPPERCASE = (1 << 11),
+    CAPACITY_URL = (1 << 12),
+    CAPACITY_DIALABLE = (1 << 13),
+    CAPACITY_NUMBER = (1 << 14),
+    CAPACITY_NO_ON_SCREEN_KEYBOARD = (1 << 15),
+    CAPACITY_SPELLCHECK = (1 << 16),
+    CAPACITY_NO_SPELLCHECK = (1 << 17),
+    CAPACITY_WORD_COMPLETION = (1 << 18),
+    CAPACITY_UPPERCASE_WORDS = (1 << 19),
+    CAPACITY_UPPERCASE_SENTENCES = (1 << 20),
+    CAPACITY_ALPHA = (1 << 21),
+    CAPACITY_NAME = (1 << 22)
+} ;
 
 /** message type and flags */
 enum FcitxMessageType {
@@ -85,7 +105,7 @@ public:
     virtual void setFocusObject(QObject* object);
 
     Q_INVOKABLE bool x11FilterEvent(uint keyval, uint keycode, uint state, bool press);
-    
+
 
 public Q_SLOTS:
     void cursorRectChanged();
@@ -98,9 +118,14 @@ public Q_SLOTS:
     void deleteSurroundingText(int offset, uint nchar);
     void forwardKey(uint keyval, uint state, int type);
     void createInputContextFinished(QDBusPendingCallWatcher* watcher);
+    void socketFileChanged();
+    void dbusDisconnect();
+    void newServiceAppear();
 
 private:
     static int displayNumber();
+    const QString& socketFile();
+    QString address();
     void createInputContext();
     bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
     bool checkAlgorithmically();
@@ -127,11 +152,13 @@ private:
     }
 
     void updateCapacity();
-    
-    bool x11FilterEventFallback(uint keyval, uint keycode, uint state, bool press);
 
-    QDBusConnection m_connection;
-    QFreedesktopDBusProxy* m_dbusproxy;
+    bool x11FilterEventFallback(uint keyval, uint keycode, uint state, bool press);
+    void createConnection();
+    void cleanUp();
+    bool isConnected();
+
+    QDBusConnection* m_connection;
     QFcitxInputMethodProxy* m_improxy;
     QFcitxInputContextProxy* m_icproxy;
     QFlags<FcitxCapacityFlags> m_capacity;
@@ -146,6 +173,12 @@ private:
     QString m_preedit;
     QString m_commitPreedit;
     FcitxFormattedPreeditList m_preeditList;
+    QString m_socketFile;
+    QPointer<QFileSystemWatcher> m_watcher;
+    QDBusServiceWatcher m_serviceWatcher;
+    bool m_syncMode;
+    int m_displayNumber;
+    QRect m_rect;
 };
 
 #endif // QFCITXPLATFORMINPUTCONTEXT_H
