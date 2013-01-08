@@ -178,7 +178,7 @@ QFcitxPlatformInputContext::address()
     if (!addrVar.isNull())
         return QString::fromLocal8Bit(addrVar);
 
-    qDebug() << socketFile();
+    // qDebug() << socketFile();
     QFile file(socketFile());
     if (!file.open(QIODevice::ReadOnly))
         return QString();
@@ -363,7 +363,7 @@ void QFcitxPlatformInputContext::invokeAction(QInputMethod::Action action, int c
         && (cursorPosition <= 0 || cursorPosition >= m_preedit.length())
     )
     {
-        qDebug() << action << cursorPosition;
+        // qDebug() << action << cursorPosition;
         commitPreedit();
     }
 }
@@ -467,7 +467,7 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
                 anchor = var2.toInt();
             else
                 anchor = cursor;
-            qDebug() << text << cursor << anchor;
+            // qDebug() << text << cursor << anchor;
             m_icproxy->SetSurroundingText(text, cursor, anchor);
         }
         else
@@ -580,7 +580,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
             break;
 
         this->m_id = qdbus_cast<int>(result.argumentAt(0));
-        qDebug() << "ic id:" << m_id;
+        // qDebug() << "ic id:" << m_id;
         this->m_path = QString("/inputcontext_%1").arg(m_id);
         if (m_icproxy) {
             delete m_icproxy;
