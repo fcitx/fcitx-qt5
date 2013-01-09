@@ -391,6 +391,9 @@ void QFcitxPlatformInputContext::reset()
 
 void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
 {
+    if (!m_icproxy || !m_icproxy->isValid())
+        return;
+
     QInputMethod *method = qApp->inputMethod();
     QObject *input = qApp->focusObject();
     if (!input)
@@ -502,6 +505,9 @@ void QFcitxPlatformInputContext::setFocusObject(QObject* object)
 
 void QFcitxPlatformInputContext::cursorRectChanged()
 {
+    if (!m_icproxy || !m_icproxy->isValid())
+        return;
+
     QRect r = qApp->inputMethod()->cursorRectangle().toRect();
     if(!r.isValid())
         return;
