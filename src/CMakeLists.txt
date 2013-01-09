@@ -41,4 +41,4 @@ target_link_libraries(fcitxplatforminputcontextplugin
                           ${Qt5DBus_LIBRARIES}
                          )
 
-install(TARGETS fcitxplatforminputcontextplugin DESTINATION ${_Qt5_PLUGIN_INSTALL_DIR})
+install(TARGETS fcitxplatforminputcontextplugin DESTINATION ${_Qt5_PLUGIN_INSTALL_DIR}/platforminputcontexts)
