@@ -683,6 +683,7 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxFormattedPree
     m_commitPreedit = commitStr;
     QInputMethodEvent event(str, attrList);
     QCoreApplication::sendEvent(input, &event);
+    update(Qt::ImCursorRectangle);
 }
 
 void QFcitxPlatformInputContext::deleteSurroundingText(int offset, uint nchar)
