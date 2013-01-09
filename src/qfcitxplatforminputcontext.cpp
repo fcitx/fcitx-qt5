@@ -159,7 +159,7 @@ QFcitxPlatformInputContext::socketFile()
     if (home.isEmpty()) {
         home = QDir::homePath().append(QLatin1Literal("/.config"));
     }
-    m_socketFile = QString("%1/.config/fcitx/dbus/%2").arg(home).arg(filename);
+    m_socketFile = QString("%1/fcitx/dbus/%2").arg(home).arg(filename);
 
     return m_socketFile;
 }
