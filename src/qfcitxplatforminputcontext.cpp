@@ -784,16 +784,12 @@ bool QFcitxPlatformInputContext::x11FilterEvent(uint keyval, uint keycode, uint 
                                           (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY,
                                           QDateTime::currentDateTime().toTime_t()
                                       );
-    {
-        QEventLoop loop;
-        QDBusPendingCallWatcher watcher(result);
-        loop.connect(&watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(quit()));
-        loop.exec(QEventLoop::ExcludeUserInputEvents | QEventLoop::WaitForMoreEvents);
-    }
+    result.waitForFinished();
 
     if (result.isError() || result.value() <= 0) {
         return x11FilterEventFallback(keyval, keycode, state, press);
     } else {
+        update(Qt::ImCursorRectangle);
         return true;
     }
     return false;
