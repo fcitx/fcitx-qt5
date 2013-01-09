@@ -9,4 +9,14 @@ find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5DBus REQUIRED)
 
+get_target_property(REAL_QMAKE_EXECUTABLE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
+
+execute_process(COMMAND ${REAL_QMAKE_EXECUTABLE} -query QT_INSTALL_PLUGINS
+OUTPUT_VARIABLE _Qt5_PLUGIN_INSTALL_DIR ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if (NOT _Qt5_PLUGIN_INSTALL_DIR)
+    message(FATAL_ERROR "not found qt5 plugin dir")
+endif (NOT _Qt5_PLUGIN_INSTALL_DIR)
+
 add_subdirectory(src)
