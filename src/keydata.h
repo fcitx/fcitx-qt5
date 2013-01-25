@@ -1,37 +1,24 @@
+/***************************************************************************
+ *   Copyright (C) 2012~2013 by CSSlayer                                   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
+ ***************************************************************************/
 
-/* GDK - The GIMP Drawing Kit
-* Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh MacDonald
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 2 of the License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library; if not, write to the
-* Free Software Foundation, Inc., 
-* 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
-*/
-
-/*
-* Modified by the GTK+ Team and others 1997-2000. See the AUTHORS
-* file for a list of people on the GTK+ Team. See the ChangeLog
-* files for a list of changes. These files are distributed with
-* GTK+ at ftp://ftp.gtk.org/pub/gtk/.
-*/
-
-/* Thanks to Markus G. Kuhn <mkuhn@acm.org> for the ksysym<->Unicode
-* mapping functions, from the xterm sources.
-*/
-
-/* These tables could be compressed by contiguous ranges, but the benefit of doing so
-* is smallish. It would save about ~1000 bytes total.
-*/
+#ifndef KEYDATA_H
+#define KEYDATA_H
 
 struct _FcitxKeySymToUnicode{
     uint16_t keysym;
@@ -1621,3 +1608,5 @@ static const struct _FcitxUnicodeToKeySym gdk_unicode_to_keysym_tab[] = {
     { 0x0ef6, 0x318d }, /* Hangul_AraeA ㆍ HANGUL LETTER ARAEA */
     { 0x0ef7, 0x318e }, /* Hangul_AraeAE ㆎ HANGUL LETTER ARAEAE */
 };
+
+#endif // KEYDATA_H
