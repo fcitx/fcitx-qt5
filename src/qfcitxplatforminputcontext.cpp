@@ -361,7 +361,7 @@ void QFcitxPlatformInputContext::windowDestroyed(QObject* object)
         return;
 
     delete data;
-    qDebug() << "Window Destroyed and we destroy IC correctly, horray!";
+    // qDebug() << "Window Destroyed and we destroy IC correctly, horray!";
 }
 
 void QFcitxPlatformInputContext::cursorRectChanged()
