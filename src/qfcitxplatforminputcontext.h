@@ -2,15 +2,18 @@
 #define QFCITXPLATFORMINPUTCONTEXT_H
 
 #include <qpa/qplatforminputcontext.h>
+#include <QWindow>
 #include <QDBusConnection>
 #include <QDBusServiceWatcher>
 #include <QPointer>
 #include <QFileSystemWatcher>
 #include <QRect>
-#include "fcitxformattedpreedit.h"
+#include "fcitx-qt5/fcitxqtformattedpreedit.h"
+#include <fcitx-qt5/fcitxqtinputcontextproxy.h>
 
 #define MAX_COMPOSE_LEN 7
 
+class FcitxQtConnection;
 class QFileSystemWatcher;
 enum FcitxKeyEventType {
     FCITX_PRESS_KEY,
@@ -84,11 +87,24 @@ enum FcitxKeyState {
     FcitxKeyState_UsedMask = 0x5c001fff
 };
 
-class QKeyEvent;
-class QFreedesktopDBusProxy;
-class QFcitxInputMethodProxy;
-class QFcitxInputContextProxy;
-class QDBusPendingCallWatcher;
+struct FcitxQtICData {
+    FcitxQtICData() : capacity(0), proxy(0), surroundingAnchor(-1), surroundingCursor(-1) {}
+    ~FcitxQtICData() {
+        if (proxy && proxy->isValid()) {
+            proxy->DestroyIC();
+            delete proxy;
+        }
+    }
+    QFlags<FcitxCapacityFlags> capacity;
+    QPointer<FcitxQtInputContextProxy> proxy;
+    QRect rect;
+    QString surroundingText;
+    int surroundingAnchor;
+    int surroundingCursor;
+};
+
+class FcitxQtInputMethodProxy;
+
 class QFcitxPlatformInputContext : public QPlatformInputContext
 {
     Q_OBJECT
@@ -109,76 +125,65 @@ public:
 
 public Q_SLOTS:
     void cursorRectChanged();
-    void imChanged(const QString& service, const QString& oldowner, const QString& newowner);
-    void closeIM();
-    void enableIM();
     void commitString(const QString& str);
-    void updatePreedit(const QString& str, int cursorPos);
-    void updateFormattedPreedit(const FcitxFormattedPreeditList& preeditList, int cursorPos);
+    void updateFormattedPreedit(const FcitxQtFormattedPreeditList& preeditList, int cursorPos);
     void deleteSurroundingText(int offset, uint nchar);
     void forwardKey(uint keyval, uint state, int type);
     void createInputContextFinished(QDBusPendingCallWatcher* watcher);
-    void socketFileChanged();
-    void dbusDisconnect();
-    void newServiceAppear();
+    void connected();
+    void cleanUp();
+    void windowDestroyed(QObject* object);
 
 private:
-    static int displayNumber();
-    const QString& socketFile();
-    QString address();
-    void createInputContext();
+    void createInputContext(WId w);
     bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
     bool checkAlgorithmically();
     bool checkCompactTable(const struct _FcitxComposeTableCompact *table);
     QKeyEvent* createKeyEvent(uint keyval, uint state, int type);
+
+
+    void addCapacity(FcitxQtICData* data, QFlags<FcitxCapacityFlags> capacity, bool forceUpdate = false)
+    {
+        QFlags< FcitxCapacityFlags > newcaps = data->capacity | capacity;
+        if (data->capacity != newcaps || forceUpdate) {
+            data->capacity = newcaps;
+            updateCapacity(data);
+        }
+    }
+
+    void removeCapacity(FcitxQtICData* data, QFlags<FcitxCapacityFlags> capacity, bool forceUpdate = false)
+    {
+        QFlags< FcitxCapacityFlags > newcaps = data->capacity & (~capacity);
+        if (data->capacity != newcaps || forceUpdate) {
+            data->capacity = newcaps;
+            updateCapacity(data);
+        }
+    }
+
+    void updateCapacity(FcitxQtICData* data);
     void commitPreedit();
-
-    void addCapacity(QFlags<FcitxCapacityFlags> capacity, bool forceUpdage = false)
-    {
-        QFlags< FcitxCapacityFlags > newcaps = m_capacity | capacity;
-        if (m_capacity != newcaps || forceUpdage) {
-            m_capacity = newcaps;
-            updateCapacity();
-        }
-    }
-
-    void removeCapacity(QFlags<FcitxCapacityFlags> capacity, bool forceUpdage = false)
-    {
-        QFlags< FcitxCapacityFlags > newcaps = m_capacity & (~capacity);
-        if (m_capacity != newcaps || forceUpdage) {
-            m_capacity = newcaps;
-            updateCapacity();
-        }
-    }
-
-    void updateCapacity();
-
+    void createICData(QWindow* w);
+    FcitxQtInputContextProxy* validIC();
+    FcitxQtInputContextProxy* validICByWindow(QWindow* window);
+    FcitxQtInputContextProxy* validICByWId(WId wid);
     bool x11FilterEventFallback(uint keyval, uint keycode, uint state, bool press);
-    void createConnection();
-    void cleanUp();
-    bool isConnected();
 
-    QDBusConnection* m_connection;
-    QFcitxInputMethodProxy* m_improxy;
-    QFcitxInputContextProxy* m_icproxy;
-    QFlags<FcitxCapacityFlags> m_capacity;
-    int m_id;
-    QString m_path;
-    bool m_has_focus;
+    FcitxQtInputMethodProxy* m_improxy;
     uint m_compose_buffer[MAX_COMPOSE_LEN + 1];
     int m_n_compose;
-    QString m_serviceName;
-    int m_cursorPos;
-    bool m_useSurroundingText;
     QString m_preedit;
     QString m_commitPreedit;
-    FcitxFormattedPreeditList m_preeditList;
-    QString m_socketFile;
-    QPointer<QFileSystemWatcher> m_watcher;
-    QDBusServiceWatcher m_serviceWatcher;
+    FcitxQtFormattedPreeditList m_preeditList;
+    int m_cursorPos;
+    bool m_useSurroundingText;
     bool m_syncMode;
-    int m_displayNumber;
-    QRect m_rect;
+    FcitxQtConnection* m_connection;
+    QString m_lastSurroundingText;
+    int m_lastSurroundingAnchor;
+    int m_lastSurroundingCursor;
+    QHash<WId, FcitxQtICData*> m_icMap;
+    QHash<QObject*, WId> m_windowToWidMap;
+    WId m_lastWId;
 };
 
 #endif // QFCITXPLATFORMINPUTCONTEXT_H

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2012~2012 by CSSlayer                                   *
+ *   Copyright (C) 2011~2012 by CSSlayer                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,34 +17,42 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef FCITX_FORMATTED_PREEDIT_H
-#define FCITX_FORMATTED_PREEDIT_H
+#ifndef FCITX_QT_KEYBOARD_LAYOUT_H
+#define FCITX_QT_KEYBOARD_LAYOUT_H
 
-#include <QMetaType>
-#include <QDebug>
-#include <QDBusArgument>
+#include "fcitxqt_export.h"
 
-class FcitxFormattedPreedit {
+// Qt
+#include <QtCore/QString>
+#include <QtCore/QMetaType>
+#include <QtDBus/QDBusArgument>
+
+class FCITX_QT_EXPORT_API FcitxQtKeyboardLayout
+{
 public:
-    const QString& string() const;
-    qint32 format() const;
-    void setString(const QString& str);
-    void setFormat(qint32 format);
+    const QString& layout() const;
+    const QString& variant() const;
+    const QString& name() const;
+    const QString& langCode() const;
+    void setLayout(const QString& layout);
+    void setLangCode(const QString& lang);
+    void setName(const QString& name);
+    void setVariant(const QString& variant);
 
     static void registerMetaType();
-
-    bool operator ==(const FcitxFormattedPreedit& preedit) const;
 private:
-    QString m_string;
-    qint32 m_format;
+    QString m_layout;
+    QString m_variant;
+    QString m_name;
+    QString m_langCode;
 };
 
-typedef QList<FcitxFormattedPreedit> FcitxFormattedPreeditList;
+typedef QList<FcitxQtKeyboardLayout> FcitxQtKeyboardLayoutList;
 
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxFormattedPreedit& im);
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxFormattedPreedit& im);
+QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtKeyboardLayout& l);
+const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtKeyboardLayout& l);
 
-Q_DECLARE_METATYPE(FcitxFormattedPreedit)
-Q_DECLARE_METATYPE(FcitxFormattedPreeditList)
+Q_DECLARE_METATYPE(FcitxQtKeyboardLayout)
+Q_DECLARE_METATYPE(FcitxQtKeyboardLayoutList)
 
 #endif
