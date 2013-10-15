@@ -36,13 +36,14 @@ public:
     Q_DECLARE_PUBLIC(FcitxQtConnection);
 
 private Q_SLOTS:
-    void imChanged(const QString& service, const QString& oldowner, const QString& newowner);
     void dbusDisconnected();
-    void cleanUp();
     void newServiceAppear();
-    void socketFileChanged();
 
 private:
+    void imChanged(const QString& service, const QString& oldowner,
+                   const QString& newowner);
+    void cleanUp();
+    void socketFileChanged();
     bool isConnected();
 
     static QByteArray localMachineId();

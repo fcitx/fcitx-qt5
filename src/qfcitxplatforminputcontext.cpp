@@ -128,19 +128,21 @@ compare_seq(const void *key, const void *value)
 
 
 QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
-    m_connection(new FcitxQtConnection(this)),
     m_improxy(0),
     m_n_compose(0),
     m_cursorPos(0),
     m_useSurroundingText(false),
     m_syncMode(true),
+    m_connection(new FcitxQtConnection(this)),
     m_lastWId(0)
 {
     FcitxQtFormattedPreedit::registerMetaType();
 
     memset(m_compose_buffer, 0, sizeof(uint) * (MAX_COMPOSE_LEN + 1));
-    connect(m_connection, SIGNAL(connected()), this, SLOT(connected()));
-    connect(m_connection, SIGNAL(disconnected()), this, SLOT(cleanUp()));
+    connect(m_connection, &FcitxQtConnection::connected,
+            this, &QFcitxPlatformInputContext::connected);
+    connect(m_connection, &FcitxQtConnection::disconnected,
+            this, &QFcitxPlatformInputContext::cleanUp);
 
     m_connection->startConnection();
 }
@@ -235,7 +237,7 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
 
     FcitxQtICData* data = m_icMap.value(window->winId());
 
-    QInputMethod *method = qApp->inputMethod();
+    // QInputMethod *method = qApp->inputMethod();
     QObject *input = qApp->focusObject();
     if (!input)
         return;
@@ -326,6 +328,7 @@ void QFcitxPlatformInputContext::commit()
 
 void QFcitxPlatformInputContext::setFocusObject(QObject* object)
 {
+    Q_UNUSED(object);
     FcitxQtInputContextProxy* proxy = validICByWId(m_lastWId);
     if (proxy) {
         proxy->FocusOut();
@@ -407,7 +410,8 @@ void QFcitxPlatformInputContext::createInputContext(WId w)
     QDBusPendingReply< int, bool, uint, uint, uint, uint > result = m_improxy->CreateICv3(info.fileName(), QCoreApplication::applicationPid());
     QDBusPendingCallWatcher* watcher = new QDBusPendingCallWatcher(result);
     watcher->setProperty("wid", (qulonglong) w);
-    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(createInputContextFinished(QDBusPendingCallWatcher*)));
+    connect(watcher, &QDBusPendingCallWatcher::finished,
+            this, &QFcitxPlatformInputContext::createInputContextFinished);
 }
 
 void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatcher* watcher)
@@ -433,10 +437,16 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
             delete data->proxy;
         }
         data->proxy = new FcitxQtInputContextProxy(m_connection->serviceName(), path, *m_connection->connection(), this);
-        connect(data->proxy, SIGNAL(CommitString(QString)), this, SLOT(commitString(QString)));
-        connect(data->proxy, SIGNAL(ForwardKey(uint, uint, int)), this, SLOT(forwardKey(uint, uint, int)));
-        connect(data->proxy, SIGNAL(UpdateFormattedPreedit(FcitxQtFormattedPreeditList,int)), this, SLOT(updateFormattedPreedit(FcitxQtFormattedPreeditList,int)));
-        connect(data->proxy, SIGNAL(DeleteSurroundingText(int,uint)), this, SLOT(deleteSurroundingText(int,uint)));
+        connect(data->proxy.data(), &FcitxQtInputContextProxy::CommitString,
+                this, &QFcitxPlatformInputContext::commitString);
+        connect(data->proxy.data(), &FcitxQtInputContextProxy::ForwardKey,
+                this, &QFcitxPlatformInputContext::forwardKey);
+        connect(data->proxy.data(),
+                &FcitxQtInputContextProxy::UpdateFormattedPreedit,
+                this, &QFcitxPlatformInputContext::updateFormattedPreedit);
+        connect(data->proxy.data(),
+                &FcitxQtInputContextProxy::DeleteSurroundingText,
+                this, &QFcitxPlatformInputContext::deleteSurroundingText);
 
         if (data->proxy->isValid()) {
             QWindow* window = qApp->focusWindow();
@@ -558,7 +568,8 @@ void QFcitxPlatformInputContext::createICData(QWindow* w)
         data = new FcitxQtICData;
         m_icMap[w->winId()] = data;
         m_windowToWidMap[w] = w->winId();
-        connect(w, SIGNAL(destroyed(QObject*)), this, SLOT(windowDestroyed(QObject*)));
+        connect(w, &QWindow::destroyed,
+                this, &QFcitxPlatformInputContext::windowDestroyed);
     }
     createInputContext(w->winId());
 }

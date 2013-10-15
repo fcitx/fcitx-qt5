@@ -1,14 +1,8 @@
 include_directories(${Qt5Core_INCLUDE_DIRS}
-                    ${Qt5Gui_INCLUDE_DIRS}
-                    ${Qt5DBus_INCLUDE_DIRS}
+  ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+  ${Qt5Gui_INCLUDE_DIRS}
+  ${Qt5DBus_INCLUDE_DIRS}
 )
-
-find_path(Qt5Gui_INCLUDE_DIRECTORY
-           NAMES QtGuiVersion
-           HINTS ${Qt5Gui_INCLUDE_DIRS})
-
-include_directories(${Qt5Gui_INCLUDE_DIRECTORY}/${Qt5Gui_VERSION}/QtGui)
-
 
 set(plugin_SRCS
     qfcitxplatforminputcontext.cpp

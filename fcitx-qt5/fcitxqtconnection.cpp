@@ -130,8 +130,10 @@ void FcitxQtConnectionPrivate::initialize() {
         m_watcher->addPath(info.filePath());
     }
 
-    connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(socketFileChanged()));
-    connect(m_watcher, SIGNAL(directoryChanged(QString)), this, SLOT(socketFileChanged()));
+    connect(m_watcher, &QFileSystemWatcher::fileChanged,
+            this, &FcitxQtConnectionPrivate::socketFileChanged);
+    connect(m_watcher, &QFileSystemWatcher::directoryChanged,
+            this, &FcitxQtConnectionPrivate::socketFileChanged);
     m_initialized = true;
 }
 
@@ -281,7 +283,8 @@ void FcitxQtConnectionPrivate::createConnection() {
 
     if (!m_connection) {
         QDBusConnection* connection = new QDBusConnection(QDBusConnection::sessionBus());
-        connect(m_serviceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), this, SLOT(imChanged(QString,QString,QString)));
+        connect(m_serviceWatcher, &QDBusServiceWatcher::serviceOwnerChanged,
+                this, &FcitxQtConnectionPrivate::imChanged);
         QDBusReply<bool> registered = connection->interface()->isServiceRegistered(m_serviceName);
         if (!registered.isValid() || !registered.value()) {
             delete connection;
@@ -294,7 +297,7 @@ void FcitxQtConnectionPrivate::createConnection() {
     Q_Q(FcitxQtConnection);
     if (m_connection) {
 
-        m_connection->connect ("org.freedesktop.DBus.Local",
+        m_connection->connect("org.freedesktop.DBus.Local",
                             "/org/freedesktop/DBus/Local",
                             "org.freedesktop.DBus.Local",
                             "Disconnected",

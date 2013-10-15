@@ -141,19 +141,17 @@ public:
 
     Q_INVOKABLE bool x11FilterEvent(uint keyval, uint keycode, uint state, bool press);
 
-
-public Q_SLOTS:
+private:
     void cursorRectChanged();
     void commitString(const QString& str);
-    void updateFormattedPreedit(const FcitxQtFormattedPreeditList& preeditList, int cursorPos);
+    void updateFormattedPreedit(const FcitxQtFormattedPreeditList& preeditList,
+                                int cursorPos);
     void deleteSurroundingText(int offset, uint nchar);
     void forwardKey(uint keyval, uint state, int type);
+    void windowDestroyed(QObject* object);
     void createInputContextFinished(QDBusPendingCallWatcher* watcher);
     void connected();
     void cleanUp();
-    void windowDestroyed(QObject* object);
-
-private:
     void createInputContext(WId w);
     bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
     bool checkAlgorithmically();
