@@ -626,7 +626,9 @@ bool QFcitxPlatformInputContext::x11FilterEvent(uint keyval, uint keycode, uint 
                                           (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY,
                                           QDateTime::currentDateTime().toTime_t()
                                       );
-    result.waitForFinished();
+    do {
+            QCoreApplication::processEvents (QEventLoop::WaitForMoreEvents);
+    } while (QCoreApplication::hasPendingEvents () || !result.isFinished ());    
 
     if (!m_connection->isConnected() || !result.isFinished() || result.isError() || result.value() <= 0) {
         return x11FilterEventFallback(keyval, keycode, state, press);
