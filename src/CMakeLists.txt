@@ -31,9 +31,9 @@ set_target_properties(fcitxplatforminputcontextplugin PROPERTIES
                         )
 
 target_link_libraries(fcitxplatforminputcontextplugin
-                          ${Qt5Core_LIBRARIES}
-                          ${Qt5Gui_LIBRARIES}
-                          ${Qt5DBus_LIBRARIES}
+                          Qt5::Core
+                          Qt5::Gui
+                          Qt5::DBus
                           fcitx-qt5
                          )
 

@@ -40,9 +40,9 @@ set_target_properties(fcitx-qt5
 
 target_link_libraries(
     fcitx-qt5
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES}
-    ${Qt5DBus_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui
+    Qt5::DBus
 )
 
 install(TARGETS fcitx-qt5 LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
