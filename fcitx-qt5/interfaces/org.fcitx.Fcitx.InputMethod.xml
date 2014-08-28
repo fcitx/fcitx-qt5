@@ -64,6 +64,8 @@
     </method>
     <method name="ToggleIM">
     </method>
+    <method name="ResetIMList">
+    </method>
     <method name="GetCurrentState">
       <arg name="state" direction="out" type="i"/>
     </method>
@@ -71,6 +73,9 @@
       <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName" value="FcitxQtInputMethodItemList" />
       <annotation name="org.qtproject.QtDBus.QtTypeName" value="FcitxQtInputMethodItemList" />
+    </property>
+    <property access="readwrite" type="s" name="CurrentIM">
+    <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
     </property>
   </interface>
 </node>
