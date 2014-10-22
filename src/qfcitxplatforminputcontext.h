@@ -28,7 +28,7 @@
 #include <QFileSystemWatcher>
 #include <QRect>
 #include "fcitx-qt5/fcitxqtformattedpreedit.h"
-#include <fcitx-qt5/fcitxqtinputcontextproxy.h>
+#include "fcitx-qt5/fcitxqtinputcontextproxy.h"
 
 #define MAX_COMPOSE_LEN 7
 
@@ -131,15 +131,13 @@ public:
     QFcitxPlatformInputContext();
     virtual ~QFcitxPlatformInputContext();
 
+    virtual bool filterEvent(const QEvent* event);
     virtual bool isValid() const;
-
     virtual void invokeAction(QInputMethod::Action , int cursorPosition);
     virtual void reset();
     virtual void commit();
     virtual void update(Qt::InputMethodQueries quries );
     virtual void setFocusObject(QObject* object);
-
-    Q_INVOKABLE bool x11FilterEvent(uint keyval, uint keycode, uint state, bool press);
 
 
 public Q_SLOTS:
@@ -152,6 +150,7 @@ public Q_SLOTS:
     void connected();
     void cleanUp();
     void windowDestroyed(QObject* object);
+
 
 private:
     void createInputContext(WId w);
@@ -185,7 +184,7 @@ private:
     FcitxQtInputContextProxy* validIC();
     FcitxQtInputContextProxy* validICByWindow(QWindow* window);
     FcitxQtInputContextProxy* validICByWId(WId wid);
-    bool x11FilterEventFallback(uint keyval, uint keycode, uint state, bool press);
+    bool filterEventFallback(uint keyval, uint keycode, uint state, bool press);
 
     FcitxQtInputMethodProxy* m_improxy;
     uint m_compose_buffer[MAX_COMPOSE_LEN + 1];

@@ -598,48 +598,70 @@ QKeyEvent* QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state, i
     return keyevent;
 }
 
-bool QFcitxPlatformInputContext::x11FilterEvent(uint keyval, uint keycode, uint state, bool press)
+bool QFcitxPlatformInputContext::filterEvent(const QEvent* event)
 {
-    if (key_filtered)
-        return false;
-
-    if (!inputMethodAccepted())
-        return false;
-
-    QObject *input = qApp->focusObject();
-
-    if (!input)
-        return false;
-
-    FcitxQtInputContextProxy* proxy = validICByWindow(qApp->focusWindow());
-
-    if (!proxy) {
-        return x11FilterEventFallback(keyval, keycode, state, press);
-    }
-
-    proxy->FocusIn();
-
-    QDBusPendingReply< int > result = proxy->ProcessKeyEvent(
-                                          keyval,
-                                          keycode,
-                                          state,
-                                          (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY,
-                                          QDateTime::currentDateTime().toTime_t()
-                                      );
     do {
-            QCoreApplication::processEvents (QEventLoop::WaitForMoreEvents);
-    } while (QCoreApplication::hasPendingEvents () || !result.isFinished ());    
+        if (event->type() != QEvent::KeyPress && event->type() != QEvent::KeyRelease) {
+            break;
+        }
 
-    if (!m_connection->isConnected() || !result.isFinished() || result.isError() || result.value() <= 0) {
-        return x11FilterEventFallback(keyval, keycode, state, press);
-    } else {
-        update(Qt::ImCursorRectangle);
-        return true;
-    }
-    return false;
+        const QKeyEvent* keyEvent = static_cast<const QKeyEvent*>(event);
+        quint32 keyval = keyEvent->nativeVirtualKey();
+        quint32 keycode = keyEvent->nativeScanCode();
+        quint32 state = keyEvent->nativeModifiers();
+        bool press = keyEvent->type() == QEvent::KeyPress;
+
+        if (key_filtered) {
+            break;
+        }
+
+        if (!inputMethodAccepted())
+            break;
+
+        QObject *input = qApp->focusObject();
+
+        if (!input) {
+            break;
+        }
+
+        FcitxQtInputContextProxy* proxy = validICByWindow(qApp->focusWindow());
+
+        if (!proxy) {
+            if (filterEventFallback(keyval, keycode, state, press)) {
+                return true;
+            } else {
+                break;
+            }
+        }
+
+        proxy->FocusIn();
+
+        QDBusPendingReply< int > result = proxy->ProcessKeyEvent(
+                                            keyval,
+                                            keycode,
+                                            state,
+                                            (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY,
+                                            QDateTime::currentDateTime().toTime_t()
+                                        );
+        do {
+            QCoreApplication::processEvents (QEventLoop::WaitForMoreEvents);
+        } while (QCoreApplication::hasPendingEvents () || !result.isFinished ());
+
+        if (!m_connection->isConnected() || !result.isFinished() || result.isError() || result.value() <= 0) {
+            if (filterEventFallback(keyval, keycode, state, press)) {
+                return true;
+            } else {
+                break;
+            }
+        } else {
+            update(Qt::ImCursorRectangle);
+            return true;
+        }
+    } while(0);
+    return QPlatformInputContext::filterEvent(event);
 }
 
-bool QFcitxPlatformInputContext::x11FilterEventFallback(uint keyval, uint keycode, uint state, bool press)
+bool QFcitxPlatformInputContext::filterEventFallback(uint keyval, uint keycode, uint state, bool press)
 {
     Q_UNUSED(keycode);
     if (processCompose(keyval, state, (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY)) {
