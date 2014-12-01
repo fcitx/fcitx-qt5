@@ -107,6 +107,7 @@ FcitxQtConnectionPrivate::FcitxQtConnectionPrivate(FcitxQtConnection* conn) : QO
     ,m_connectedOnce(false)
     ,m_initialized(false)
 {
+    qDebug() << m_serviceName;
 }
 
 FcitxQtConnectionPrivate::~FcitxQtConnectionPrivate()
@@ -189,10 +190,16 @@ int FcitxQtConnectionPrivate::displayNumber() {
         QByteArray displayNumber("0");
         QByteArray display(qgetenv("DISPLAY"));
         int pos = display.indexOf(':');
-        ++pos;
-        int pos2 = display.indexOf('.', pos);
-        if (pos2 > 0)
-            displayNumber = display.mid(pos, pos2 - pos);
+
+        if (pos >= 0) {
+            ++pos;
+            int pos2 = display.indexOf('.', pos);
+            if (pos2 > 0) {
+                displayNumber = display.mid(pos, pos2 - pos);
+            } else {
+                displayNumber = display.mid(pos);
+            }
+        }
 
         bool ok;
         int d = displayNumber.toInt(&ok);
