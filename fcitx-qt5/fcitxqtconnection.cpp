@@ -107,7 +107,6 @@ FcitxQtConnectionPrivate::FcitxQtConnectionPrivate(FcitxQtConnection* conn) : QO
     ,m_connectedOnce(false)
     ,m_initialized(false)
 {
-    qDebug() << m_serviceName;
 }
 
 FcitxQtConnectionPrivate::~FcitxQtConnectionPrivate()
