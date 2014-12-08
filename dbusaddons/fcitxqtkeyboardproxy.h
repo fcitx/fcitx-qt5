@@ -20,12 +20,12 @@
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 #include "fcitxqtkeyboardlayout.h"
-#include "fcitxqt_export.h"
+#include "fcitxqtdbusaddons_export.h"
 
 /*
  * Proxy class for interface org.fcitx.Fcitx.Keyboard
  */
-class FCITX_QT_EXPORT_API FcitxQtKeyboardProxy: public QDBusAbstractInterface
+class FCITXQTDBUSADDONS_EXPORT FcitxQtKeyboardProxy: public QDBusAbstractInterface
 {
     Q_OBJECT
 public:

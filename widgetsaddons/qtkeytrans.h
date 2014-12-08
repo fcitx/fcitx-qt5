@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2011~2012 by CSSlayer                                   *
+ *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,42 +17,12 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef FCITX_QT_KEYBOARD_LAYOUT_H
-#define FCITX_QT_KEYBOARD_LAYOUT_H
+#ifndef QTKEYTRANS_H
+#define QTKEYTRANS_H
+#include <qnamespace.h>
 
-#include "fcitxqt_export.h"
+bool keyQtToSym(int qtcode, Qt::KeyboardModifiers mod, int& sym, unsigned int& state);
 
-// Qt
-#include <QtCore/QString>
-#include <QtCore/QMetaType>
-#include <QtDBus/QDBusArgument>
-
-class FCITX_QT_EXPORT_API FcitxQtKeyboardLayout
-{
-public:
-    const QString& layout() const;
-    const QString& variant() const;
-    const QString& name() const;
-    const QString& langCode() const;
-    void setLayout(const QString& layout);
-    void setLangCode(const QString& lang);
-    void setName(const QString& name);
-    void setVariant(const QString& variant);
-
-    static void registerMetaType();
-private:
-    QString m_layout;
-    QString m_variant;
-    QString m_name;
-    QString m_langCode;
-};
-
-typedef QList<FcitxQtKeyboardLayout> FcitxQtKeyboardLayoutList;
-
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtKeyboardLayout& l);
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtKeyboardLayout& l);
-
-Q_DECLARE_METATYPE(FcitxQtKeyboardLayout)
-Q_DECLARE_METATYPE(FcitxQtKeyboardLayoutList)
+bool symToKeyQt(int sym, unsigned int state, int& qtcode, Qt::KeyboardModifiers& mod);
 
 #endif

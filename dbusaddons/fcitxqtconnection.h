@@ -20,7 +20,7 @@
 #ifndef FCITXQTCONNECTION_H
 #define FCITXQTCONNECTION_H
 
-#include "fcitxqt_export.h"
+#include "fcitxqtdbusaddons_export.h"
 
 #include <QtCore/QObject>
 
@@ -32,7 +32,7 @@ class FcitxQtConnectionPrivate;
 /**
  * dbus connection to fcitx
  **/
-class FCITX_QT_EXPORT_API FcitxQtConnection : public QObject {
+class FCITXQTDBUSADDONS_EXPORT FcitxQtConnection : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool autoReconnect READ autoReconnect WRITE setAutoReconnect)
     Q_PROPERTY(bool connected READ isConnected)

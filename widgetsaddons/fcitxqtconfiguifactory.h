@@ -17,35 +17,49 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef FCITX_QT_FORMATTED_PREEDIT_H
-#define FCITX_QT_FORMATTED_PREEDIT_H
+#ifndef FCITX_QT_CONFIG_UI_FACTORY_H
+#define FCITX_QT_CONFIG_UI_FACTORY_H
 
-#include "fcitxqt_export.h"
+#include <QtCore/QObject>
+#include <QtCore/QMap>
+#include <QtCore/QStringList>
 
-#include <QtCore/QMetaType>
-#include <QtDBus/QDBusArgument>
+#include "fcitxqtwidgetsaddons_export.h"
+#include "fcitxqtconfiguiwidget.h"
+#include "fcitxqtconfiguiplugin.h"
 
-class FCITX_QT_EXPORT_API FcitxQtFormattedPreedit {
+class FcitxQtConfigUIFactoryPrivate;
+/**
+ * ui plugin factory.
+ **/
+class FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIFactory : public QObject
+{
+    Q_OBJECT
 public:
-    const QString& string() const;
-    qint32 format() const;
-    void setString(const QString& str);
-    void setFormat(qint32 format);
-
-    static void registerMetaType();
-
-    bool operator ==(const FcitxQtFormattedPreedit& preedit) const;
+    /**
+     * create a plugin factory
+     *
+     * @param parent object parent
+     **/
+    explicit FcitxQtConfigUIFactory(QObject* parent = 0);
+    virtual ~FcitxQtConfigUIFactory();
+    /**
+     * create widget based on file name, it might return 0 if there is no match
+     *
+     * @param file file name need to be configured
+     * @return FcitxQtConfigUIWidget*
+     **/
+    FcitxQtConfigUIWidget* create(const QString& file);
+    /**
+     * a simplified version of create, but it just test if there is a valid entry or not
+     *
+     * @param file file name
+     * @return bool
+     **/
+    bool test(const QString& file);
 private:
-    QString m_string;
-    qint32 m_format;
+    FcitxQtConfigUIFactoryPrivate* d_ptr;
+    Q_DECLARE_PRIVATE(FcitxQtConfigUIFactory);
 };
 
-typedef QList<FcitxQtFormattedPreedit> FcitxQtFormattedPreeditList;
-
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtFormattedPreedit& im);
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtFormattedPreedit& im);
-
-Q_DECLARE_METATYPE(FcitxQtFormattedPreedit)
-Q_DECLARE_METATYPE(FcitxQtFormattedPreeditList)
-
-#endif
+#endif // FCITX_CONFIG_UI_FACTORY_H

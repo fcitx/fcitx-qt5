@@ -54,7 +54,7 @@ bool FcitxQtFormattedPreedit::operator==(const FcitxQtFormattedPreedit& preedit)
     return (preedit.m_format == m_format) && (preedit.m_string == m_string);
 }
 
-FCITX_QT_EXPORT_API
+FCITXQTDBUSADDONS_EXPORT
 QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtFormattedPreedit& preedit)
 {
     argument.beginStructure();
@@ -64,7 +64,7 @@ QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtFormattedPreedit
     return argument;
 }
 
-FCITX_QT_EXPORT_API
+FCITXQTDBUSADDONS_EXPORT
 const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtFormattedPreedit& preedit)
 {
     QString str;

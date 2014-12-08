@@ -22,74 +22,79 @@
 #include <QDBusMetaType>
 
 // self
-#include "fcitxqtinputmethoditem.h"
+#include "fcitxqtkeyboardlayout.h"
 
-bool FcitxQtInputMethodItem::enabled() const
+const QString& FcitxQtKeyboardLayout::layout() const
 {
-    return m_enabled;
+    return m_layout;
 }
-const QString& FcitxQtInputMethodItem::langCode() const
+const QString& FcitxQtKeyboardLayout::langCode() const
 {
     return m_langCode;
 }
-const QString& FcitxQtInputMethodItem::name() const
+const QString& FcitxQtKeyboardLayout::name() const
 {
     return m_name;
 }
-const QString& FcitxQtInputMethodItem::uniqueName() const
+
+const QString& FcitxQtKeyboardLayout::variant() const
 {
-    return m_uniqueName;
+    return m_variant;
 }
-void FcitxQtInputMethodItem::setEnabled(bool enable)
+
+void FcitxQtKeyboardLayout::setLayout(const QString& layout)
 {
-    m_enabled = enable;
+    m_layout = layout;
 }
-void FcitxQtInputMethodItem::setLangCode(const QString& lang)
+
+void FcitxQtKeyboardLayout::setLangCode(const QString& lang)
 {
     m_langCode = lang;
 }
-void FcitxQtInputMethodItem::setName(const QString& name)
+
+void FcitxQtKeyboardLayout::setName(const QString& name)
 {
     m_name = name;
 }
-void FcitxQtInputMethodItem::setUniqueName(const QString& name)
+
+void FcitxQtKeyboardLayout::setVariant(const QString& variant)
 {
-    m_uniqueName = name;
+    m_variant = variant;
 }
 
-void FcitxQtInputMethodItem::registerMetaType()
+void FcitxQtKeyboardLayout::registerMetaType()
 {
-    qRegisterMetaType<FcitxQtInputMethodItem>("FcitxQtInputMethodItem");
-    qDBusRegisterMetaType<FcitxQtInputMethodItem>();
-    qRegisterMetaType<FcitxQtInputMethodItemList>("FcitxQtInputMethodItemList");
-    qDBusRegisterMetaType<FcitxQtInputMethodItemList>();
+    qRegisterMetaType<FcitxQtKeyboardLayout>("FcitxQtKeyboardLayout");
+    qDBusRegisterMetaType<FcitxQtKeyboardLayout>();
+    qRegisterMetaType<FcitxQtKeyboardLayoutList>("FcitxQtKeyboardLayoutList");
+    qDBusRegisterMetaType<FcitxQtKeyboardLayoutList>();
 }
 
-FCITX_QT_EXPORT_API
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtInputMethodItem& im)
+FCITXQTDBUSADDONS_EXPORT
+QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtKeyboardLayout& layout)
 {
     argument.beginStructure();
-    argument << im.name();
-    argument << im.uniqueName();
-    argument << im.langCode();
-    argument << im.enabled();
+    argument << layout.layout();
+    argument << layout.variant();
+    argument << layout.name();
+    argument << layout.langCode();
     argument.endStructure();
     return argument;
 }
 
-FCITX_QT_EXPORT_API
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtInputMethodItem& im)
+FCITXQTDBUSADDONS_EXPORT
+const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtKeyboardLayout& layout)
 {
+    QString l;
+    QString variant;
     QString name;
-    QString uniqueName;
     QString langCode;
-    bool enabled;
     argument.beginStructure();
-    argument >> name >> uniqueName >> langCode >> enabled;
+    argument >> l >> variant >> name >> langCode;
     argument.endStructure();
-    im.setName(name);
-    im.setUniqueName(uniqueName);
-    im.setLangCode(langCode);
-    im.setEnabled(enabled);
+    layout.setLayout(l);
+    layout.setVariant(variant);
+    layout.setName(name);
+    layout.setLangCode(langCode);
     return argument;
 }

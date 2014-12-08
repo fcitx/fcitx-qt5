@@ -20,12 +20,12 @@
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 #include "fcitxqtformattedpreedit.h"
-#include "fcitxqt_export.h"
+#include "fcitxqtdbusaddons_export.h"
 
 /*
  * Proxy class for interface org.fcitx.Fcitx.InputContext
  */
-class FCITX_QT_EXPORT_API FcitxQtInputContextProxy: public QDBusAbstractInterface
+class FCITXQTDBUSADDONS_EXPORT FcitxQtInputContextProxy: public QDBusAbstractInterface
 {
     Q_OBJECT
 public:

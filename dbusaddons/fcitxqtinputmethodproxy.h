@@ -20,12 +20,12 @@
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 #include "fcitxqtinputmethoditem.h"
-#include "fcitxqt_export.h"
+#include "fcitxqtdbusaddons_export.h"
 
 /*
  * Proxy class for interface org.fcitx.Fcitx.InputMethod
  */
-class FCITX_QT_EXPORT_API FcitxQtInputMethodProxy: public QDBusAbstractInterface
+class FCITXQTDBUSADDONS_EXPORT FcitxQtInputMethodProxy: public QDBusAbstractInterface
 {
     Q_OBJECT
 public:

@@ -33,9 +33,9 @@
 #include "fcitx-compose-data.h"
 
 #include "qfcitxplatforminputcontext.h"
-#include "fcitx-qt5/fcitxqtinputcontextproxy.h"
-#include "fcitx-qt5/fcitxqtinputmethodproxy.h"
-#include <fcitx-qt5/fcitxqtconnection.h>
+#include "fcitxqtinputcontextproxy.h"
+#include "fcitxqtinputmethodproxy.h"
+#include "fcitxqtconnection.h"
 #include "keyuni.h"
 #include "utils.h"
 

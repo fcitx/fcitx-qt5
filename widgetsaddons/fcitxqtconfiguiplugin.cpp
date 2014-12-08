@@ -17,11 +17,14 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef FCITXQT_EXPORT_H
-#define FCITXQT_EXPORT_H
+#include "fcitxqtconfiguiplugin.h"
 
-#ifndef FCITX_QT_EXPORT_API
-#define FCITX_QT_EXPORT_API __attribute__ ((visibility("default")))
-#endif
+FcitxQtConfigUIPlugin::FcitxQtConfigUIPlugin(QObject* parent): QObject(parent)
+{
 
-#endif // FCITXQT_EXPORT_H
+}
+
+FcitxQtConfigUIPlugin::~FcitxQtConfigUIPlugin()
+{
+
+}

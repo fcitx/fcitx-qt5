@@ -27,8 +27,8 @@
 #include <QPointer>
 #include <QFileSystemWatcher>
 #include <QRect>
-#include "fcitx-qt5/fcitxqtformattedpreedit.h"
-#include "fcitx-qt5/fcitxqtinputcontextproxy.h"
+#include "fcitxqtformattedpreedit.h"
+#include "fcitxqtinputcontextproxy.h"
 
 #define MAX_COMPOSE_LEN 7
 
