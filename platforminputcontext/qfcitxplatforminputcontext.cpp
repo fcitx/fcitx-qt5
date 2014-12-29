@@ -134,7 +134,8 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
     m_cursorPos(0),
     m_useSurroundingText(false),
     m_syncMode(true),
-    m_lastWId(0)
+    m_lastWId(0),
+    m_destroy(false)
 {
     FcitxQtFormattedPreedit::registerMetaType();
 
@@ -147,6 +148,7 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
 
 QFcitxPlatformInputContext::~QFcitxPlatformInputContext()
 {
+    m_destroy = true;
     cleanUp();
 }
 
@@ -184,7 +186,9 @@ void QFcitxPlatformInputContext::cleanUp()
         m_improxy = 0;
     }
 
-    reset();
+    if (!m_destroy) {
+        commitPreedit();
+    }
 }
 
 bool QFcitxPlatformInputContext::isValid() const
@@ -672,12 +676,18 @@ bool QFcitxPlatformInputContext::filterEventFallback(uint keyval, uint keycode, 
 
 FcitxQtInputContextProxy* QFcitxPlatformInputContext::validIC()
 {
+    if (m_icMap.isEmpty()) {
+        return 0;
+    }
     QWindow* window = qApp->focusWindow();
     return validICByWindow(window);
 }
 
 FcitxQtInputContextProxy* QFcitxPlatformInputContext::validICByWId(WId wid)
 {
+    if (m_icMap.isEmpty()) {
+        return 0;
+    }
     FcitxQtICData* icData = m_icMap.value(wid);
     if (!icData)
         return 0;
@@ -691,9 +701,13 @@ FcitxQtInputContextProxy* QFcitxPlatformInputContext::validICByWId(WId wid)
 
 FcitxQtInputContextProxy* QFcitxPlatformInputContext::validICByWindow(QWindow* w)
 {
-    if (!w)
+    if (!w) {
         return 0;
+    }
 
+    if (m_icMap.isEmpty()) {
+        return 0;
+    }
     return validICByWId(w->winId());
 }
 

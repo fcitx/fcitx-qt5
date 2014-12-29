@@ -202,6 +202,7 @@ private:
     QHash<WId, FcitxQtICData*> m_icMap;
     QHash<QObject*, WId> m_windowToWidMap;
     WId m_lastWId;
+    bool m_destroy;
 };
 
 #endif // QFCITXPLATFORMINPUTCONTEXT_H
