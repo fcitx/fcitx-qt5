@@ -46,7 +46,7 @@
 
 #include <QKeyEvent>
 #include <QTimer>
-#include <QtCore/QHash>
+#include <QHash>
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QApplication>
@@ -492,20 +492,22 @@ void FcitxQtKeySequenceButton::keyReleaseEvent(QKeyEvent *e)
             || e->key() == Qt::Key_Meta
             || e->key() == Qt::Key_Alt)) {
         d->side = MS_Unknown;
-#ifdef Q_WS_X11
-        if (e->nativeVirtualKey() == FcitxKey_Control_L
-         || e->nativeVirtualKey() == FcitxKey_Alt_L
-         || e->nativeVirtualKey() == FcitxKey_Shift_L
-         || e->nativeVirtualKey() == FcitxKey_Super_L) {
-            d->side = MS_Left;
+
+        if (qApp->platformName() == "xcb") {
+
+            if (e->nativeVirtualKey() == FcitxKey_Control_L
+            || e->nativeVirtualKey() == FcitxKey_Alt_L
+            || e->nativeVirtualKey() == FcitxKey_Shift_L
+            || e->nativeVirtualKey() == FcitxKey_Super_L) {
+                d->side = MS_Left;
+            }
+            if (e->nativeVirtualKey() == FcitxKey_Control_R
+            || e->nativeVirtualKey() == FcitxKey_Alt_R
+            || e->nativeVirtualKey() == FcitxKey_Shift_R
+            || e->nativeVirtualKey() == FcitxKey_Super_R) {
+                d->side = MS_Right;
+            }
         }
-        if (e->nativeVirtualKey() == FcitxKey_Control_R
-         || e->nativeVirtualKey() == FcitxKey_Alt_R
-         || e->nativeVirtualKey() == FcitxKey_Shift_R
-         || e->nativeVirtualKey() == FcitxKey_Super_R) {
-            d->side = MS_Right;
-        }
-#endif
         int keyQt = e->key() | d->modifierKeys;
         d->keySequence = QKeySequence(keyQt);
         d->doneRecording();
