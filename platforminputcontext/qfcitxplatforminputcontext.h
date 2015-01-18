@@ -22,6 +22,7 @@
 
 #include <qpa/qplatforminputcontext.h>
 #include <QWindow>
+#include <QKeyEvent>
 #include <QDBusConnection>
 #include <QDBusServiceWatcher>
 #include <QPointer>
@@ -122,6 +123,36 @@ struct FcitxQtICData {
     int surroundingCursor;
 };
 
+
+class ProcessKeyWatcher : public QDBusPendingCallWatcher
+{
+    Q_OBJECT
+public:
+    ProcessKeyWatcher(const QKeyEvent& event, QWindow* window, const QDBusPendingCall &call, QObject *parent = 0) :
+        QDBusPendingCallWatcher(call, parent)
+       ,m_event(event.type(), event.key(), event.modifiers(),
+                event.nativeScanCode(), event.nativeVirtualKey(), event.nativeModifiers(),
+                event.text(), event.isAutoRepeat(), event.count())
+       ,m_window(window)
+    {
+    }
+
+    virtual ~ProcessKeyWatcher() {
+    }
+
+    const QKeyEvent& event() {
+        return m_event;
+    }
+
+    QWindow* window() {
+        return m_window.data();
+    }
+
+private:
+    QKeyEvent m_event;
+    QPointer<QWindow> m_window;
+};
+
 class FcitxQtInputMethodProxy;
 
 class QFcitxPlatformInputContext : public QPlatformInputContext
@@ -203,6 +234,8 @@ private:
     QHash<QObject*, WId> m_windowToWidMap;
     WId m_lastWId;
     bool m_destroy;
+private slots:
+    void processKeyEventFinished(QDBusPendingCallWatcher*);
 };
 
 #endif // QFCITXPLATFORMINPUTCONTEXT_H

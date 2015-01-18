@@ -24,6 +24,9 @@
 #include <QTextCharFormat>
 #include <QPalette>
 #include <QWindow>
+#include <qpa/qplatformscreen.h>
+#include <qpa/qplatformcursor.h>
+#include <qpa/qwindowsysteminterface.h>
 
 #include <unistd.h>
 #include <errno.h>
@@ -640,28 +643,88 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent* event)
 
         proxy->FocusIn();
 
-        QDBusPendingReply< int > result = proxy->ProcessKeyEvent(
-                                            keyval,
-                                            keycode,
-                                            state,
-                                            (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY,
-                                            QDateTime::currentDateTime().toTime_t()
-                                        );
-        result.waitForFinished();
+        QDBusPendingReply< int > reply = proxy->ProcessKeyEvent(keyval,
+                                                                keycode,
+                                                                state,
+                                                                (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY,
+                                                                QDateTime::currentDateTime().toTime_t());
 
-        if (!m_connection->isConnected() || !result.isFinished() || result.isError() || result.value() <= 0) {
-            if (filterEventFallback(keyval, keycode, state, press)) {
-                return true;
+
+        if (Q_UNLIKELY(m_syncMode)) {
+            reply.waitForFinished();
+
+            if (!m_connection->isConnected() || !reply.isFinished() || reply.isError() || reply.value() <= 0) {
+                if (filterEventFallback(keyval, keycode, state, press)) {
+                    return true;
+                } else {
+                    break;
+                }
             } else {
-                break;
+                update(Qt::ImCursorRectangle);
+                return true;
             }
-        } else {
-            update(Qt::ImCursorRectangle);
+        }
+        else {
+            ProcessKeyWatcher* watcher = new ProcessKeyWatcher(*keyEvent, qApp->focusWindow(), reply, this);
+            connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+                    this, SLOT(processKeyEventFinished(QDBusPendingCallWatcher*)));
             return true;
         }
     } while(0);
     return QPlatformInputContext::filterEvent(event);
 }
+
+void QFcitxPlatformInputContext::processKeyEventFinished(QDBusPendingCallWatcher* w)
+{
+    ProcessKeyWatcher* watcher = static_cast<ProcessKeyWatcher*>(w);
+    QDBusPendingReply< int > result(*watcher);
+    bool filtered = false;
+
+    QWindow* window = watcher->window();
+    // if window is already destroyed, we can only throw this event away.
+    if (!window) {
+        return;
+    }
+
+    const QKeyEvent& keyEvent = watcher->event();
+
+    // use same variable name as in QXcbKeyboard::handleKeyEvent
+    QEvent::Type type = keyEvent.type();
+    int qtcode = keyEvent.key();
+    Qt::KeyboardModifiers modifiers = keyEvent.modifiers();
+    quint32 code = keyEvent.nativeScanCode();
+    quint32 sym = keyEvent.nativeVirtualKey();
+    quint32 state = keyEvent.nativeModifiers();
+    QString string = keyEvent.text();
+    bool isAutoRepeat = keyEvent.isAutoRepeat();
+    ulong time = keyEvent.timestamp();
+
+    if (result.isError() || result.value() <= 0) {
+        filtered = filterEventFallback(sym, code, state, type == QEvent::KeyPress);
+    } else {
+        filtered = true;
+    }
+
+    if (!result.isError()) {
+        update(Qt::ImCursorRectangle);
+    }
+
+    if (!filtered) {
+        // copied from QXcbKeyboard::handleKeyEvent()
+        if (type == QEvent::KeyPress && qtcode == Qt::Key_Menu) {
+            const QPoint globalPos = window->screen()->handle()->cursor()->pos();
+            const QPoint pos = window->mapFromGlobal(globalPos);            QWindowSystemInterface::handleContextMenuEvent(window, false, pos, globalPos, modifiers);
+        }
+        QWindowSystemInterface::handleExtendedKeyEvent(window, time, type, qtcode, modifiers,
+                                                       code, sym, state, string, isAutoRepeat);
+
+        if (isAutoRepeat && type == QEvent::KeyRelease) {
+            QWindowSystemInterface::handleExtendedKeyEvent(window, time, QEvent::KeyPress, qtcode, modifiers,
+                                                           code, sym, state, string, isAutoRepeat);
+        }
+    }
+}
+
 
 bool QFcitxPlatformInputContext::filterEventFallback(uint keyval, uint keycode, uint state, bool press)
 {
