@@ -647,9 +647,7 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent* event)
                                             (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY,
                                             QDateTime::currentDateTime().toTime_t()
                                         );
-        do {
-            QCoreApplication::processEvents (QEventLoop::WaitForMoreEvents);
-        } while (QCoreApplication::hasPendingEvents () || !result.isFinished ());
+        result.waitForFinished();
 
         if (!m_connection->isConnected() || !result.isFinished() || result.isError() || result.value() <= 0) {
             if (filterEventFallback(keyval, keycode, state, press)) {
