@@ -28,6 +28,7 @@
 #include <QPointer>
 #include <QFileSystemWatcher>
 #include <QRect>
+#include <xkbcommon/xkbcommon-compose.h>
 #include "fcitxqtformattedpreedit.h"
 #include "fcitxqtinputcontextproxy.h"
 
@@ -153,6 +154,30 @@ private:
     QPointer<QWindow> m_window;
 };
 
+struct XkbContextDeleter
+{
+    static inline void cleanup(struct xkb_context* pointer)
+    {
+        if (pointer) xkb_context_unref(pointer);
+    }
+};
+
+struct XkbComposeTableDeleter
+{
+    static inline void cleanup(struct xkb_compose_table* pointer)
+    {
+        if (pointer) xkb_compose_table_unref(pointer);
+    }
+};
+
+struct XkbComposeStateDeleter
+{
+    static inline void cleanup(struct xkb_compose_state* pointer)
+    {
+        if (pointer) xkb_compose_state_unref(pointer);
+    }
+};
+
 class FcitxQtInputMethodProxy;
 
 class QFcitxPlatformInputContext : public QPlatformInputContext
@@ -234,6 +259,9 @@ private:
     QHash<QObject*, WId> m_windowToWidMap;
     WId m_lastWId;
     bool m_destroy;
+    QScopedPointer<struct xkb_context, XkbContextDeleter> m_xkbContext;
+    QScopedPointer<struct xkb_compose_table, XkbComposeTableDeleter>  m_xkbComposeTable;
+    QScopedPointer<struct xkb_compose_state, XkbComposeStateDeleter> m_xkbComposeState;
 private slots:
     void processKeyEventFinished(QDBusPendingCallWatcher*);
 };

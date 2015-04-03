@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.5)
+cmake_minimum_required(VERSION 2.8.12)
 
 project(fcitx-qt5)
 
@@ -10,7 +10,6 @@ find_package(ECM 1.4.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(GNUInstallDirs)
-include(FindPkgConfig)
 include(FeatureSummary)
 include(GenerateExportHeader)
 include(ECMPackageConfigHelpers)
@@ -19,6 +18,7 @@ include(ECMGenerateHeaders)
 
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Widgets)
 find_package(Qt5Gui ${REQUIRED_QT_VERSION} REQUIRED Private)
+find_package(XKBCommon 0.5.0 REQUIRED COMPONENTS XKBCommon)
 pkg_check_modules(FCITX_UTILS fcitx-utils REQUIRED)
 pkg_check_modules(FCITX_CONFIG fcitx-config REQUIRED)
 

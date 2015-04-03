@@ -33,7 +33,6 @@
 #include <signal.h>
 
 #include "keyserver_x11.h"
-#include "fcitx-compose-data.h"
 
 #include "qfcitxplatforminputcontext.h"
 #include "fcitxqtinputcontextproxy.h"
@@ -41,41 +40,6 @@
 #include "fcitxqtconnection.h"
 #include "keyuni.h"
 #include "utils.h"
-
-typedef struct _FcitxComposeTableCompact FcitxComposeTableCompact;
-struct _FcitxComposeTableCompact {
-    const quint32 *data;
-    int max_seq_len;
-    int n_index_size;
-    int n_index_stride;
-};
-
-static const FcitxComposeTableCompact fcitx_compose_table_compact = {
-    fcitx_compose_seqs_compact,
-    5,
-    23,
-    6
-};
-
-static const uint fcitx_compose_ignore[] = {
-    XK_Shift_L,
-    XK_Shift_R,
-    XK_Control_L,
-    XK_Control_R,
-    XK_Caps_Lock,
-    XK_Shift_Lock,
-    XK_Meta_L,
-    XK_Meta_R,
-    XK_Alt_L,
-    XK_Alt_R,
-    XK_Super_L,
-    XK_Super_R,
-    XK_Hyper_L,
-    XK_Hyper_R,
-    XK_Mode_switch,
-    XK_ISO_Level3_Shift,
-    XK_VoidSymbol
-};
 
 static bool key_filtered = false;
 
@@ -98,37 +62,19 @@ get_boolean_env(const char *name,
     return true;
 }
 
-static int
-compare_seq_index(const void *key, const void *value)
+static inline const char*
+get_locale()
 {
-    const uint *keysyms = (const uint *)key;
-    const quint32 *seq = (const quint32 *)value;
+    const char* locale = getenv("LC_ALL");
+    if (!locale)
+        locale = getenv("LC_CTYPE");
+    if (!locale)
+        locale = getenv("LANG");
+    if (!locale)
+        locale = "C";
 
-    if (keysyms[0] < seq[0])
-        return -1;
-    else if (keysyms[0] > seq[0])
-        return 1;
-    return 0;
+    return locale;
 }
-
-static int
-compare_seq(const void *key, const void *value)
-{
-    int i = 0;
-    const uint *keysyms = (const uint *)key;
-    const quint32 *seq = (const quint32 *)value;
-
-    while (keysyms[i]) {
-        if (keysyms[i] < seq[i])
-            return -1;
-        else if (keysyms[i] > seq[i])
-            return 1;
-        i++;
-    }
-
-    return 0;
-}
-
 
 QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
     m_connection(new FcitxQtConnection(this)),
@@ -138,7 +84,10 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
     m_useSurroundingText(false),
     m_syncMode(true),
     m_lastWId(0),
-    m_destroy(false)
+    m_destroy(false),
+    m_xkbContext(xkb_context_new(XKB_CONTEXT_NO_FLAGS)),
+    m_xkbComposeTable(m_xkbContext ? xkb_compose_table_new_from_locale(m_xkbContext.data(), get_locale(), XKB_COMPOSE_COMPILE_NO_FLAGS) : 0),
+    m_xkbComposeState(m_xkbComposeTable ? xkb_compose_state_new(m_xkbComposeTable.data(), XKB_COMPOSE_STATE_NO_FLAGS) : 0)
 {
     FcitxQtFormattedPreedit::registerMetaType();
 
@@ -771,195 +720,34 @@ FcitxQtInputContextProxy* QFcitxPlatformInputContext::validICByWindow(QWindow* w
 bool QFcitxPlatformInputContext::processCompose(uint keyval, uint state, FcitxKeyEventType event)
 {
     Q_UNUSED(state);
-    int i;
 
-    if (event == FCITX_RELEASE_KEY)
+    if (!m_xkbComposeTable || event == FCITX_RELEASE_KEY)
         return false;
 
-    for (i = 0; fcitx_compose_ignore[i] != XK_VoidSymbol; i++) {
-        if (keyval == fcitx_compose_ignore[i])
-            return false;
-    }
+    struct xkb_compose_state* xkbComposeState = m_xkbComposeState.data();
 
-    m_compose_buffer[m_n_compose ++] = keyval;
-    m_compose_buffer[m_n_compose] = 0;
-
-    if (checkCompactTable(&fcitx_compose_table_compact)) {
-        // qDebug () << "checkCompactTable ->true";
-        return true;
-    }
-
-    if (checkAlgorithmically()) {
-        // qDebug () << "checkAlgorithmically ->true";
-        return true;
-    }
-
-    if (m_n_compose > 1) {
-        m_compose_buffer[0] = 0;
-        m_n_compose = 0;
-        return true;
-    } else {
-        m_compose_buffer[0] = 0;
-        m_n_compose = 0;
+    enum xkb_compose_feed_result result = xkb_compose_state_feed(xkbComposeState, keyval);
+    if (result == XKB_COMPOSE_FEED_IGNORED) {
         return false;
     }
+
+    enum xkb_compose_status status = xkb_compose_state_get_status(xkbComposeState);
+    if (status == XKB_COMPOSE_NOTHING) {
+        return 0;
+    } else if (status == XKB_COMPOSE_COMPOSED) {
+        char buffer[] = {'\0', '\0', '\0', '\0', '\0', '\0', '\0'};
+        int length = xkb_compose_state_get_utf8(xkbComposeState, buffer, sizeof(buffer));
+        xkb_compose_state_reset(xkbComposeState);
+        if (length != 0) {
+            commitString(QString::fromUtf8(buffer));
+        }
+
+    } else if (status == XKB_COMPOSE_CANCELLED) {
+        xkb_compose_state_reset(xkbComposeState);
+    }
+
+    return true;
 }
 
-#define IS_DEAD_KEY(k) \
-    ((k) >= XK_dead_grave && (k) <= (XK_dead_dasia+1))
-
-bool QFcitxPlatformInputContext::checkAlgorithmically()
-{
-    int i;
-    quint32 combination_buffer[MAX_COMPOSE_LEN];
-
-    if (m_n_compose >= MAX_COMPOSE_LEN)
-        return false;
-
-    for (i = 0; i < m_n_compose && IS_DEAD_KEY(m_compose_buffer[i]); i++);
-    if (i == m_n_compose)
-        return true;
-
-    if (i > 0 && i == m_n_compose - 1) {
-        combination_buffer[0] = FcitxKeySymToUnicode(m_compose_buffer[i]);
-        combination_buffer[m_n_compose] = 0;
-        i--;
-        while (i >= 0) {
-            switch (m_compose_buffer[i]) {
-#define CASE(keysym, unicode) \
-case XK_dead_##keysym: combination_buffer[i + 1] = unicode; break
-                CASE(grave, 0x0300);
-                CASE(acute, 0x0301);
-                CASE(circumflex, 0x0302);
-                CASE(tilde, 0x0303);  /* Also used with perispomeni, 0x342. */
-                CASE(macron, 0x0304);
-                CASE(breve, 0x0306);
-                CASE(abovedot, 0x0307);
-                CASE(diaeresis, 0x0308);
-                CASE(hook, 0x0309);
-                CASE(abovering, 0x030A);
-                CASE(doubleacute, 0x030B);
-                CASE(caron, 0x030C);
-                CASE(abovecomma, 0x0313);  /* Equivalent to psili */
-                CASE(abovereversedcomma, 0x0314);  /* Equivalent to dasia */
-                CASE(horn, 0x031B);  /* Legacy use for psili, 0x313 (or 0x343). */
-                CASE(belowdot, 0x0323);
-                CASE(cedilla, 0x0327);
-                CASE(ogonek, 0x0328);  /* Legacy use for dasia, 0x314.*/
-                CASE(iota, 0x0345);
-                CASE(voiced_sound, 0x3099);  /* Per Markus Kuhn keysyms.txt file. */
-                CASE(semivoiced_sound, 0x309A);  /* Per Markus Kuhn keysyms.txt file. */
-                /* The following cases are to be removed once xkeyboard-config,
-                * xorg are fully updated.
-                **/
-                /* Workaround for typo in 1.4.x xserver-xorg */
-            case 0xfe66:
-                combination_buffer[i + 1] = 0x314;
-                break;
-                /* CASE (dasia, 0x314); */
-                /* CASE (perispomeni, 0x342); */
-                /* CASE (psili, 0x343); */
-#undef CASE
-            default:
-                combination_buffer[i + 1] = FcitxKeySymToUnicode(m_compose_buffer[i]);
-            }
-            i--;
-        }
-
-        /* If the buffer normalizes to a single character,
-        * then modify the order of combination_buffer accordingly, if necessary,
-        * and return TRUE.
-        **/
-#if 0
-        if (check_normalize_nfc(combination_buffer, m_n_compose)) {
-            gunichar value;
-            combination_utf8 = g_ucs4_to_utf8(combination_buffer, -1, NULL, NULL, NULL);
-            nfc = g_utf8_normalize(combination_utf8, -1, G_NORMALIZE_NFC);
-
-            value = g_utf8_get_char(nfc);
-            gtk_im_context_simple_commit_char(GTK_IM_CONTEXT(context_simple), value);
-            context_simple->compose_buffer[0] = 0;
-
-            g_free(combination_utf8);
-            g_free(nfc);
-
-            return TRUE;
-        }
-#endif
-        QString s(QString::fromUcs4(combination_buffer, m_n_compose));
-        s = s.normalized(QString::NormalizationForm_C);
-
-        // qDebug () << "combination_buffer = " << QString::fromUcs4(combination_buffer, m_n_compose) << "m_n_compose" << m_n_compose;
-        // qDebug () << "result = " << s << "i = " << s.length();
-
-        if (s.length() == 1) {
-            commitString(QString(s[0]));
-            m_compose_buffer[0] = 0;
-            m_n_compose = 0;
-            return true;
-        }
-    }
-    return false;
-}
-
-
-bool
-QFcitxPlatformInputContext::checkCompactTable(const FcitxComposeTableCompact *table)
-{
-    int row_stride;
-    const quint32 *seq_index;
-    const quint32 *seq;
-    int i;
-
-    /* Will never match, if the sequence in the compose buffer is longer
-    * than the sequences in the table. Further, compare_seq (key, val)
-    * will overrun val if key is longer than val. */
-    if (m_n_compose > table->max_seq_len)
-        return false;
-
-    seq_index = (const quint32 *)bsearch(m_compose_buffer,
-                                         table->data, table->n_index_size,
-                                         sizeof(quint32) * table->n_index_stride,
-                                         compare_seq_index);
-
-    if (!seq_index) {
-        return false;
-    }
-
-    if (seq_index && m_n_compose == 1) {
-        return true;
-    }
-
-    seq = NULL;
-    for (i = m_n_compose - 1; i < table->max_seq_len; i++) {
-        row_stride = i + 1;
-
-        if (seq_index[i + 1] - seq_index[i] > 0) {
-            seq = (const quint32 *) bsearch(m_compose_buffer + 1,
-                                            table->data + seq_index[i], (seq_index[i + 1] - seq_index[i]) / row_stride,
-                                            sizeof(quint32) * row_stride,
-                                            compare_seq);
-            if (seq) {
-                if (i == m_n_compose - 1)
-                    break;
-                else {
-                    return true;
-                }
-            }
-        }
-    }
-
-    if (!seq) {
-        return false;
-    } else {
-        uint value;
-        value = seq[row_stride - 1];
-        commitString(QString(QChar(value)));
-        m_compose_buffer[0] = 0;
-        m_n_compose = 0;
-        return true;
-    }
-    return false;
-}
 
 // kate: indent-mode cstyle; space-indent on; indent-width 0;

@@ -25,6 +25,7 @@ target_link_libraries(fcitxplatforminputcontextplugin
                           Qt5::Gui
                           Qt5::DBus
                           FcitxQt5::DBusAddons
+                          XKBCommon::XKBCommon
                          )
 
 include(ECMQueryQmake)
