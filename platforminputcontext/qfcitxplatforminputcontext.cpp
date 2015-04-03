@@ -717,11 +717,6 @@ void QFcitxPlatformInputContext::processKeyEventFinished(QDBusPendingCallWatcher
         }
         QWindowSystemInterface::handleExtendedKeyEvent(window, time, type, qtcode, modifiers,
                                                        code, sym, state, string, isAutoRepeat);
-
-        if (isAutoRepeat && type == QEvent::KeyRelease) {
-            QWindowSystemInterface::handleExtendedKeyEvent(window, time, QEvent::KeyPress, qtcode, modifiers,
-                                                           code, sym, state, string, isAutoRepeat);
-        }
     }
 }
 
