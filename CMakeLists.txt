@@ -19,8 +19,8 @@ include(ECMGenerateHeaders)
 
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Widgets)
 find_package(Qt5Gui ${REQUIRED_QT_VERSION} REQUIRED Private)
-pkg_check_modules(FCITX_UTILS fcitx-utils)
-pkg_check_modules(FCITX_CONFIG fcitx-config)
+pkg_check_modules(FCITX_UTILS fcitx-utils REQUIRED)
+pkg_check_modules(FCITX_CONFIG fcitx-config REQUIRED)
 
 set(FcitxQt5_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_FULL_INCLUDEDIR}/FcitxQt5)
 add_subdirectory(dbusaddons)
