@@ -91,7 +91,9 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
 {
     FcitxQtFormattedPreedit::registerMetaType();
 
-    xkb_context_set_log_level(m_xkbContext.data(), XKB_LOG_LEVEL_CRITICAL);
+    if (m_xkbContext) {
+        xkb_context_set_log_level(m_xkbContext.data(), XKB_LOG_LEVEL_CRITICAL);
+    }
 
     memset(m_compose_buffer, 0, sizeof(uint) * (MAX_COMPOSE_LEN + 1));
     connect(m_connection, SIGNAL(connected()), this, SLOT(connected()));
