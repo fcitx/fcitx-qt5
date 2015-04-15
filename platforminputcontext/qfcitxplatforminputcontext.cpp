@@ -189,6 +189,9 @@ void QFcitxPlatformInputContext::reset()
     FcitxQtInputContextProxy* proxy = validIC();
     if (proxy)
         proxy->Reset();
+    if (m_xkbComposeState) {
+        xkb_compose_state_reset(m_xkbComposeState.data());
+    }
     QPlatformInputContext::reset();
 }
 
