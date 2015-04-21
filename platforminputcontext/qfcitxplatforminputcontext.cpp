@@ -680,6 +680,8 @@ void QFcitxPlatformInputContext::processKeyEventFinished(QDBusPendingCallWatcher
         QWindowSystemInterface::handleExtendedKeyEvent(window, time, type, qtcode, modifiers,
                                                        code, sym, state, string, isAutoRepeat);
     }
+
+    delete watcher;
 }
 
 
