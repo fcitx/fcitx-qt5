@@ -350,9 +350,11 @@ void QFcitxPlatformInputContext::cursorRectChanged()
 
     r.moveTopLeft(inputWindow->mapToGlobal(r.topLeft()));
 
+    qreal scale = inputWindow->devicePixelRatio();
     if (data->rect != r) {
         data->rect = r;
-        proxy->SetCursorRect(r.x(), r.y(), r.width(), r.height());
+        proxy->SetCursorRect(r.x() * scale, r.y() * scale,
+                             r.width() * scale, r.height() * scale);
     }
 }
 
