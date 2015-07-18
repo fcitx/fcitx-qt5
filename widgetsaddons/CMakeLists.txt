@@ -40,6 +40,7 @@ set(fcitxqtwidgetsaddons_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${FCITX_UTILS_INCLUDE_DIRS}
+    ${Intl_INCLUDE_DIRS}
 )
 
 add_library(FcitxQt5WidgetsAddons SHARED ${widgetsaddons_SOURCES})
@@ -65,6 +66,7 @@ target_link_libraries(FcitxQt5WidgetsAddons
     PRIVATE
         ${FCITX_UTILS_LIBRARIES}
         ${FCITX_CONFIG_LIBRARIES}
+        ${Intl_LIBRARIES}
 )
 
 install(TARGETS FcitxQt5WidgetsAddons EXPORT FcitxQt5WidgetsAddonsTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
