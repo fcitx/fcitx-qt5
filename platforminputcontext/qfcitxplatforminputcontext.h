@@ -188,14 +188,14 @@ public:
     QFcitxPlatformInputContext();
     virtual ~QFcitxPlatformInputContext();
 
-    virtual bool filterEvent(const QEvent* event);
-    virtual bool isValid() const;
-    virtual void invokeAction(QInputMethod::Action , int cursorPosition);
-    virtual void reset();
-    virtual void commit();
-    virtual void update(Qt::InputMethodQueries quries );
-    virtual void setFocusObject(QObject* object);
-
+    virtual bool filterEvent(const QEvent* event) Q_DECL_OVERRIDE;
+    virtual bool isValid() const Q_DECL_OVERRIDE;
+    virtual void invokeAction(QInputMethod::Action , int cursorPosition) Q_DECL_OVERRIDE;
+    virtual void reset() Q_DECL_OVERRIDE;
+    virtual void commit() Q_DECL_OVERRIDE;
+    virtual void update(Qt::InputMethodQueries quries ) Q_DECL_OVERRIDE;
+    virtual void setFocusObject(QObject* object) Q_DECL_OVERRIDE;
+    virtual QLocale locale() const Q_DECL_OVERRIDE;
 
 public Q_SLOTS:
     void cursorRectChanged();

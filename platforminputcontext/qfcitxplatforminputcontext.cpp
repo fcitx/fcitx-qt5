@@ -535,6 +535,11 @@ void QFcitxPlatformInputContext::updateCurrentIM(const QString& name, const QStr
     }
 }
 
+QLocale QFcitxPlatformInputContext::locale() const
+{
+    return m_locale;
+}
+
 void QFcitxPlatformInputContext::createICData(QWindow* w)
 {
     FcitxQtICData* data = m_icMap.value(w->winId());
