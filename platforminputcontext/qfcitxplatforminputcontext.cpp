@@ -408,6 +408,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         connect(data->proxy, SIGNAL(ForwardKey(uint, uint, int)), this, SLOT(forwardKey(uint, uint, int)));
         connect(data->proxy, SIGNAL(UpdateFormattedPreedit(FcitxQtFormattedPreeditList,int)), this, SLOT(updateFormattedPreedit(FcitxQtFormattedPreeditList,int)));
         connect(data->proxy, SIGNAL(DeleteSurroundingText(int,uint)), this, SLOT(deleteSurroundingText(int,uint)));
+        connect(data->proxy, SIGNAL(CurrentIM(QString,QString,QString)), this, SLOT(updateCurrentIM(QString,QString,QString)));
 
         if (data->proxy->isValid()) {
             QWindow* window = qApp->focusWindow();
@@ -419,6 +420,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         flag |= CAPACITY_PREEDIT;
         flag |= CAPACITY_FORMATTED_PREEDIT;
         flag |= CAPACITY_CLIENT_UNFOCUS_COMMIT;
+        flag |= CAPACITY_GET_IM_INFO_ON_FOCUS;
         m_useSurroundingText = get_boolean_env("FCITX_QT_ENABLE_SURROUNDING_TEXT", true);
         if (m_useSurroundingText)
             flag |= CAPACITY_SURROUNDING_TEXT;
@@ -519,6 +521,17 @@ void QFcitxPlatformInputContext::forwardKey(uint keyval, uint state, int type)
         QCoreApplication::sendEvent(input, keyevent);
         delete keyevent;
         key_filtered = false;
+    }
+}
+
+void QFcitxPlatformInputContext::updateCurrentIM(const QString& name, const QString& uniqueName, const QString& langCode)
+{
+    Q_UNUSED(name);
+    Q_UNUSED(uniqueName);
+    QLocale newLocale(langCode);
+    if (m_locale != newLocale) {
+        m_locale = newLocale;
+        emitLocaleChanged();
     }
 }
 

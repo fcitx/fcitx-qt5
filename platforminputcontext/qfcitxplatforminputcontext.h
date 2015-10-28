@@ -65,7 +65,8 @@ enum FcitxCapacityFlags {
     CAPACITY_UPPERCASE_WORDS = (1 << 19),
     CAPACITY_UPPERCASE_SENTENCES = (1 << 20),
     CAPACITY_ALPHA = (1 << 21),
-    CAPACITY_NAME = (1 << 22)
+    CAPACITY_NAME = (1 << 22),
+    CAPACITY_GET_IM_INFO_ON_FOCUS = (1 << 23),
 } ;
 
 /** message type and flags */
@@ -206,15 +207,13 @@ public Q_SLOTS:
     void connected();
     void cleanUp();
     void windowDestroyed(QObject* object);
+    void updateCurrentIM(const QString &name, const QString &uniqueName, const QString &langCode);
 
 
 private:
     void createInputContext(WId w);
     bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
-    bool checkAlgorithmically();
-    bool checkCompactTable(const struct _FcitxComposeTableCompact *table);
     QKeyEvent* createKeyEvent(uint keyval, uint state, int type);
-
 
     void addCapacity(FcitxQtICData* data, QFlags<FcitxCapacityFlags> capacity, bool forceUpdate = false)
     {
@@ -262,6 +261,7 @@ private:
     QScopedPointer<struct xkb_context, XkbContextDeleter> m_xkbContext;
     QScopedPointer<struct xkb_compose_table, XkbComposeTableDeleter>  m_xkbComposeTable;
     QScopedPointer<struct xkb_compose_state, XkbComposeStateDeleter> m_xkbComposeState;
+    QLocale m_locale;
 private slots:
     void processKeyEventFinished(QDBusPendingCallWatcher*);
 };

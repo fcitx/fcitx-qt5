@@ -54,6 +54,11 @@
     <signal name="CommitString">
       <arg name="str" type="s"/>
     </signal>
+    <signal name="CurrentIM">
+      <arg name="name" type="s"/>
+      <arg name="uniqueName" type="s"/>
+      <arg name="langCode" type="s"/>
+    </signal>
     <signal name="UpdateFormattedPreedit">
       <arg name="str" type="a(si)" />
       <arg name="cursorpos" type="i"/>
