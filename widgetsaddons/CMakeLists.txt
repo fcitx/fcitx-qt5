@@ -58,6 +58,11 @@ set_target_properties(FcitxQt5WidgetsAddons
                       EXPORT_NAME WidgetsAddons
 )
 
+link_directories(
+    ${FCITX4_FCITX_UTILS_LIBRARY_DIRS}
+    ${FCITX4_FCITX_CONFIG_LIBRARY_DIRS}
+)
+
 target_link_libraries(FcitxQt5WidgetsAddons
     PUBLIC
         Qt5::Core
