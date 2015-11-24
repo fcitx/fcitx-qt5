@@ -1,3 +1,8 @@
+link_directories(
+    ${FCITX_UTILS_LIBRARY_DIRS}
+    ${FCITX_CONFIG_LIBRARY_DIRS}
+)
+
 ecm_setup_version(${FcitxQt5_VERSION} VARIABLE_PREFIX FCITXQT5WIDGETSADDONS
                         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/fcitxqtwidgetsaddons_version.h"
                         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/FcitxQt5WidgetsAddonsConfigVersion.cmake"
@@ -56,11 +61,6 @@ set_target_properties(FcitxQt5WidgetsAddons
                       COMPILE_FLAGS "-fvisibility=hidden"
                       LINK_FLAGS "-Wl,--no-undefined"
                       EXPORT_NAME WidgetsAddons
-)
-
-link_directories(
-    ${FCITX_UTILS_LIBRARY_DIRS}
-    ${FCITX_CONFIG_LIBRARY_DIRS}
 )
 
 target_link_libraries(FcitxQt5WidgetsAddons
