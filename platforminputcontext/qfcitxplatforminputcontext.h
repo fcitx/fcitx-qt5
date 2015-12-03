@@ -112,8 +112,10 @@ struct FcitxQtICData {
     FcitxQtICData() : capacity(0), proxy(0), surroundingAnchor(-1), surroundingCursor(-1) {}
     FcitxQtICData(const FcitxQtICData& that) = delete;
     ~FcitxQtICData() {
-        if (proxy && proxy->isValid()) {
-            proxy->DestroyIC();
+        if (proxy) {
+            if (proxy->isValid()) {
+                proxy->DestroyIC();
+            }
             delete proxy;
         }
     }
