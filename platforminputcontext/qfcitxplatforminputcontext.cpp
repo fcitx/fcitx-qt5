@@ -131,7 +131,6 @@ void QFcitxPlatformInputContext::connected()
 
 void QFcitxPlatformInputContext::cleanUp()
 {
-    qDebug() << "Clean Up";
     m_icMap.clear();
 
     if (m_improxy) {
