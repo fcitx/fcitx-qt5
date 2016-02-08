@@ -254,6 +254,12 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
                     anchor = var2.toInt();
                 else
                     anchor = cursor;
+
+                // adjust it to real character size
+                QVector<uint> tempUCS4 = text.leftRef(cursor).toUcs4();
+                cursor = tempUCS4.size();
+                tempUCS4 = text.leftRef(anchor).toUcs4();
+                anchor = tempUCS4.size();
                 if (data.surroundingText != text) {
                     data.surroundingText = text;
                     proxy->SetSurroundingText(text, cursor, anchor);
@@ -388,6 +394,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
             delete data.proxy;
         }
         data.proxy = new FcitxQtInputContextProxy(m_connection->serviceName(), path, *m_connection->connection(), this);
+        data.proxy->setProperty("icData", qVariantFromValue(static_cast<void*>(&data)));
         connect(data.proxy, SIGNAL(CommitString(QString)), this, SLOT(commitString(QString)));
         connect(data.proxy, SIGNAL(ForwardKey(uint, uint, int)), this, SLOT(forwardKey(uint, uint, int)));
         connect(data.proxy, SIGNAL(UpdateFormattedPreedit(FcitxQtFormattedPreeditList,int)), this, SLOT(updateFormattedPreedit(FcitxQtFormattedPreeditList,int)));
@@ -480,15 +487,53 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(const FcitxQtFormattedPr
     update(Qt::ImCursorRectangle);
 }
 
-void QFcitxPlatformInputContext::deleteSurroundingText(int offset, uint nchar)
+void QFcitxPlatformInputContext::deleteSurroundingText(int offset, uint _nchar)
 {
     QObject *input = qApp->focusObject();
     if (!input)
         return;
 
     QInputMethodEvent event;
-    event.setCommitString("", offset, nchar);
-    QCoreApplication::sendEvent(input, &event);
+
+    FcitxQtInputContextProxy *proxy = qobject_cast<FcitxQtInputContextProxy*>(sender());
+    if (!proxy) {
+        return;
+    }
+
+    FcitxQtICData *data = static_cast<FcitxQtICData*>(proxy->property("icData").value<void *>());
+    QVector<uint> ucsText = data->surroundingText.toUcs4();
+
+    int cursor = data->surroundingCursor;
+    // make nchar signed so we are safer
+    int nchar = _nchar;
+    // Qt's reconvert semantics is different from gtk's. It doesn't count the current
+    // selection. Discard selection from nchar.
+    if (data->surroundingAnchor < data->surroundingCursor) {
+        nchar -= data->surroundingCursor - data->surroundingAnchor;
+        offset += data->surroundingCursor - data->surroundingAnchor;
+        cursor = data->surroundingAnchor;
+    } else if (data->surroundingAnchor > data->surroundingCursor) {
+        nchar -= data->surroundingAnchor - data->surroundingCursor;
+        cursor = data->surroundingCursor;
+    }
+
+    // validates
+    if (nchar >= 0 && cursor + offset >= 0 && cursor + offset + nchar < ucsText.size()) {
+        // order matters
+        nchar = QString::fromUcs4(ucsText.mid(cursor + offset, nchar).data()).size();
+
+        int start, len;
+        if (offset >= 0) {
+            start = cursor;
+            len = offset;
+        } else {
+            start = cursor;
+            len = -offset;
+        }
+        offset = QString::fromUcs4(ucsText.mid(start, len).data()).size() * (offset >= 0 ? 1 : -1);
+        event.setCommitString("", offset, nchar);
+        QCoreApplication::sendEvent(input, &event);
+    }
 }
 
 void QFcitxPlatformInputContext::forwardKey(uint keyval, uint state, int type)
