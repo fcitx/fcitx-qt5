@@ -102,7 +102,9 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext() :
     connect(m_connection, &FcitxQtConnection::connected, this, &QFcitxPlatformInputContext::connected);
     connect(m_connection, &FcitxQtConnection::disconnected, this, &QFcitxPlatformInputContext::cleanUp);
 
-    m_connection->startConnection();
+    QTimer::singleShot(0, this, [this] () {
+        m_connection->startConnection();
+    });
 }
 
 QFcitxPlatformInputContext::~QFcitxPlatformInputContext()
