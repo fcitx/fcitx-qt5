@@ -51,29 +51,29 @@ void qEventToSym(int key, const QString& text, Qt::KeyboardModifiers mod, int& o
         if (sym)
             break;
 
-        QtCode2Key* result = NULL;
+        QtCode2Key* result = nullptr;
         if (mod & Qt::KeypadModifier) {
             result = qBinaryFind(keyPadQtCodeToKey, _ARRAY_END(keyPadQtCodeToKey), key);
             if (result == _ARRAY_END(keyPadQtCodeToKey))
-                result = NULL;
+                result = nullptr;
         }
         else {
             if (text.isNull()) {
                 result = qBinaryFind(qtCodeToKeyBackup, _ARRAY_END(qtCodeToKeyBackup), key);
                 if (result == _ARRAY_END(qtCodeToKeyBackup))
-                    result = NULL;
+                    result = nullptr;
             }
             if (!result) {
                 result = qBinaryFind(qtCodeToKey, _ARRAY_END(qtCodeToKey), key);
 
                 if (result == _ARRAY_END(qtCodeToKey))
-                    result = NULL;
+                    result = nullptr;
             }
 
             if (!result) {
                 result = qBinaryFind(keyPadQtCodeToKey, _ARRAY_END(keyPadQtCodeToKey), key);
                 if (result == _ARRAY_END(keyPadQtCodeToKey))
-                    result = NULL;
+                    result = nullptr;
             }
         }
 
