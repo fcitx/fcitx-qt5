@@ -123,9 +123,6 @@ public Q_SLOTS:
     void clearKeySequence();
 
 private:
-    Q_PRIVATE_SLOT(d, void doneRecording())
-
-private:
     friend class FcitxQtKeySequenceWidgetPrivate;
     FcitxQtKeySequenceWidgetPrivate *const d;
 

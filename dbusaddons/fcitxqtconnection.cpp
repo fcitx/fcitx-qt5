@@ -101,7 +101,7 @@ FcitxQtConnectionPrivate::FcitxQtConnectionPrivate(FcitxQtConnection* conn) : QO
     ,m_displayNumber(-1)
     ,m_serviceName(QString("%1-%2").arg("org.fcitx.Fcitx").arg(displayNumber()))
     ,m_connection(0)
-    ,m_serviceWatcher(new QDBusServiceWatcher(conn))
+    ,m_serviceWatcher(new QDBusServiceWatcher(this))
     ,m_watcher(new QFileSystemWatcher(this))
     ,m_autoReconnect(true)
     ,m_connectedOnce(false)
@@ -130,8 +130,8 @@ void FcitxQtConnectionPrivate::initialize() {
         m_watcher->addPath(info.filePath());
     }
 
-    connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(socketFileChanged()));
-    connect(m_watcher, SIGNAL(directoryChanged(QString)), this, SLOT(socketFileChanged()));
+    connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &FcitxQtConnectionPrivate::socketFileChanged);
+    connect(m_watcher, &QFileSystemWatcher::directoryChanged, this, &FcitxQtConnectionPrivate::socketFileChanged);
     m_initialized = true;
 }
 
@@ -139,8 +139,8 @@ void FcitxQtConnectionPrivate::finalize() {
     m_serviceWatcher->removeWatchedService(m_serviceName);
     m_watcher->removePaths(m_watcher->files());
     m_watcher->removePaths(m_watcher->directories());
-    m_watcher->disconnect(SIGNAL(fileChanged(QString)));
-    m_watcher->disconnect(SIGNAL(directoryChanged(QString)));
+    disconnect(m_watcher, &QFileSystemWatcher::fileChanged, this, &FcitxQtConnectionPrivate::socketFileChanged);
+    disconnect(m_watcher, &QFileSystemWatcher::directoryChanged, this, &FcitxQtConnectionPrivate::socketFileChanged);
     m_initialized = false;
 }
 
@@ -166,7 +166,7 @@ QByteArray FcitxQtConnectionPrivate::localMachineId()
 #else
     QFile file1("/var/lib/dbus/machine-id");
     QFile file2("/etc/machine-id");
-    QFile* fileToRead = NULL;
+    QFile* fileToRead = nullptr;
     if (file1.open(QIODevice::ReadOnly)) {
         fileToRead = &file1;
     }
@@ -273,7 +273,7 @@ void FcitxQtConnectionPrivate::createConnection() {
         return;
     }
 
-    m_serviceWatcher->disconnect(SIGNAL(serviceOwnerChanged(QString,QString,QString)));
+    disconnect(m_serviceWatcher, &QDBusServiceWatcher::serviceOwnerChanged, this, &FcitxQtConnectionPrivate::imChanged);
     QString addr = address();
     if (!addr.isNull()) {
         QDBusConnection connection(QDBusConnection::connectToBus(addr, "fcitx"));
@@ -287,7 +287,7 @@ void FcitxQtConnectionPrivate::createConnection() {
 
     if (!m_connection) {
         QDBusConnection* connection = new QDBusConnection(QDBusConnection::sessionBus());
-        connect(m_serviceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), this, SLOT(imChanged(QString,QString,QString)));
+        connect(m_serviceWatcher, &QDBusServiceWatcher::serviceOwnerChanged, this, &FcitxQtConnectionPrivate::imChanged);
         QDBusReply<bool> registered = connection->interface()->isServiceRegistered(m_serviceName);
         if (!registered.isValid() || !registered.value()) {
             delete connection;
@@ -340,7 +340,7 @@ void FcitxQtConnectionPrivate::cleanUp()
     QDBusConnection::disconnectFromBus("fcitx");
     if (m_connection) {
         delete m_connection;
-        m_connection = 0;
+        m_connection = nullptr;
         doemit = true;
     }
 

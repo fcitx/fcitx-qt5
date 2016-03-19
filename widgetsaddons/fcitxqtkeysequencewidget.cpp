@@ -116,9 +116,9 @@ public:
 
 FcitxQtKeySequenceWidgetPrivate::FcitxQtKeySequenceWidgetPrivate(FcitxQtKeySequenceWidget *q)
     : q(q)
-     ,layout(NULL)
-     ,keyButton(NULL)
-     ,clearButton(NULL)
+     ,layout(nullptr)
+     ,keyButton(nullptr)
+     ,clearButton(nullptr)
      ,allowModifierless(false)
      ,nKey(0)
      ,modifierKeys(0)
@@ -134,9 +134,11 @@ FcitxQtKeySequenceWidget::FcitxQtKeySequenceWidget(QWidget *parent)
 {
     d->init();
     setFocusProxy( d->keyButton );
-    connect(d->keyButton, SIGNAL(clicked()), this, SLOT(captureKeySequence()));
-    connect(d->clearButton, SIGNAL(clicked()), this, SLOT(clearKeySequence()));
-    connect(&d->modifierlessTimeout, SIGNAL(timeout()), this, SLOT(doneRecording()));
+    connect(d->keyButton, &QPushButton::clicked, this, &FcitxQtKeySequenceWidget::captureKeySequence);
+    connect(d->clearButton, &QPushButton::clicked, this, &FcitxQtKeySequenceWidget::clearKeySequence);
+    connect(&d->modifierlessTimeout, &QTimer::timeout, this, [this] () {
+        d->doneRecording();
+    });
     //TODO: how to adopt style changes at runtime?
     /*QFont modFont = d->clearButton->font();
     modFont.setStyleHint(QFont::TypeWriter);
