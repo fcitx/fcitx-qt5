@@ -754,12 +754,10 @@ FcitxQtInputContextProxy* QFcitxPlatformInputContext::validICByWindow(QWindow* w
     if (iter == m_icMap.end())
         return nullptr;
     auto &data = iter->second;
-    if (data.proxy.isNull()) {
+    if (!data.proxy || !data.proxy->isValid()) {
         return nullptr;
-    } else if (data.proxy->isValid()) {
-        return data.proxy.data();
     }
-    return nullptr;
+    return data.proxy;
 }
 
 

@@ -109,7 +109,7 @@ enum FcitxKeyState {
 };
 
 struct FcitxQtICData {
-    FcitxQtICData() : capacity(0), proxy(0), surroundingAnchor(-1), surroundingCursor(-1) {}
+    FcitxQtICData() : capacity(0), proxy(nullptr), surroundingAnchor(-1), surroundingCursor(-1) {}
     FcitxQtICData(const FcitxQtICData& that) = delete;
     ~FcitxQtICData() {
         if (proxy) {
@@ -120,7 +120,7 @@ struct FcitxQtICData {
         }
     }
     QFlags<FcitxCapacityFlags> capacity;
-    QPointer<FcitxQtInputContextProxy> proxy;
+    FcitxQtInputContextProxy *proxy;
     QRect rect;
     QString surroundingText;
     int surroundingAnchor;
