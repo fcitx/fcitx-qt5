@@ -388,11 +388,11 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         }
         data.proxy = new FcitxQtInputContextProxy(m_connection->serviceName(), path, *m_connection->connection(), this);
         data.proxy->setProperty("icData", qVariantFromValue(static_cast<void*>(&data)));
-        connect(data.proxy, &FcitxQtInputContextProxy::CommitString, this, &QFcitxPlatformInputContext::commitString);
-        connect(data.proxy, &FcitxQtInputContextProxy::ForwardKey, this, &QFcitxPlatformInputContext::forwardKey);
-        connect(data.proxy, &FcitxQtInputContextProxy::UpdateFormattedPreedit, this, &QFcitxPlatformInputContext::updateFormattedPreedit);
-        connect(data.proxy, &FcitxQtInputContextProxy::DeleteSurroundingText, this, &QFcitxPlatformInputContext::deleteSurroundingText);
-        connect(data.proxy, &FcitxQtInputContextProxy::CurrentIM, this, &QFcitxPlatformInputContext::updateCurrentIM);
+        connect(data.proxy.data(), &FcitxQtInputContextProxy::CommitString, this, &QFcitxPlatformInputContext::commitString);
+        connect(data.proxy.data(), &FcitxQtInputContextProxy::ForwardKey, this, &QFcitxPlatformInputContext::forwardKey);
+        connect(data.proxy.data(), &FcitxQtInputContextProxy::UpdateFormattedPreedit, this, &QFcitxPlatformInputContext::updateFormattedPreedit);
+        connect(data.proxy.data(), &FcitxQtInputContextProxy::DeleteSurroundingText, this, &QFcitxPlatformInputContext::deleteSurroundingText);
+        connect(data.proxy.data(), &FcitxQtInputContextProxy::CurrentIM, this, &QFcitxPlatformInputContext::updateCurrentIM);
 
         if (data.proxy->isValid()) {
             QWindow* window = qApp->focusWindow();
