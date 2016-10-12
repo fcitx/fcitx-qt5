@@ -712,8 +712,12 @@ void QFcitxPlatformInputContext::processKeyEventFinished(QDBusPendingCallWatcher
     if (!filtered) {
         // copied from QXcbKeyboard::handleKeyEvent()
         if (type == QEvent::KeyPress && qtcode == Qt::Key_Menu) {
-            const QPoint globalPos = window->screen()->handle()->cursor()->pos();
-            const QPoint pos = window->mapFromGlobal(globalPos);            QWindowSystemInterface::handleContextMenuEvent(window, false, pos, globalPos, modifiers);
+            QPoint globalPos, pos;
+            if (window->screen()) {
+                globalPos = window->screen()->handle()->cursor()->pos();
+                pos = window->mapFromGlobal(globalPos);
+            }
+            QWindowSystemInterface::handleContextMenuEvent(window, false, pos, globalPos, modifiers);
         }
         QWindowSystemInterface::handleExtendedKeyEvent(window, time, type, qtcode, modifiers,
                                                        code, sym, state, string, isAutoRepeat);
