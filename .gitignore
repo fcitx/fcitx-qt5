@@ -6,3 +6,4 @@ build/*
 *.kate-swp
 *.orig
 tags
+run.sh
