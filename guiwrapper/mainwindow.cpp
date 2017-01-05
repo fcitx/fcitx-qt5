@@ -24,9 +24,9 @@
 
 #include "common.h"
 #include "mainwindow.h"
-#include "fcitx-qt/fcitxqtconfiguifactory.h"
-#include "fcitx-qt/fcitxqtconnection.h"
-#include "fcitx-qt/fcitxqtinputmethodproxy.h"
+#include "fcitxqtconnection.h"
+#include "fcitxqtinputmethodproxy.h"
+#include "fcitxqtconfiguifactory.h"
 #include "fcitx-utils/utils.h"
 
 MainWindow::MainWindow(FcitxQtConfigUIWidget* pluginWidget, QWidget* parent): QMainWindow(parent)
