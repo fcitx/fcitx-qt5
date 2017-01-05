@@ -23,7 +23,7 @@
 #include <QMainWindow>
 
 #include "ui_mainwindow.h"
-#include "fcitx-qt/fcitxqtconfiguiwidget.h"
+#include "fcitxqtconfiguiwidget.h"
 
 class FcitxQtInputMethodProxy;
 class FcitxQtConnection;

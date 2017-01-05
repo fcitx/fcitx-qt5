@@ -23,7 +23,6 @@
 #include <QApplication>
 #include "mainwindow.h"
 
-class FcitxQtConnection;
 class FcitxQtConfigUIFactory;
 class WrapperApp : public QApplication {
     Q_OBJECT

@@ -23,6 +23,6 @@
 
 int main(int argc, char* argv[])
 {
-    WrapperApp app(argc, argv);
-    return app.exec();
+  WrapperApp app(argc, argv);
+  return app.exec();
 }

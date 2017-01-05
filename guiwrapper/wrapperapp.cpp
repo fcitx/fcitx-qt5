@@ -24,8 +24,8 @@
 
 #include "wrapperapp.h"
 #include "mainwindow.h"
-#include "fcitx-qt/fcitxqtconfiguifactory.h"
-#include "fcitx-qt/fcitxqtconnection.h"
+#include "fcitxqtconfiguifactory.h"
+#include "fcitxqtconnection.h"
 #include "fcitx-utils/utils.h"
 
 WrapperApp::WrapperApp(int& argc, char** argv): QApplication(argc, argv)
