@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
+ *   Copyright (C) 2017~2017 by xzhao                                      *
+ *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -17,8 +19,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef FCITXQT5_GUIWRAPPER_MAINWINDOW_H
+#define FCITXQT5_GUIWRAPPER_MAINWINDOW_H
 
 #include <QMainWindow>
 
@@ -45,4 +47,4 @@ private:
     FcitxQtInputMethodProxy* m_proxy;
 };
 
-#endif // MAINWINDOW_H
+#endif // FCITXQT5_GUIWRAPPER_MAINWINDOW_H

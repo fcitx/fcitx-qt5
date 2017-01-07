@@ -6,6 +6,10 @@ set(QT_WRAPPER_SRCS
   mainwindow.cpp
   )
 
+fcitx_translate_add_sources(
+  ${QT_WRAPPER_SRCS}
+  )
+
 include_directories(
   ${LIBINTL_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -27,7 +31,7 @@ target_link_libraries(fcitx-qt5-gui-wrapper
       Qt5::Widgets
       FcitxQt5::DBusAddons
       FcitxQt5::WidgetsAddons
-       ${FCITX4_FCITX_UTILS_LIBRARIES}
+      ${FCITX4_FCITX_UTILS_LIBRARIES}
 )
 
 install(TARGETS fcitx-qt5-gui-wrapper DESTINATION "${CMAKE_INSTALL_LIBDIR}/libexec")

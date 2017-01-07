@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
+ *   Copyright (C) 2017~2017 by xzhao                                      *
+ *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -17,8 +19,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITXCONFIGUIWRAPPERAPP_H
-#define FCITXCONFIGUIWRAPPERAPP_H
+#ifndef FCITXQT5_GUIWRAPPER_WRAPPERAPP_H
+#define FCITXQT5_GUIWRAPPER_WRAPPERAPP_H
 
 #include <QApplication>
 #include "mainwindow.h"
@@ -37,4 +39,4 @@ private:
     MainWindow* m_mainWindow;
 };
 
-#endif // FCITXCONFIGUIWRAPPERAPP_H
+#endif // FCITXQT5_GUIWRAPPER_WRAPPERAPP_H
