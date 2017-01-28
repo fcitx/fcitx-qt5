@@ -36,5 +36,6 @@ set(FcitxQt5_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_FULL_INCLUDEDIR}/FcitxQt5)
 add_subdirectory(dbusaddons)
 add_subdirectory(widgetsaddons)
 add_subdirectory(platforminputcontext)
+add_subdirectory(guiwrapper)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
