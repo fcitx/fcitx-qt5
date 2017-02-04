@@ -25,6 +25,7 @@
 
 int main(int argc, char* argv[])
 {
-  WrapperApp app(argc, argv);
-  return app.exec();
+    QGuiApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+    WrapperApp app(argc, argv);
+    return app.exec();
 }

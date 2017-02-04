@@ -1,6 +1,6 @@
 link_directories(
-    ${FCITX_UTILS_LIBRARY_DIRS}
-    ${FCITX_CONFIG_LIBRARY_DIRS}
+    ${FCITX4_FCITX_UTILS_LIBRARY_DIRS}
+    ${FCITX4_FCITX_CONFIG_LIBRARY_DIRS}
 )
 
 ecm_setup_version(${FcitxQt5_VERSION} VARIABLE_PREFIX FCITXQT5WIDGETSADDONS
@@ -44,7 +44,7 @@ set(widgetsaddons_HEADERS
 set(fcitxqtwidgetsaddons_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${FCITX_UTILS_INCLUDE_DIRS}
+    ${FCITX4_FCITX_UTILS_INCLUDE_DIRS}
 )
 
 add_library(FcitxQt5WidgetsAddons SHARED ${widgetsaddons_SOURCES})
@@ -68,8 +68,8 @@ target_link_libraries(FcitxQt5WidgetsAddons
         Qt5::Core
         Qt5::Widgets
     PRIVATE
-        ${FCITX_UTILS_LIBRARIES}
-        ${FCITX_CONFIG_LIBRARIES}
+        ${FCITX4_FCITX_UTILS_LIBRARIES}
+        ${FCITX4_FCITX_CONFIG_LIBRARIES}
 )
 
 install(TARGETS FcitxQt5WidgetsAddons EXPORT FcitxQt5WidgetsAddonsTargets LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
