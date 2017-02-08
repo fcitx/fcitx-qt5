@@ -29,5 +29,7 @@ target_link_libraries(fcitxplatforminputcontextplugin
                          )
 
 include(ECMQueryQmake)
+if (NOT CMAKE_INSTALL_QTPLUGINDIR)
 query_qmake(CMAKE_INSTALL_QTPLUGINDIR QT_INSTALL_PLUGINS)
+endif()
 install(TARGETS fcitxplatforminputcontextplugin DESTINATION ${CMAKE_INSTALL_QTPLUGINDIR}/platforminputcontexts)
