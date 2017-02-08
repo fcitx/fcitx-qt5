@@ -12,7 +12,7 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-link_directories(${FCITX_UTILS_LIBRARY_DIRS})
+link_directories(${FCITX4_FCITX_UTILS_LIBRARY_DIRS})
 
 qt5_wrap_ui(QT_WRAPPER_SRCS mainwindow.ui)
 
