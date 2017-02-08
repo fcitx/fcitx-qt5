@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(fcitx-qt5)
 
-set(FcitxQt5_VERSION 1.0.0)
+set(FcitxQt5_VERSION 1.1.0)
 set(REQUIRED_QT_VERSION 5.1.0)
 
 find_package(ECM 1.4.0 REQUIRED NO_MODULE)
