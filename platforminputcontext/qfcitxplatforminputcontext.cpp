@@ -232,6 +232,7 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
     else \
         removeCapacity(data, _CAPACITY);
 
+        CHECK_HINTS(Qt::ImhHiddenText, CAPACITY_PASSWORD)
         CHECK_HINTS(Qt::ImhNoAutoUppercase, CAPACITY_NOAUTOUPPERCASE)
         CHECK_HINTS(Qt::ImhPreferNumbers, CAPACITY_NUMBER)
         CHECK_HINTS(Qt::ImhPreferUppercase, CAPACITY_UPPERCASE)
@@ -629,6 +630,9 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent* event)
         if (event->type() != QEvent::KeyPress && event->type() != QEvent::KeyRelease) {
             break;
         }
+
+        // we need password flag ahead.
+        update(Qt::ImHints);
 
         const QKeyEvent* keyEvent = static_cast<const QKeyEvent*>(event);
         quint32 keyval = keyEvent->nativeVirtualKey();
