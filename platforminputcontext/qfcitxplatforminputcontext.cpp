@@ -76,6 +76,19 @@ get_locale()
     return locale;
 }
 
+static bool objectAcceptsInputMethod()
+{
+    bool enabled = false;
+    QObject *object = qApp->focusObject();
+    if (object) {
+        QInputMethodQueryEvent query(Qt::ImEnabled);
+        QGuiApplication::sendEvent(object, &query);
+        enabled = query.value(Qt::ImEnabled).toBool();
+    }
+
+    return enabled;
+}
+
 struct xkb_context* _xkb_context_new_helper()
 {
     struct xkb_context* context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
@@ -186,6 +199,11 @@ void QFcitxPlatformInputContext::reset()
 
 void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
 {
+    // ignore the boring query
+    if (!(queries & (Qt::ImCursorRectangle | Qt::ImHints |  Qt::ImSurroundingText | Qt::ImCursorPosition))) {
+        return;
+    }
+
     QWindow* window = qApp->focusWindow();
     FcitxQtInputContextProxy* proxy = validICByWindow(window);
     if (!proxy)
@@ -622,9 +640,8 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent* event)
             break;
         }
 
-        // Force refresh the value to ImEnabled, this may workaround some bug in Qt
-        qApp->inputMethod()->update(Qt::ImEnabled);
-        if (!inputMethodAccepted())
+        // Force query the value of ImEnabled, this may workaround some bug in Qt
+        if (!inputMethodAccepted() && !objectAcceptsInputMethod())
             break;
 
         QObject *input = qApp->focusObject();
