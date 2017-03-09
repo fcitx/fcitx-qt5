@@ -622,6 +622,8 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent* event)
             break;
         }
 
+        // Force refresh the value to ImEnabled, this may workaround some bug in Qt
+        qApp->inputMethod()->update(Qt::ImEnabled);
         if (!inputMethodAccepted())
             break;
 
