@@ -6,7 +6,7 @@ ecm_setup_version(${FcitxQt5_VERSION} VARIABLE_PREFIX FCITXQT5DBUSADDONS
 # create a Config.cmake and a ConfigVersion.cmake file and install them
 set(CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/FcitxQt5DBusAddons")
 
-ecm_configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/FcitxQt5DBusAddonsConfig.cmake.in"
+configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/FcitxQt5DBusAddonsConfig.cmake.in"
                               "${CMAKE_CURRENT_BINARY_DIR}/FcitxQt5DBusAddonsConfig.cmake"
                               INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
                               )

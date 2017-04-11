@@ -11,7 +11,7 @@ ecm_setup_version(${FcitxQt5_VERSION} VARIABLE_PREFIX FCITXQT5WIDGETSADDONS
 # create a Config.cmake and a ConfigVersion.cmake file and install them
 set(CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/FcitxQt5WidgetsAddons")
 
-ecm_configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/FcitxQt5WidgetsAddonsConfig.cmake.in"
+configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/FcitxQt5WidgetsAddonsConfig.cmake.in"
                               "${CMAKE_CURRENT_BINARY_DIR}/FcitxQt5WidgetsAddonsConfig.cmake"
                               INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
                               )
