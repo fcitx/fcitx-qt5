@@ -349,13 +349,21 @@ void QFcitxPlatformInputContext::cursorRectChanged()
     if(!r.isValid())
         return;
 
-    r.moveTopLeft(inputWindow->mapToGlobal(r.topLeft()));
+    // not sure if this is necessary but anyway, qt's screen used to be buggy.
+    if (!inputWindow->screen()) {
+        return;
+    }
 
     qreal scale = inputWindow->devicePixelRatio();
-    if (data.rect != r) {
-        data.rect = r;
-        proxy->SetCursorRect(r.x() * scale, r.y() * scale,
-                             r.width() * scale, r.height() * scale);
+    auto screenGeometry = inputWindow->screen()->geometry();
+    auto point = inputWindow->mapToGlobal(r.topLeft());
+    auto native = (point - screenGeometry.topLeft()) * scale + screenGeometry.topLeft();
+    QRect newRect(native, r.size() * scale);
+
+    if (data.rect != newRect) {
+        data.rect = newRect;
+        proxy->SetCursorRect(newRect.x(), newRect.y(), newRect.width(),
+                             newRect.height());
     }
 }
 
