@@ -194,7 +194,9 @@ int FcitxQtConnectionPrivate::displayNumber() {
             ++pos;
             int pos2 = display.indexOf('.', pos);
             if (pos2 > 0) {
-                displayNumber = display.mid(pos, pos2 - pos);
+                // Flatpak: use host display number
+                ++pos2;
+                displayNumber = display.mid(pos2);
             } else {
                 displayNumber = display.mid(pos);
             }
@@ -217,14 +219,21 @@ const QString& FcitxQtConnectionPrivate::socketFile()
     if (!m_socketFile.isEmpty())
         return m_socketFile;
 
-    QString filename = QString("%1-%2").arg(QString::fromLatin1(QDBusConnection::localMachineId())).arg(displayNumber());
-
-    QString home = QString::fromLocal8Bit(qgetenv("XDG_CONFIG_HOME"));
-    if (home.isEmpty()) {
-        home = QDir::homePath().append(QLatin1Literal("/.config"));
+    // Flatpak: use host dbus file for fcitx
+    QString configDir = qgetenv("FCITX_USER_CONFIG_DIR");
+    if (!configDir.isEmpty()) {
+        QString home = qgetenv("HOME");
+        QString machineID = QString::fromLatin1(QDBusConnection::localMachineId());
+        QString filename = QString("%1-%2").arg(machineID).arg(displayNumber());
+        m_socketFile = QString("%1/%2/dbus/%3").arg(home).arg(configDir).arg(filename);
+    } else {
+        QString filename = QString("%1-%2").arg(QString::fromLatin1(QDBusConnection::localMachineId())).arg(displayNumber());
+        QString home = QString::fromLocal8Bit(qgetenv("XDG_CONFIG_HOME"));
+        if (home.isEmpty()) {
+            home = QDir::homePath().append(QLatin1Literal("/.config"));
+        }
+        m_socketFile = QString("%1/fcitx/dbus/%2").arg(home).arg(filename);
     }
-    m_socketFile = QString("%1/fcitx/dbus/%2").arg(home).arg(filename);
-
     return m_socketFile;
 }
 
@@ -253,6 +262,14 @@ QString FcitxQtConnectionPrivate::address()
     if (sz != addrlen + 2 * sizeof(pid_t) + 1)
         return QString();
 
+    addr = QLatin1String(buffer);
+
+    // Flatpak: skip pid check, may add a config option is better
+    QString configDir = qgetenv("FCITX_USER_CONFIG_DIR");
+    if (!configDir.isEmpty()) {
+        return addr;
+    }
+
     /* skip '\0' */
     p++;
     pid_t *ppid = (pid_t*) p;
@@ -262,8 +279,6 @@ QString FcitxQtConnectionPrivate::address()
     if (!_pid_exists(daemonpid)
         || !_pid_exists(fcitxpid))
         return QString();
-
-    addr = QLatin1String(buffer);
 
     return addr;
 }
