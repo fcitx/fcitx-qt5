@@ -1,8 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012~2012 by CSSlayer                                   *
+ *   Copyright (C) 2013~2013 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
+#ifndef FCITX_TOOLS_GUI_BATCHDIALOG_H
+#define FCITX_TOOLS_GUI_BATCHDIALOG_H
 
-#include <libintl.h>
+#include <QDialog>
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
+class CMacroTable;
+namespace Ui
+{
+class BatchDialog;
+}
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+namespace fcitx
+{
+class BatchDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit BatchDialog(QWidget* parent = 0);
+    virtual ~BatchDialog();
+
+    QString text() const;
+    void setText(const QString& s);
+
+private:
+    Ui::BatchDialog* m_ui;
+};
+}
+
+
+#endif // FCITX_TOOLS_GUI_

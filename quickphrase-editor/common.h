@@ -1,8 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
+#ifndef _FCITX_TOOL_GUI_COMMON_H
+#define _FCITX_TOOL_GUI_COMMON_H
 
 #include <libintl.h>
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
+#define _(x) QString::fromUtf8(dgettext("fcitx", x))
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+#endif // _FCITX_TOOL_GUI_COMMON_H

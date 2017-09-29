@@ -1,8 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,35 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
+#ifndef FCITX_TOOLS_GUI_DIALOG_H
+#define FCITX_TOOLS_GUI_DIALOG_H
 
-#include <libintl.h>
+#include <QDialog>
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
+class CMacroTable;
+namespace Ui
+{
+class EditorDialog;
+}
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+namespace fcitx
+{
+class EditorDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit EditorDialog(QWidget* parent = 0);
+    virtual ~EditorDialog();
+
+    QString key() const;
+    QString value() const;
+    void setValue(const QString& s);
+    void setKey(const QString& s);
+
+private:
+    Ui::EditorDialog* m_ui;
+};
+}
+
+
+#endif // FCITX_TOOLS_GUI_

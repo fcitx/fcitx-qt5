@@ -26,7 +26,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
-find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Widgets)
+find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Widgets Concurrent)
 find_package(Qt5Gui ${REQUIRED_QT_VERSION} REQUIRED Private)
 find_package(XKBCommon 0.5.0 REQUIRED COMPONENTS XKBCommon)
 find_package(Fcitx 4.2.8 REQUIRED)
@@ -37,5 +37,7 @@ add_subdirectory(dbusaddons)
 add_subdirectory(widgetsaddons)
 add_subdirectory(platforminputcontext)
 add_subdirectory(guiwrapper)
+add_subdirectory(quickphrase-editor)
+add_subdirectory(po)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

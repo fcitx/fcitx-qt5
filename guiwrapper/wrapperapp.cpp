@@ -37,8 +37,10 @@ WrapperApp::WrapperApp(int& argc, char** argv): QApplication(argc, argv)
     char* localedir = fcitx_utils_get_fcitx_path("localedir");
     setlocale(LC_ALL, "");
     bindtextdomain("fcitx", localedir);
+    bindtextdomain("fcitx-qt5", localedir);
     free(localedir);
     bind_textdomain_codeset("fcitx", "UTF-8");
+    bind_textdomain_codeset("fcitx-qt5", "UTF-8");
     textdomain("fcitx");
 
     FcitxQtConfigUIWidget* widget = 0;

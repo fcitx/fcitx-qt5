@@ -1,8 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012~2012 by CSSlayer                                   *
+ *   Copyright (C) 2013~2013 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,34 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
+#include "common.h"
+#include "ui_batchdialog.h"
+#include "batchdialog.h"
 
-#include <libintl.h>
+namespace fcitx
+{
+BatchDialog::BatchDialog(QWidget* parent): QDialog(parent),
+    m_ui(new Ui::BatchDialog)
+{
+    m_ui->setupUi(this);
+    m_ui->iconLabel->setPixmap(QIcon::fromTheme("dialog-information").pixmap(22, 22));
+    m_ui->infoLabel->setText(_("Use <Keyword> <Phrase> format on every line."));
+}
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
+BatchDialog::~BatchDialog()
+{
+    delete m_ui;
+}
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+void BatchDialog::setText(const QString& s)
+{
+    m_ui->plainTextEdit->setPlainText(s);
+}
+
+QString BatchDialog::text() const
+{
+    return m_ui->plainTextEdit->toPlainText();
+}
+
+
+}

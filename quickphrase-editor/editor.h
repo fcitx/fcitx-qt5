@@ -1,8 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,71 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
+#ifndef FCITX_TOOLS_GUI_EDITOR_H
+#define FCITX_TOOLS_GUI_EDITOR_H
 
-#include <libintl.h>
+#include <QMainWindow>
+#include <QDir>
+#include <QMutex>
+#include "fcitx-qt/fcitxqtconfiguiwidget.h"
+#include "model.h"
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
+class QAbstractItemModel;
+class CMacroTable;
+namespace Ui
+{
+class Editor;
+}
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+namespace fcitx
+{
+
+class FileListModel;
+
+class ListEditor : public FcitxQtConfigUIWidget
+{
+    Q_OBJECT
+public:
+    explicit ListEditor(QWidget* parent = 0);
+    virtual ~ListEditor();
+
+    virtual void load();
+    virtual void save();
+    virtual QString title();
+    virtual QString addon();
+    virtual bool asyncSave();
+
+    void loadFileList();
+
+public slots:
+    void batchEditAccepted();
+    void removeFileTriggered();
+    void addFileTriggered();
+    void refreshListTriggered();
+    void changeFile(int);
+
+private slots:
+    void addWord();
+    void batchEditWord();
+    void deleteWord();
+    void deleteAllWord();
+    void itemFocusChanged();
+    void addWordAccepted();
+    void importData();
+    void exportData();
+    void importFileSelected();
+    void exportFileSelected();
+private:
+    void load(const QString& file);
+    void save(const QString& file);
+    QString currentFile();
+    QString currentName();
+    Ui::Editor* m_ui;
+    QuickPhraseModel* m_model;
+    FileListModel* m_fileListModel;
+    QMenu* m_operationMenu;
+    QString m_lastFile;
+};
+}
+
+#endif // FCITX_TOOLS_GUI_EDITOR_H

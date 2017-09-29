@@ -1,8 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012~2012 by CSSlayer                                   *
+ *   Copyright (C) 2013~2013 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,36 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
+#ifndef FCITX_TOOLS_GUI_FILE_LIST_MODEL_H_
+#define FCITX_TOOLS_GUI_FILE_LIST_MODEL_H_
 
-#include <libintl.h>
+#include <QAbstractListModel>
+#include <QStringList>
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+#define QUICK_PHRASE_CONFIG_DIR "data/quickphrase.d"
+#define QUICK_PHRASE_CONFIG_FILE "data/QuickPhrase.mb"
+
+namespace fcitx
+{
+
+class FileListModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    explicit FileListModel(QObject* parent = 0);
+    virtual ~FileListModel();
+
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
+
+    void loadFileList();
+    int findFile(const QString& lastFileName);
+
+private:
+    QStringList m_fileList;
+};
+
+}
+
+#endif // FCITX_TOOLS_GUI_FILE_LIST_MODEL_H_

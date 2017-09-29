@@ -1,8 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,34 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
-
 #include <libintl.h>
+#include <fcitx-utils/utils.h>
+#include "main.h"
+#include "editor.h"
+#include "model.h"
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
+QuickPhraseEditorPlugin::QuickPhraseEditorPlugin(QObject* parent): FcitxQtConfigUIPlugin(parent)
+{
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+}
+
+FcitxQtConfigUIWidget* QuickPhraseEditorPlugin::create(const QString& key)
+{
+    Q_UNUSED(key);
+    return new fcitx::ListEditor;
+}
+
+QStringList QuickPhraseEditorPlugin::files()
+{
+    return QStringList("data/QuickPhrase.mb");
+}
+
+QString QuickPhraseEditorPlugin::name()
+{
+    return "quickphrase-editor";
+}
+
+QString QuickPhraseEditorPlugin::domain()
+{
+    return "fcitx";
+}

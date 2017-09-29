@@ -1,8 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2012~2012 by CSSlayer                                   *
  *   wengxt@gmail.com                                                      *
- *   Copyright (C) 2017~2017 by xzhao                                      *
- *   i@xuzhao.net                                                          *
  *                                                                         *
  *  This program is free software: you can redistribute it and/or modify   *
  *  it under the terms of the GNU General Public License as published by   *
@@ -19,11 +17,44 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FCITX_QT5_GUIWRAPPER_COMMON_H
-#define FCITX_QT5_GUIWRAPPER_COMMON_H
+#include "common.h"
+#include "ui_editordialog.h"
+#include "editordialog.h"
 
-#include <libintl.h>
+namespace fcitx
+{
+EditorDialog::EditorDialog(QWidget* parent): QDialog(parent),
+    m_ui(new Ui::EditorDialog)
+{
+    m_ui->setupUi(this);
+    m_ui->keyLabel->setText(_("Keyword:"));
+    m_ui->valueLabel->setText(_("Phrase:"));
+}
 
-#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
+EditorDialog::~EditorDialog()
+{
+    delete m_ui;
+}
 
-#endif // FCITX_QT5_GUIWRAPPER_COMMON_H
+void EditorDialog::setKey(const QString& s)
+{
+    m_ui->keyLineEdit->setText(s);
+}
+
+void EditorDialog::setValue(const QString& s)
+{
+    m_ui->valueLineEdit->setText(s);
+}
+
+QString EditorDialog::key() const
+{
+    return m_ui->keyLineEdit->text();
+}
+
+QString EditorDialog::value() const
+{
+    return m_ui->valueLineEdit->text();
+}
+
+
+}

@@ -1,0 +1,389 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Translators:
+# Adolfo Jayme Barrientos, 2012
+msgid ""
+msgstr ""
+"Project-Id-Version: fcitx\n"
+"Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
+"POT-Creation-Date: 2017-09-28 18:15-0700\n"
+"PO-Revision-Date: 2015-12-12 07:18+0000\n"
+"Last-Translator: csslayer <wengxt@gmail.com>\n"
+"Language-Team: Spanish (http://www.transifex.com/fcitx/fcitx/language/es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: quickphrase-editor/editor.cpp:323
+#, kde-format
+msgid "%1 is a system file, do you want to delete all phrases instead?"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:51
+msgid "&Add"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:52
+msgid "&Batch Edit"
+msgstr ""
+
+#: guiwrapper/mainwindow.cpp:44
+msgid "&Close"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:53
+msgid "&Delete"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:55
+msgid "&Import"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:57
+msgid "&Operation"
+msgstr ""
+
+#: guiwrapper/mainwindow.cpp:43
+msgid "&Reset"
+msgstr ""
+
+#: guiwrapper/mainwindow.cpp:42
+msgid "&Save"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:68
+msgid "Add File"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:335
+#, kde-format
+msgid "Are you sure to delete %1?"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:296
+#, kde-format
+msgid "Cannot create file %1."
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:322
+msgid "Cannot remove system file"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:334
+msgid "Confirm deletion"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:279
+msgid "Create new file"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:54
+msgid "De&lete All"
+msgstr ""
+
+#: quickphrase-editor/filelistmodel.cpp:47
+msgid "Default"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:56
+msgid "E&xport"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:343
+#, kde-format
+msgid "Error while deleting %1."
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:295 quickphrase-editor/editor.cpp:342
+msgid "File Operation Failed"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:285
+msgid "File name should not contain '/'."
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:285
+msgid "Invalid filename"
+msgstr ""
+
+#: quickphrase-editor/model.cpp:56
+msgid "Keyword"
+msgstr ""
+
+#: quickphrase-editor/editordialog.cpp:30
+msgid "Keyword:"
+msgstr ""
+
+#: quickphrase-editor/model.cpp:58
+msgid "Phrase"
+msgstr ""
+
+#: quickphrase-editor/editordialog.cpp:31
+msgid "Phrase:"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:280
+msgid "Please input a filename for newfile"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:148
+msgid "Quick Phrase Editor"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:70
+msgid "Refresh List"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:69
+msgid "Remove File"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:131
+msgid "Save Changes"
+msgstr ""
+
+#: quickphrase-editor/editor.cpp:132
+msgid ""
+"The content has changed.\n"
+"Do you want to save the changes or discard them?"
+msgstr ""
+
+#: quickphrase-editor/batchdialog.cpp:31
+msgid "Use <Keyword> <Phrase> format on every line."
+msgstr ""
+
+#~ msgid " Ctrl+Delete To Delete"
+#~ msgstr "Ctrl+Supr para eliminar"
+
+#~ msgid "All"
+#~ msgstr "Todo"
+
+#~ msgid "Appearance"
+#~ msgstr "Apariencia"
+
+#~ msgid "Auto Create Phrase"
+#~ msgstr "Crear frase automáticamente"
+
+#~ msgid "Background Image"
+#~ msgstr "Imagen de fondo"
+
+#~ msgid "Candidate Word Number"
+#~ msgstr "Número de palabra candidata"
+
+#~ msgid "Category"
+#~ msgstr "Categoría"
+
+#~ msgid "Code is "
+#~ msgstr "El código es"
+
+#~ msgid "Color of Cursor"
+#~ msgstr "Color del cursor"
+
+#~ msgid "Comment"
+#~ msgstr "Comentario"
+
+#~ msgid "Configure"
+#~ msgstr "Configurar"
+
+#~ msgid "Convert Simplified Chinese To Traditional Chinese"
+#~ msgstr "Convertir chino simplificado a chino tradicional"
+
+#~ msgid "Copy"
+#~ msgstr "Copiar"
+
+#~ msgid "Current Enabled Input Method List"
+#~ msgstr "Lista de métodos de entrada activados"
+
+#~ msgid "Current Input Method Name"
+#~ msgstr "Nombre del método de entrada actual"
+
+#~ msgid "Default Input Method State"
+#~ msgstr "Estado predeterminado del método de entrada"
+
+#~ msgid "Dependency"
+#~ msgstr "Dependencia"
+
+#~ msgid "Disabled"
+#~ msgstr "Desactivado"
+
+#~ msgid "Do not show input window if there is only preedit string"
+#~ msgstr "No mostrar ventanas de entrada si solo hay una cadena preeditada"
+
+#~ msgid "Enable"
+#~ msgstr "Activar"
+
+#~ msgid "Enabled"
+#~ msgstr "Activado"
+
+#~ msgid "Error: Load fontconfig failed"
+#~ msgstr "Error: Falló la carga de fontconfig"
+
+#~ msgid "Exit"
+#~ msgstr "Salir"
+
+#~ msgid "Fcitx"
+#~ msgstr "Fcitx"
+
+#~ msgid "Font"
+#~ msgstr "Tipo de letra"
+
+#~ msgid "Frontend"
+#~ msgstr "Interfaz"
+
+#~ msgid "Hide"
+#~ msgstr "Ocultar"
+
+#~ msgid "Inactive"
+#~ msgstr "Inactivo"
+
+#~ msgid "Input Font Size"
+#~ msgstr "Tamaño de letra de entrada"
+
+#~ msgid "Input Method"
+#~ msgstr "Método de entrada"
+
+#~ msgid "Input Method Disabled"
+#~ msgstr "Método de entrada desactivado"
+
+#~ msgid "Input Speed: "
+#~ msgstr "Velocidad de entrada"
+
+#~ msgid ""
+#~ "Left/Right to choose selected character, Press Enter to confirm, Press "
+#~ "Escape to Cancel"
+#~ msgstr ""
+#~ "Izq/Der para elegir el carácter seleccionado. Oprima Intro para "
+#~ "confirmar. Oprima Escape para cancelar."
+
+#~ msgid "Library"
+#~ msgstr "Biblioteca"
+
+#~ msgid "MS"
+#~ msgstr "MS"
+
+#~ msgid "Menu Font"
+#~ msgstr "Tipo de letra del menú"
+
+#~ msgid "Menu Font Size"
+#~ msgstr "Tamaño de letra de los menús"
+
+#~ msgid "Migrate the old file path to the new one"
+#~ msgstr "Migrar la ruta de archivo anterior a la nueva"
+
+#~ msgid "Module"
+#~ msgstr "Módulo"
+
+#~ msgid "Name"
+#~ msgstr "Nombre"
+
+#~ msgid "Name that can be display in UI"
+#~ msgstr "Nombre que puede mostrarse en la IU"
+
+#~ msgid "Native"
+#~ msgstr "Nativo"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "Online Help"
+#~ msgstr "Ayuda en línea"
+
+#~ msgid "OpenCC"
+#~ msgstr "OpenCC"
+
+#~ msgid "Other Color"
+#~ msgstr "Otro color"
+
+#~ msgid "Output"
+#~ msgstr "Salida"
+
+#~ msgid "Parent"
+#~ msgstr "Padre"
+
+#~ msgid "Pinyin"
+#~ msgstr "Pinyin"
+
+#~ msgid "Pinyin: "
+#~ msgstr "Pinyin:"
+
+#~ msgid "Press Enter to input text"
+#~ msgstr "Oprima Intro para introducir texto"
+
+#~ msgid "Priority"
+#~ msgstr "Prioridad"
+
+#~ msgid "Quick Phrase List"
+#~ msgstr "Lista de frases rápidas"
+
+#~ msgid "Resize"
+#~ msgstr "Redimensionar"
+
+#~ msgid "Save Auto Created Phrase"
+#~ msgstr "Guardar la frase creada automáticamente"
+
+#~ msgid "Show"
+#~ msgstr "Mostrar"
+
+#~ msgid "Show Input Speed"
+#~ msgstr "Mostrar velocidad de entrada"
+
+#~ msgid "Show Version"
+#~ msgstr "Mostrar versión"
+
+#~ msgid "Shuang Pin Schema"
+#~ msgstr "Shuang Pin Schema"
+
+#~ msgid "Shuangpin"
+#~ msgstr "Shuangpin"
+
+#~ msgid "Table"
+#~ msgstr "Tabla"
+
+#~ msgid "Type"
+#~ msgstr "Tipo"
+
+#~ msgid "UI"
+#~ msgstr "IU"
+
+#~ msgid "Unique Name for Table"
+#~ msgstr "Nombre único para la tabla"
+
+#~ msgid "Use Complete Pinyin"
+#~ msgstr "Usar pinyin completo"
+
+#~ msgid "Use Full Width Character"
+#~ msgstr "Usar carácter de anchura completa"
+
+#~ msgid "Use System Tray Icon"
+#~ msgstr "Usar icono en el área de notificación"
+
+#~ msgid "Use Wide Punctuation"
+#~ msgstr "Usar puntuación ancha"
+
+#~ msgid "User Defined"
+#~ msgstr "Definido por el usuario"
+
+#~ msgid "Virtual Keyboard"
+#~ msgstr "Teclado virtual"
+
+#~ msgid "Virtual Keyboard State"
+#~ msgstr "Estado del teclado virtual"
+
+#~ msgid "X11 not initialized"
+#~ msgstr "X11 no inicializado"
+
+#~ msgid "Zhongwenzhixing"
+#~ msgstr "Zhongwenzhixing"
+
+#~ msgid "Ziguang"
+#~ msgstr "Ziguang"
+
+#~ msgid "Ziranma"
+#~ msgstr "Ziranma"
+
+#~ msgid "your current font is: %s"
+#~ msgstr "su tipo de letra actual es: %s"

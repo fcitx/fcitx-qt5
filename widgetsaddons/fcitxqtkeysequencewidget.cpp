@@ -57,7 +57,7 @@
 
 #include "qtkeytrans.h"
 
-#define _(x) QString::fromUtf8(dgettext("fcitx", x))
+#define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
 
 class FcitxQtKeySequenceWidgetPrivate
 {
