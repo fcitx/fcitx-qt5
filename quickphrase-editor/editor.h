@@ -23,7 +23,7 @@
 #include <QMainWindow>
 #include <QDir>
 #include <QMutex>
-#include "fcitx-qt/fcitxqtconfiguiwidget.h"
+#include "fcitxqtconfiguiwidget.h"
 #include "model.h"
 
 class QAbstractItemModel;

@@ -20,7 +20,7 @@
 #ifndef FCITX_TOOLS_GUI_MAIN_H_
 #define FCITX_TOOLS_GUI_MAIN_H_
 
-#include "fcitx-qt/fcitxqtconfiguiplugin.h"
+#include "fcitxqtconfiguiplugin.h"
 
 class QuickPhraseEditorPlugin : public FcitxQtConfigUIPlugin
 {
