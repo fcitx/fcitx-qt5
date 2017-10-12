@@ -3,14 +3,8 @@ include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 
 set(plugin_SRCS
     qfcitxplatforminputcontext.cpp
-    keyuni.cpp
     main.cpp
-    utils.cpp
-)
-
-set(plugin_MOC_HDRS
-    qfcitxplatforminputcontext.h
-    main.h
+    qtkey.cpp
 )
 
 add_library(fcitxplatforminputcontextplugin MODULE ${plugin_SRCS})

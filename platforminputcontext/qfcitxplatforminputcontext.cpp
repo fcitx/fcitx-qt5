@@ -17,6 +17,7 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
+#include <QTextCodec>
 #include <QKeyEvent>
 #include <QDBusConnection>
 #include <QGuiApplication>
@@ -32,14 +33,12 @@
 #include <errno.h>
 #include <signal.h>
 
-#include "keyserver_x11.h"
+#include "qtkey.h"
 
 #include "qfcitxplatforminputcontext.h"
 #include "fcitxqtinputcontextproxy.h"
 #include "fcitxqtinputmethodproxy.h"
 #include "fcitxqtconnection.h"
-#include "keyuni.h"
-#include "utils.h"
 
 static bool key_filtered = false;
 
@@ -184,6 +183,12 @@ void QFcitxPlatformInputContext::commitPreedit()
     m_commitPreedit.clear();
 }
 
+bool checkUtf8(const QByteArray &byteArray) {
+    QTextCodec::ConverterState state;
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    const QString text = codec->toUnicode(byteArray.constData(), byteArray.size(), &state);
+    return state.invalidChars == 0;
+}
 
 void QFcitxPlatformInputContext::reset()
 {
@@ -228,9 +233,9 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
 
 #define CHECK_HINTS(_HINTS, _CAPACITY) \
     if (hints & _HINTS) \
-        addCapacity(data, _CAPACITY); \
+        addCapability(data, _CAPACITY); \
     else \
-        removeCapacity(data, _CAPACITY);
+        removeCapability(data, _CAPACITY);
 
         CHECK_HINTS(Qt::ImhHiddenText, CAPACITY_PASSWORD)
         CHECK_HINTS(Qt::ImhNoAutoUppercase, CAPACITY_NOAUTOUPPERCASE)
@@ -263,8 +268,8 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
         /* we don't want to waste too much memory here */
 #define SURROUNDING_THRESHOLD 4096
         if (text.length() < SURROUNDING_THRESHOLD) {
-            if (_utf8_check_string(text.toUtf8().data())) {
-                addCapacity(data, CAPACITY_SURROUNDING_TEXT);
+            if (checkUtf8(text.toUtf8().data())) {
+                addCapability(data, CAPACITY_SURROUNDING_TEXT);
 
                 int cursor = var1.toInt();
                 int anchor;
@@ -296,7 +301,7 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
             data.surroundingAnchor = -1;
             data.surroundingCursor = -1;
             data.surroundingText = QString::null;
-            removeCapacity(data, CAPACITY_SURROUNDING_TEXT);
+            removeCapability(data, CAPACITY_SURROUNDING_TEXT);
         }
     } while(0);
 }
@@ -427,7 +432,7 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
                 data.proxy->FocusIn();
         }
 
-        QFlags<FcitxCapacityFlags> flag;
+        QFlags<FcitxCapabilityFlags> flag;
         flag |= CAPACITY_PREEDIT;
         flag |= CAPACITY_FORMATTED_PREEDIT;
         flag |= CAPACITY_CLIENT_UNFOCUS_COMMIT;
@@ -436,12 +441,12 @@ void QFcitxPlatformInputContext::createInputContextFinished(QDBusPendingCallWatc
         if (m_useSurroundingText)
             flag |= CAPACITY_SURROUNDING_TEXT;
 
-        addCapacity(data, flag, true);
+        addCapability(data, flag, true);
     } while(0);
     delete watcher;
 }
 
-void QFcitxPlatformInputContext::updateCapacity(const FcitxQtICData &data)
+void QFcitxPlatformInputContext::updateCapability(const FcitxQtICData &data)
 {
     if (!data.proxy || !data.proxy->isValid())
         return;
@@ -617,8 +622,13 @@ QKeyEvent* QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state, i
         count ++;
     }
 
-    int key;
-    symToKeyQt(keyval, key);
+    auto unicode = xkb_keysym_to_utf32(keyval);
+    QString text;
+    if (unicode) {
+        text = QString::fromUcs4(&unicode, 1);
+    }
+
+    int key = keysymToQtKey(keyval, text);
 
     QKeyEvent* keyevent = new QKeyEvent(
         (type == FCITX_PRESS_KEY) ? (QEvent::KeyPress) : (QEvent::KeyRelease),

@@ -40,7 +40,7 @@ enum FcitxKeyEventType {
     FCITX_RELEASE_KEY
 };
 
-enum FcitxCapacityFlags {
+enum FcitxCapabilityFlags {
     CAPACITY_NONE = 0,
     CAPACITY_CLIENT_SIDE_UI = (1 << 0),
     CAPACITY_PREEDIT = (1 << 1),
@@ -119,7 +119,7 @@ struct FcitxQtICData {
             delete proxy;
         }
     }
-    QFlags<FcitxCapacityFlags> capacity;
+    QFlags<FcitxCapabilityFlags> capacity;
     FcitxQtInputContextProxy *proxy;
     QRect rect;
     QString surroundingText;
@@ -217,25 +217,25 @@ private:
     bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
     QKeyEvent* createKeyEvent(uint keyval, uint state, int type);
 
-    void addCapacity(FcitxQtICData &data, QFlags<FcitxCapacityFlags> capacity, bool forceUpdate = false)
+    void addCapability(FcitxQtICData &data, QFlags<FcitxCapabilityFlags> capacity, bool forceUpdate = false)
     {
-        QFlags< FcitxCapacityFlags > newcaps = data.capacity | capacity;
+        QFlags< FcitxCapabilityFlags > newcaps = data.capacity | capacity;
         if (data.capacity != newcaps || forceUpdate) {
             data.capacity = newcaps;
-            updateCapacity(data);
+            updateCapability(data);
         }
     }
 
-    void removeCapacity(FcitxQtICData &data, QFlags<FcitxCapacityFlags> capacity, bool forceUpdate = false)
+    void removeCapability(FcitxQtICData &data, QFlags<FcitxCapabilityFlags> capacity, bool forceUpdate = false)
     {
-        QFlags< FcitxCapacityFlags > newcaps = data.capacity & (~capacity);
+        QFlags< FcitxCapabilityFlags > newcaps = data.capacity & (~capacity);
         if (data.capacity != newcaps || forceUpdate) {
             data.capacity = newcaps;
-            updateCapacity(data);
+            updateCapability(data);
         }
     }
 
-    void updateCapacity(const FcitxQtICData &data);
+    void updateCapability(const FcitxQtICData &data);
     void commitPreedit();
     void createICData(QWindow* w);
     FcitxQtInputContextProxy* validIC();
