@@ -109,7 +109,7 @@ enum FcitxKeyState {
 };
 
 struct FcitxQtICData {
-    FcitxQtICData() : capacity(0), proxy(nullptr), surroundingAnchor(-1), surroundingCursor(-1) {}
+    FcitxQtICData() : capability(0), proxy(nullptr), surroundingAnchor(-1), surroundingCursor(-1) {}
     FcitxQtICData(const FcitxQtICData& that) = delete;
     ~FcitxQtICData() {
         if (proxy) {
@@ -119,7 +119,7 @@ struct FcitxQtICData {
             delete proxy;
         }
     }
-    QFlags<FcitxCapabilityFlags> capacity;
+    QFlags<FcitxCapabilityFlags> capability;
     FcitxQtInputContextProxy *proxy;
     QRect rect;
     QString surroundingText;
@@ -217,20 +217,20 @@ private:
     bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
     QKeyEvent* createKeyEvent(uint keyval, uint state, int type);
 
-    void addCapability(FcitxQtICData &data, QFlags<FcitxCapabilityFlags> capacity, bool forceUpdate = false)
+    void addCapability(FcitxQtICData &data, QFlags<FcitxCapabilityFlags> capability, bool forceUpdate = false)
     {
-        QFlags< FcitxCapabilityFlags > newcaps = data.capacity | capacity;
-        if (data.capacity != newcaps || forceUpdate) {
-            data.capacity = newcaps;
+        QFlags< FcitxCapabilityFlags > newcaps = data.capability | capability;
+        if (data.capability != newcaps || forceUpdate) {
+            data.capability = newcaps;
             updateCapability(data);
         }
     }
 
-    void removeCapability(FcitxQtICData &data, QFlags<FcitxCapabilityFlags> capacity, bool forceUpdate = false)
+    void removeCapability(FcitxQtICData &data, QFlags<FcitxCapabilityFlags> capability, bool forceUpdate = false)
     {
-        QFlags< FcitxCapabilityFlags > newcaps = data.capacity & (~capacity);
-        if (data.capacity != newcaps || forceUpdate) {
-            data.capacity = newcaps;
+        QFlags< FcitxCapabilityFlags > newcaps = data.capability & (~capability);
+        if (data.capability != newcaps || forceUpdate) {
+            data.capability = newcaps;
             updateCapability(data);
         }
     }

@@ -257,7 +257,7 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries )
             break;
         if (!((queries & Qt::ImSurroundingText) && (queries & Qt::ImCursorPosition)))
             break;
-        if (data.capacity.testFlag(CAPACITY_PASSWORD))
+        if (data.capability.testFlag(CAPACITY_PASSWORD))
             break;
         QVariant var = query.value(Qt::ImSurroundingText);
         QVariant var1 = query.value(Qt::ImCursorPosition);
@@ -451,7 +451,7 @@ void QFcitxPlatformInputContext::updateCapability(const FcitxQtICData &data)
     if (!data.proxy || !data.proxy->isValid())
         return;
 
-    QDBusPendingReply< void > result = data.proxy->SetCapacity((uint) data.capacity);
+    QDBusPendingReply< void > result = data.proxy->SetCapacity((uint) data.capability);
 }
 
 void QFcitxPlatformInputContext::commitString(const QString& str)
