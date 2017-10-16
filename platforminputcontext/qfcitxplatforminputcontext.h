@@ -66,24 +66,6 @@ enum FcitxCapabilityFlags {
     CAPACITY_GET_IM_INFO_ON_FOCUS = (1 << 23),
 };
 
-/** message type and flags */
-enum FcitxMessageType {
-    MSG_TYPE_FIRST = 0,
-    MSG_TYPE_LAST = 6,
-    MSG_TIPS = 0,      /**< Hint Text */
-    MSG_INPUT = 1,     /**< User Input */
-    MSG_INDEX = 2,     /**< Index Number */
-    MSG_FIRSTCAND = 3, /**< First candidate */
-    MSG_USERPHR = 4,   /**< User Phrase */
-    MSG_CODE = 5,      /**< Typed character */
-    MSG_OTHER = 6,     /**< Other Text */
-    MSG_NOUNDERLINE =
-        (1 << 3), /**< backward compatible, no underline is a flag */
-    MSG_HIGHLIGHT = (1 << 4),                 /**< highlight the preedit */
-    MSG_DONOT_COMMIT_WHEN_UNFOCUS = (1 << 5), /**< backward compatible */
-    MSG_REGULAR_MASK = 0x7                    /**< regular color type mask */
-};
-
 enum FcitxKeyState {
     FcitxKeyState_None = 0,
     FcitxKeyState_Shift = 1 << 0,

@@ -384,15 +384,35 @@ void QFcitxPlatformInputContext::updateFormattedPreedit(
     QString str, commitStr;
     int pos = 0;
     QList<QInputMethodEvent::Attribute> attrList;
+
+    // Fcitx 5's flags support.
+    enum TextFormatFlag : int {
+        TextFormatFlag_Underline = (1 << 3), /**< underline is a flag */
+        TextFormatFlag_HighLight = (1 << 4), /**< highlight the preedit */
+        TextFormatFlag_DontCommit = (1 << 5),
+        TextFormatFlag_Bold = (1 << 6),
+        TextFormatFlag_Strike = (1 << 7),
+        TextFormatFlag_Italic = (1 << 8),
+    };
+
     Q_FOREACH (const FcitxFormattedPreedit &preedit, preeditList) {
         str += preedit.string();
-        if (!(preedit.format() & MSG_DONOT_COMMIT_WHEN_UNFOCUS))
+        if (!(preedit.format() & TextFormatFlag_DontCommit))
             commitStr += preedit.string();
         QTextCharFormat format;
-        if (preedit.format() & MSG_NOUNDERLINE) {
+        if (preedit.format() & TextFormatFlag_Underline) {
             format.setUnderlineStyle(QTextCharFormat::DashUnderline);
         }
-        if (preedit.format() & MSG_HIGHLIGHT) {
+        if (preedit.format() & TextFormatFlag_Strike) {
+            format.setFontStrikeOut(true);
+        }
+        if (preedit.format() & TextFormatFlag_Bold) {
+            format.setFontWeight(QFont::Bold);
+        }
+        if (preedit.format() & TextFormatFlag_Italic) {
+            format.setFontItalic(true);
+        }
+        if (preedit.format() & TextFormatFlag_HighLight) {
             QBrush brush;
             QPalette palette;
             palette = QGuiApplication::palette();
@@ -563,9 +583,9 @@ QKeyEvent *QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state,
 
     int key = keysymToQtKey(keyval, text);
 
-    QKeyEvent *keyevent = new QKeyEvent(
-        isRelease ? (QEvent::KeyRelease) : (QEvent::KeyPress), key, qstate, 0,
-        keyval, state, text, false, count);
+    QKeyEvent *keyevent =
+        new QKeyEvent(isRelease ? (QEvent::KeyRelease) : (QEvent::KeyPress),
+                      key, qstate, 0, keyval, state, text, false, count);
 
     return keyevent;
 }
