@@ -25,7 +25,7 @@
 #include "fcitxwatcher.h"
 #include <QDBusConnection>
 #include <QDBusServiceWatcher>
-#include <QFileSystemWatcher>
+#include <QGuiApplication>
 #include <QKeyEvent>
 #include <QPointer>
 #include <QRect>
@@ -193,7 +193,7 @@ public Q_SLOTS:
     void updateFormattedPreedit(const FcitxFormattedPreeditList &preeditList,
                                 int cursorPos);
     void deleteSurroundingText(int offset, uint nchar);
-    void forwardKey(uint keyval, uint state, int type);
+    void forwardKey(uint keyval, uint state, bool type);
     void createInputContextFinished();
     void cleanUp();
     void windowDestroyed(QObject *object);
@@ -201,8 +201,8 @@ public Q_SLOTS:
                          const QString &langCode);
 
 private:
-    bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
-    QKeyEvent *createKeyEvent(uint keyval, uint state, int type);
+    bool processCompose(uint keyval, uint state, bool isRelaese);
+    QKeyEvent *createKeyEvent(uint keyval, uint state, bool isRelaese);
 
     void addCapability(FcitxQtICData &data,
                        QFlags<FcitxCapabilityFlags> capability,
@@ -225,11 +225,12 @@ private:
     }
 
     void updateCapability(const FcitxQtICData &data);
-    void commitPreedit();
+    void commitPreedit(QPointer<QObject> input = qApp->focusObject());
     void createICData(QWindow *w);
     FcitxInputContextProxy *validIC();
     FcitxInputContextProxy *validICByWindow(QWindow *window);
-    bool filterEventFallback(uint keyval, uint keycode, uint state, bool press);
+    bool filterEventFallback(uint keyval, uint keycode, uint state,
+                             bool isRelaese);
 
     FcitxWatcher *m_watcher;
     QString m_preedit;
@@ -239,10 +240,11 @@ private:
     bool m_useSurroundingText;
     bool m_syncMode;
     QString m_lastSurroundingText;
-    int m_lastSurroundingAnchor;
-    int m_lastSurroundingCursor;
+    int m_lastSurroundingAnchor = 0;
+    int m_lastSurroundingCursor = 0;
     std::unordered_map<QWindow *, FcitxQtICData> m_icMap;
     QPointer<QWindow> m_lastWindow;
+    QPointer<QObject> m_lastObject;
     bool m_destroy;
     QScopedPointer<struct xkb_context, XkbContextDeleter> m_xkbContext;
     QScopedPointer<struct xkb_compose_table, XkbComposeTableDeleter>

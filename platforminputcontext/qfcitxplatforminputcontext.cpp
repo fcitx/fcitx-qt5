@@ -67,18 +67,6 @@ static inline const char *get_locale() {
     return locale;
 }
 
-static bool objectAcceptsInputMethod() {
-    bool enabled = false;
-    QObject *object = qApp->focusObject();
-    if (object) {
-        QInputMethodQueryEvent query(Qt::ImEnabled);
-        QGuiApplication::sendEvent(object, &query);
-        enabled = query.value(Qt::ImEnabled).toBool();
-    }
-
-    return enabled;
-}
-
 struct xkb_context *_xkb_context_new_helper() {
     struct xkb_context *context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
     if (context) {
@@ -130,8 +118,7 @@ void QFcitxPlatformInputContext::invokeAction(QInputMethod::Action action,
     }
 }
 
-void QFcitxPlatformInputContext::commitPreedit() {
-    QObject *input = qApp->focusObject();
+void QFcitxPlatformInputContext::commitPreedit(QPointer<QObject> input) {
     if (!input)
         return;
     if (m_commitPreedit.length() <= 0)
@@ -140,6 +127,7 @@ void QFcitxPlatformInputContext::commitPreedit() {
     e.setCommitString(m_commitPreedit);
     QCoreApplication::sendEvent(input, &e);
     m_commitPreedit.clear();
+    m_preeditList.clear();
 }
 
 bool checkUtf8(const QByteArray &byteArray) {
@@ -229,7 +217,7 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries) {
 /* we don't want to waste too much memory here */
 #define SURROUNDING_THRESHOLD 4096
         if (text.length() < SURROUNDING_THRESHOLD) {
-            if (checkUtf8(text.toUtf8().data())) {
+            if (checkUtf8(text.toUtf8())) {
                 addCapability(data, CAPACITY_SURROUNDING_TEXT);
 
                 int cursor = var1.toInt();
@@ -271,12 +259,14 @@ void QFcitxPlatformInputContext::commit() { QPlatformInputContext::commit(); }
 void QFcitxPlatformInputContext::setFocusObject(QObject *object) {
     Q_UNUSED(object);
     FcitxInputContextProxy *proxy = validICByWindow(m_lastWindow);
+    commitPreedit(m_lastObject);
     if (proxy) {
         proxy->focusOut();
     }
 
     QWindow *window = qApp->focusWindow();
     m_lastWindow = window;
+    m_lastObject = object;
     if (!window) {
         return;
     }
@@ -489,11 +479,13 @@ void QFcitxPlatformInputContext::deleteSurroundingText(int offset,
     }
 }
 
-void QFcitxPlatformInputContext::forwardKey(uint keyval, uint state, int type) {
+void QFcitxPlatformInputContext::forwardKey(uint keyval, uint state,
+                                            bool type) {
     QObject *input = qApp->focusObject();
     if (input != nullptr) {
         key_filtered = true;
         QKeyEvent *keyevent = createKeyEvent(keyval, state, type);
+
         QCoreApplication::sendEvent(input, keyevent);
         delete keyevent;
         key_filtered = false;
@@ -544,7 +536,7 @@ void QFcitxPlatformInputContext::createICData(QWindow *w) {
 }
 
 QKeyEvent *QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state,
-                                                      int type) {
+                                                      bool isRelease) {
     Qt::KeyboardModifiers qstate = Qt::NoModifier;
 
     int count = 1;
@@ -572,8 +564,8 @@ QKeyEvent *QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state,
     int key = keysymToQtKey(keyval, text);
 
     QKeyEvent *keyevent = new QKeyEvent(
-        (type == FCITX_PRESS_KEY) ? (QEvent::KeyPress) : (QEvent::KeyRelease),
-        key, qstate, QString(), false, count);
+        isRelease ? (QEvent::KeyRelease) : (QEvent::KeyPress), key, qstate, 0,
+        keyval, state, text, false, count);
 
     return keyevent;
 }
@@ -585,22 +577,17 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
             break;
         }
 
-        // we need password flag ahead.
-        update(Qt::ImHints);
-
         const QKeyEvent *keyEvent = static_cast<const QKeyEvent *>(event);
         quint32 keyval = keyEvent->nativeVirtualKey();
         quint32 keycode = keyEvent->nativeScanCode();
         quint32 state = keyEvent->nativeModifiers();
-        bool press = keyEvent->type() == QEvent::KeyPress;
+        bool isRelease = keyEvent->type() == QEvent::KeyRelease;
 
         if (key_filtered) {
             break;
         }
 
-        // Force query the value of ImEnabled, this may workaround some bug in
-        // Qt
-        if (!inputMethodAccepted() && !objectAcceptsInputMethod())
+        if (!inputMethodAccepted())
             break;
 
         QObject *input = qApp->focusObject();
@@ -612,7 +599,7 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
         FcitxInputContextProxy *proxy = validICByWindow(qApp->focusWindow());
 
         if (!proxy) {
-            if (filterEventFallback(keyval, keycode, state, press)) {
+            if (filterEventFallback(keyval, keycode, state, isRelease)) {
                 return true;
             } else {
                 break;
@@ -622,7 +609,7 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
         proxy->focusIn();
 
         auto reply =
-            proxy->processKeyEvent(keyval, keycode, state, !press,
+            proxy->processKeyEvent(keyval, keycode, state, isRelease,
                                    QDateTime::currentDateTime().toTime_t());
 
         if (Q_UNLIKELY(m_syncMode)) {
@@ -630,7 +617,7 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
 
             auto filtered = proxy->processKeyEventResult(reply);
             if (!filtered) {
-                if (filterEventFallback(keyval, keycode, state, press)) {
+                if (filterEventFallback(keyval, keycode, state, isRelease)) {
                     return true;
                 } else {
                     break;
@@ -707,10 +694,10 @@ void QFcitxPlatformInputContext::processKeyEventFinished(
 }
 
 bool QFcitxPlatformInputContext::filterEventFallback(uint keyval, uint keycode,
-                                                     uint state, bool press) {
+                                                     uint state,
+                                                     bool isRelease) {
     Q_UNUSED(keycode);
-    if (processCompose(keyval, state,
-                       (press) ? FCITX_PRESS_KEY : FCITX_RELEASE_KEY)) {
+    if (processCompose(keyval, state, isRelease)) {
         return true;
     }
     return false;
@@ -744,10 +731,10 @@ QFcitxPlatformInputContext::validICByWindow(QWindow *w) {
 }
 
 bool QFcitxPlatformInputContext::processCompose(uint keyval, uint state,
-                                                FcitxKeyEventType event) {
+                                                bool isRelease) {
     Q_UNUSED(state);
 
-    if (!m_xkbComposeTable || event == FCITX_RELEASE_KEY)
+    if (!m_xkbComposeTable || isRelease)
         return false;
 
     struct xkb_compose_state *xkbComposeState = m_xkbComposeState.data();
