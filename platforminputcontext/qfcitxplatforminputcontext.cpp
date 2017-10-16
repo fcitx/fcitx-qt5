@@ -536,6 +536,12 @@ void QFcitxPlatformInputContext::createICData(QWindow *w) {
                 &QFcitxPlatformInputContext::windowDestroyed);
         iter = result.first;
         auto &data = iter->second;
+
+        if (QGuiApplication::platformName() == QLatin1String("xcb")) {
+            data.proxy->setDisplay("x11:");
+        } else if (QGuiApplication::platformName() == QLatin1String("wayland")) {
+            data.proxy->setDisplay("wayland:");
+        }
         data.proxy->setProperty("wid",
                                 qVariantFromValue(static_cast<void *>(w)));
         data.proxy->setProperty("icData",
