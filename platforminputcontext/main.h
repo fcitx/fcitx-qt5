@@ -20,18 +20,19 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <qpa/qplatforminputcontextplugin_p.h>
 #include <QtCore/QStringList>
+#include <qpa/qplatforminputcontextplugin_p.h>
 
 #include "qfcitxplatforminputcontext.h"
 
-class QFcitxPlatformInputContextPlugin : public QPlatformInputContextPlugin
-{
+class QFcitxPlatformInputContextPlugin : public QPlatformInputContextPlugin {
     Q_OBJECT
 public:
-    Q_PLUGIN_METADATA(IID QPlatformInputContextFactoryInterface_iid FILE "fcitx.json")
+    Q_PLUGIN_METADATA(IID QPlatformInputContextFactoryInterface_iid FILE
+                      "fcitx.json")
     QStringList keys() const;
-    QFcitxPlatformInputContext *create(const QString& system, const QStringList& paramList);
+    QFcitxPlatformInputContext *create(const QString &system,
+                                       const QStringList &paramList);
 };
 
 #endif // MAIN_H

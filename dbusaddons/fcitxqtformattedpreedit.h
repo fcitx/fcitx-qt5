@@ -27,14 +27,15 @@
 
 class FCITXQTDBUSADDONS_EXPORT FcitxQtFormattedPreedit {
 public:
-    const QString& string() const;
+    const QString &string() const;
     qint32 format() const;
-    void setString(const QString& str);
+    void setString(const QString &str);
     void setFormat(qint32 format);
 
     static void registerMetaType();
 
-    bool operator ==(const FcitxQtFormattedPreedit& preedit) const;
+    bool operator==(const FcitxQtFormattedPreedit &preedit) const;
+
 private:
     QString m_string;
     qint32 m_format;
@@ -42,8 +43,10 @@ private:
 
 typedef QList<FcitxQtFormattedPreedit> FcitxQtFormattedPreeditList;
 
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtFormattedPreedit& im);
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtFormattedPreedit& im);
+QDBusArgument &operator<<(QDBusArgument &argument,
+                          const FcitxQtFormattedPreedit &im);
+const QDBusArgument &operator>>(const QDBusArgument &argument,
+                                FcitxQtFormattedPreedit &im);
 
 Q_DECLARE_METATYPE(FcitxQtFormattedPreedit)
 Q_DECLARE_METATYPE(FcitxQtFormattedPreeditList)

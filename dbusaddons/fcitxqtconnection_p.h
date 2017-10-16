@@ -21,8 +21,8 @@
 #define FCITXQTCONNECTION_P_H
 
 #include "fcitxqtconnection.h"
-#include <QtCore/QWeakPointer>
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QWeakPointer>
 
 class QDBusConnection;
 class QDBusServiceWatcher;
@@ -30,13 +30,14 @@ class QDBusServiceWatcher;
 class FcitxQtConnectionPrivate : public QObject {
     Q_OBJECT
 public:
-    FcitxQtConnectionPrivate(FcitxQtConnection* conn);
+    FcitxQtConnectionPrivate(FcitxQtConnection *conn);
     virtual ~FcitxQtConnectionPrivate();
-    FcitxQtConnection * const q_ptr;
+    FcitxQtConnection *const q_ptr;
     Q_DECLARE_PUBLIC(FcitxQtConnection);
 
 private Q_SLOTS:
-    void imChanged(const QString& service, const QString& oldowner, const QString& newowner);
+    void imChanged(const QString &service, const QString &oldowner,
+                   const QString &newowner);
     void dbusDisconnected();
     void cleanUp();
     void newServiceAppear();
@@ -46,7 +47,7 @@ private:
     bool isConnected();
 
     static QByteArray localMachineId();
-    const QString& socketFile();
+    const QString &socketFile();
     void createConnection();
     QString address();
     int displayNumber();
@@ -55,14 +56,13 @@ private:
 
     int m_displayNumber;
     QString m_serviceName;
-    QDBusConnection* m_connection;
-    QDBusServiceWatcher* m_serviceWatcher;
-    QFileSystemWatcher* m_watcher;
+    QDBusConnection *m_connection;
+    QDBusServiceWatcher *m_serviceWatcher;
+    QFileSystemWatcher *m_watcher;
     QString m_socketFile;
     bool m_autoReconnect;
     bool m_connectedOnce;
     bool m_initialized;
 };
-
 
 #endif // FCITXCONNECTION_P_H

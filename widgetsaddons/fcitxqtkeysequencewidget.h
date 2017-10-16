@@ -49,38 +49,24 @@
 
 #include "fcitxqtwidgetsaddons_export.h"
 
-enum FcitxQtModifierSide {
-    MS_Unknown = 0,
-    MS_Left = 1,
-    MS_Right = 2
-};
+enum FcitxQtModifierSide { MS_Unknown = 0, MS_Left = 1, MS_Right = 2 };
 
 class FcitxQtKeySequenceWidgetPrivate;
 
-class FCITXQTWIDGETSADDONS_EXPORT FcitxQtKeySequenceWidget: public QWidget
-{
+class FCITXQTWIDGETSADDONS_EXPORT FcitxQtKeySequenceWidget : public QWidget {
     Q_OBJECT
 
-    Q_PROPERTY(
-            bool multiKeyShortcutsAllowed
-            READ multiKeyShortcutsAllowed
-            WRITE setMultiKeyShortcutsAllowed )
+    Q_PROPERTY(bool multiKeyShortcutsAllowed READ multiKeyShortcutsAllowed WRITE
+                   setMultiKeyShortcutsAllowed)
 
-    Q_PROPERTY(
-            bool modifierlessAllowed
-            READ isModifierlessAllowed
-            WRITE setModifierlessAllowed )
+    Q_PROPERTY(bool modifierlessAllowed READ isModifierlessAllowed WRITE
+                   setModifierlessAllowed)
 
-    Q_PROPERTY(
-            bool modifierOnlyAllowed
-            READ isModifierOnlyAllowed
-            WRITE setModifierOnlyAllowed )
+    Q_PROPERTY(bool modifierOnlyAllowed READ isModifierOnlyAllowed WRITE
+                   setModifierOnlyAllowed)
 
 public:
-    enum Validation {
-        Validate = 0,
-        NoValidate = 1
-    };
+    enum Validation { Validate = 0, NoValidate = 1 };
 
     /**
     * Constructor.
@@ -111,7 +97,8 @@ public:
 
     QKeySequence keySequence() const;
 
-    static void keyQtToFcitx(int keyQt, FcitxQtModifierSide side, int& outsym, uint& outstate);
+    static void keyQtToFcitx(int keyQt, FcitxQtModifierSide side, int &outsym,
+                             uint &outstate);
     static int keyFcitxToQt(int sym, uint state);
 
 Q_SIGNALS:
@@ -119,7 +106,9 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void captureKeySequence();
-    void setKeySequence(const QKeySequence &seq, FcitxQtModifierSide side = MS_Unknown, Validation val = NoValidate);
+    void setKeySequence(const QKeySequence &seq,
+                        FcitxQtModifierSide side = MS_Unknown,
+                        Validation val = NoValidate);
     void clearKeySequence();
 
 private:
@@ -129,4 +118,4 @@ private:
     Q_DISABLE_COPY(FcitxQtKeySequenceWidget)
 };
 
-#endif //KKEYSEQUENCEWIDGET_H
+#endif // KKEYSEQUENCEWIDGET_H

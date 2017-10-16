@@ -19,17 +19,9 @@
 
 #include "fcitxqtconfiguiwidget.h"
 
-FcitxQtConfigUIWidget::FcitxQtConfigUIWidget(QWidget* parent): QWidget(parent)
-{
+FcitxQtConfigUIWidget::FcitxQtConfigUIWidget(QWidget *parent)
+    : QWidget(parent) {}
 
-}
+QString FcitxQtConfigUIWidget::icon() { return QLatin1String("fcitx"); }
 
-QString FcitxQtConfigUIWidget::icon()
-{
-    return QLatin1String("fcitx");
-}
-
-bool FcitxQtConfigUIWidget::asyncSave()
-{
-    return false;
-}
+bool FcitxQtConfigUIWidget::asyncSave() { return false; }

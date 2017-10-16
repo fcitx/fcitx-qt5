@@ -20,20 +20,19 @@
 #ifndef FCITX_QT_CONFIG_UI_FACTORY_H
 #define FCITX_QT_CONFIG_UI_FACTORY_H
 
-#include <QtCore/QObject>
 #include <QtCore/QMap>
+#include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-#include "fcitxqtwidgetsaddons_export.h"
-#include "fcitxqtconfiguiwidget.h"
 #include "fcitxqtconfiguiplugin.h"
+#include "fcitxqtconfiguiwidget.h"
+#include "fcitxqtwidgetsaddons_export.h"
 
 class FcitxQtConfigUIFactoryPrivate;
 /**
  * ui plugin factory.
  **/
-class FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIFactory : public QObject
-{
+class FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIFactory : public QObject {
     Q_OBJECT
 public:
     /**
@@ -41,7 +40,7 @@ public:
      *
      * @param parent object parent
      **/
-    explicit FcitxQtConfigUIFactory(QObject* parent = 0);
+    explicit FcitxQtConfigUIFactory(QObject *parent = 0);
     virtual ~FcitxQtConfigUIFactory();
     /**
      * create widget based on file name, it might return 0 if there is no match
@@ -49,16 +48,18 @@ public:
      * @param file file name need to be configured
      * @return FcitxQtConfigUIWidget*
      **/
-    FcitxQtConfigUIWidget* create(const QString& file);
+    FcitxQtConfigUIWidget *create(const QString &file);
     /**
-     * a simplified version of create, but it just test if there is a valid entry or not
+     * a simplified version of create, but it just test if there is a valid
+     *entry or not
      *
      * @param file file name
      * @return bool
      **/
-    bool test(const QString& file);
+    bool test(const QString &file);
+
 private:
-    FcitxQtConfigUIFactoryPrivate* d_ptr;
+    FcitxQtConfigUIFactoryPrivate *d_ptr;
     Q_DECLARE_PRIVATE(FcitxQtConfigUIFactory);
 };
 

@@ -23,27 +23,23 @@
 #include <QDialog>
 
 class CMacroTable;
-namespace Ui
-{
+namespace Ui {
 class BatchDialog;
 }
 
-namespace fcitx
-{
-class BatchDialog : public QDialog
-{
+namespace fcitx {
+class BatchDialog : public QDialog {
     Q_OBJECT
 public:
-    explicit BatchDialog(QWidget* parent = 0);
+    explicit BatchDialog(QWidget *parent = 0);
     virtual ~BatchDialog();
 
     QString text() const;
-    void setText(const QString& s);
+    void setText(const QString &s);
 
 private:
-    Ui::BatchDialog* m_ui;
+    Ui::BatchDialog *m_ui;
 };
 }
-
 
 #endif // FCITX_TOOLS_GUI_

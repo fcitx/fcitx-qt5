@@ -24,46 +24,27 @@
 // self
 #include "fcitxqtkeyboardlayout.h"
 
-const QString& FcitxQtKeyboardLayout::layout() const
-{
-    return m_layout;
-}
-const QString& FcitxQtKeyboardLayout::langCode() const
-{
-    return m_langCode;
-}
-const QString& FcitxQtKeyboardLayout::name() const
-{
-    return m_name;
-}
+const QString &FcitxQtKeyboardLayout::layout() const { return m_layout; }
+const QString &FcitxQtKeyboardLayout::langCode() const { return m_langCode; }
+const QString &FcitxQtKeyboardLayout::name() const { return m_name; }
 
-const QString& FcitxQtKeyboardLayout::variant() const
-{
-    return m_variant;
-}
+const QString &FcitxQtKeyboardLayout::variant() const { return m_variant; }
 
-void FcitxQtKeyboardLayout::setLayout(const QString& layout)
-{
+void FcitxQtKeyboardLayout::setLayout(const QString &layout) {
     m_layout = layout;
 }
 
-void FcitxQtKeyboardLayout::setLangCode(const QString& lang)
-{
+void FcitxQtKeyboardLayout::setLangCode(const QString &lang) {
     m_langCode = lang;
 }
 
-void FcitxQtKeyboardLayout::setName(const QString& name)
-{
-    m_name = name;
-}
+void FcitxQtKeyboardLayout::setName(const QString &name) { m_name = name; }
 
-void FcitxQtKeyboardLayout::setVariant(const QString& variant)
-{
+void FcitxQtKeyboardLayout::setVariant(const QString &variant) {
     m_variant = variant;
 }
 
-void FcitxQtKeyboardLayout::registerMetaType()
-{
+void FcitxQtKeyboardLayout::registerMetaType() {
     qRegisterMetaType<FcitxQtKeyboardLayout>("FcitxQtKeyboardLayout");
     qDBusRegisterMetaType<FcitxQtKeyboardLayout>();
     qRegisterMetaType<FcitxQtKeyboardLayoutList>("FcitxQtKeyboardLayoutList");
@@ -71,8 +52,8 @@ void FcitxQtKeyboardLayout::registerMetaType()
 }
 
 FCITXQTDBUSADDONS_EXPORT
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtKeyboardLayout& layout)
-{
+QDBusArgument &operator<<(QDBusArgument &argument,
+                          const FcitxQtKeyboardLayout &layout) {
     argument.beginStructure();
     argument << layout.layout();
     argument << layout.variant();
@@ -83,8 +64,8 @@ QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtKeyboardLayout& 
 }
 
 FCITXQTDBUSADDONS_EXPORT
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtKeyboardLayout& layout)
-{
+const QDBusArgument &operator>>(const QDBusArgument &argument,
+                                FcitxQtKeyboardLayout &layout) {
     QString l;
     QString variant;
     QString name;

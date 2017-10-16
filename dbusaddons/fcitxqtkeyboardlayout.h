@@ -23,23 +23,23 @@
 #include "fcitxqtdbusaddons_export.h"
 
 // Qt
-#include <QtCore/QString>
 #include <QtCore/QMetaType>
+#include <QtCore/QString>
 #include <QtDBus/QDBusArgument>
 
-class FCITXQTDBUSADDONS_EXPORT FcitxQtKeyboardLayout
-{
+class FCITXQTDBUSADDONS_EXPORT FcitxQtKeyboardLayout {
 public:
-    const QString& layout() const;
-    const QString& variant() const;
-    const QString& name() const;
-    const QString& langCode() const;
-    void setLayout(const QString& layout);
-    void setLangCode(const QString& lang);
-    void setName(const QString& name);
-    void setVariant(const QString& variant);
+    const QString &layout() const;
+    const QString &variant() const;
+    const QString &name() const;
+    const QString &langCode() const;
+    void setLayout(const QString &layout);
+    void setLangCode(const QString &lang);
+    void setName(const QString &name);
+    void setVariant(const QString &variant);
 
     static void registerMetaType();
+
 private:
     QString m_layout;
     QString m_variant;
@@ -49,8 +49,10 @@ private:
 
 typedef QList<FcitxQtKeyboardLayout> FcitxQtKeyboardLayoutList;
 
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtKeyboardLayout& l);
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtKeyboardLayout& l);
+QDBusArgument &operator<<(QDBusArgument &argument,
+                          const FcitxQtKeyboardLayout &l);
+const QDBusArgument &operator>>(const QDBusArgument &argument,
+                                FcitxQtKeyboardLayout &l);
 
 Q_DECLARE_METATYPE(FcitxQtKeyboardLayout)
 Q_DECLARE_METATYPE(FcitxQtKeyboardLayoutList)

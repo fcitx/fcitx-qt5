@@ -17,34 +17,24 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "batchdialog.h"
 #include "common.h"
 #include "ui_batchdialog.h"
-#include "batchdialog.h"
 
-namespace fcitx
-{
-BatchDialog::BatchDialog(QWidget* parent): QDialog(parent),
-    m_ui(new Ui::BatchDialog)
-{
+namespace fcitx {
+BatchDialog::BatchDialog(QWidget *parent)
+    : QDialog(parent), m_ui(new Ui::BatchDialog) {
     m_ui->setupUi(this);
-    m_ui->iconLabel->setPixmap(QIcon::fromTheme("dialog-information").pixmap(22, 22));
+    m_ui->iconLabel->setPixmap(
+        QIcon::fromTheme("dialog-information").pixmap(22, 22));
     m_ui->infoLabel->setText(_("Use <Keyword> <Phrase> format on every line."));
 }
 
-BatchDialog::~BatchDialog()
-{
-    delete m_ui;
-}
+BatchDialog::~BatchDialog() { delete m_ui; }
 
-void BatchDialog::setText(const QString& s)
-{
+void BatchDialog::setText(const QString &s) {
     m_ui->plainTextEdit->setPlainText(s);
 }
 
-QString BatchDialog::text() const
-{
-    return m_ui->plainTextEdit->toPlainText();
-}
-
-
+QString BatchDialog::text() const { return m_ui->plainTextEdit->toPlainText(); }
 }

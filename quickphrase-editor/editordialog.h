@@ -23,29 +23,25 @@
 #include <QDialog>
 
 class CMacroTable;
-namespace Ui
-{
+namespace Ui {
 class EditorDialog;
 }
 
-namespace fcitx
-{
-class EditorDialog : public QDialog
-{
+namespace fcitx {
+class EditorDialog : public QDialog {
     Q_OBJECT
 public:
-    explicit EditorDialog(QWidget* parent = 0);
+    explicit EditorDialog(QWidget *parent = 0);
     virtual ~EditorDialog();
 
     QString key() const;
     QString value() const;
-    void setValue(const QString& s);
-    void setKey(const QString& s);
+    void setValue(const QString &s);
+    void setKey(const QString &s);
 
 private:
-    Ui::EditorDialog* m_ui;
+    Ui::EditorDialog *m_ui;
 };
 }
-
 
 #endif // FCITX_TOOLS_GUI_

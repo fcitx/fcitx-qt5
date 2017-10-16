@@ -19,12 +19,7 @@
 
 #include "fcitxqtconfiguiplugin.h"
 
-FcitxQtConfigUIPlugin::FcitxQtConfigUIPlugin(QObject* parent): QObject(parent)
-{
+FcitxQtConfigUIPlugin::FcitxQtConfigUIPlugin(QObject *parent)
+    : QObject(parent) {}
 
-}
-
-FcitxQtConfigUIPlugin::~FcitxQtConfigUIPlugin()
-{
-
-}
+FcitxQtConfigUIPlugin::~FcitxQtConfigUIPlugin() {}

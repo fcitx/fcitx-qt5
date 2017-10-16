@@ -17,34 +17,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <libintl.h>
-#include <fcitx-utils/utils.h>
 #include "main.h"
 #include "editor.h"
 #include "model.h"
+#include <fcitx-utils/utils.h>
+#include <libintl.h>
 
-QuickPhraseEditorPlugin::QuickPhraseEditorPlugin(QObject* parent): FcitxQtConfigUIPlugin(parent)
-{
+QuickPhraseEditorPlugin::QuickPhraseEditorPlugin(QObject *parent)
+    : FcitxQtConfigUIPlugin(parent) {}
 
-}
-
-FcitxQtConfigUIWidget* QuickPhraseEditorPlugin::create(const QString& key)
-{
+FcitxQtConfigUIWidget *QuickPhraseEditorPlugin::create(const QString &key) {
     Q_UNUSED(key);
     return new fcitx::ListEditor;
 }
 
-QStringList QuickPhraseEditorPlugin::files()
-{
+QStringList QuickPhraseEditorPlugin::files() {
     return QStringList("data/QuickPhrase.mb");
 }
 
-QString QuickPhraseEditorPlugin::name()
-{
-    return "quickphrase-editor";
-}
+QString QuickPhraseEditorPlugin::name() { return "quickphrase-editor"; }
 
-QString QuickPhraseEditorPlugin::domain()
-{
-    return "fcitx";
-}
+QString QuickPhraseEditorPlugin::domain() { return "fcitx"; }

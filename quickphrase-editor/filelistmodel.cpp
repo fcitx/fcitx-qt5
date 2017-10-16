@@ -17,27 +17,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "common.h"
 #include "filelistmodel.h"
+#include "common.h"
 #include "fcitx-config/xdg.h"
 
-fcitx::FileListModel::FileListModel(QObject* parent): QAbstractListModel(parent)
-{
+fcitx::FileListModel::FileListModel(QObject *parent)
+    : QAbstractListModel(parent) {
     loadFileList();
 }
 
-fcitx::FileListModel::~FileListModel()
-{
+fcitx::FileListModel::~FileListModel() {}
 
-}
-
-int fcitx::FileListModel::rowCount(const QModelIndex& parent) const
-{
+int fcitx::FileListModel::rowCount(const QModelIndex &parent) const {
     return m_fileList.size();
 }
 
-QVariant fcitx::FileListModel::data(const QModelIndex& index, int role) const
-{
+QVariant fcitx::FileListModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid() || index.row() >= m_fileList.size())
         return QVariant();
 
@@ -48,7 +43,9 @@ QVariant fcitx::FileListModel::data(const QModelIndex& index, int role) const
         } else {
             // remove "data/quickphrase.d/"
             const size_t length = strlen(QUICK_PHRASE_CONFIG_DIR);
-            return m_fileList[index.row()].mid(length + 1, m_fileList[index.row()].size() - length - strlen(".mb") - 1);
+            return m_fileList[index.row()].mid(length + 1,
+                                               m_fileList[index.row()].size() -
+                                                   length - strlen(".mb") - 1);
         }
     case Qt::UserRole:
         return m_fileList[index.row()];
@@ -58,24 +55,24 @@ QVariant fcitx::FileListModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void fcitx::FileListModel::loadFileList()
-{
+void fcitx::FileListModel::loadFileList() {
     beginResetModel();
     m_fileList.clear();
     m_fileList.append(QUICK_PHRASE_CONFIG_FILE);
-    FcitxStringHashSet* files = FcitxXDGGetFiles(QUICK_PHRASE_CONFIG_DIR, NULL, ".mb");
+    FcitxStringHashSet *files =
+        FcitxXDGGetFiles(QUICK_PHRASE_CONFIG_DIR, NULL, ".mb");
 
     HASH_SORT(files, fcitx_utils_string_hash_set_compare);
     HASH_FOREACH(f, files, FcitxStringHashSet) {
-        m_fileList.append(QString::fromLocal8Bit(f->name).prepend(QUICK_PHRASE_CONFIG_DIR "/"));
+        m_fileList.append(QString::fromLocal8Bit(f->name).prepend(
+            QUICK_PHRASE_CONFIG_DIR "/"));
     }
     fcitx_utils_free_string_hash_set(files);
 
     endResetModel();
 }
 
-int fcitx::FileListModel::findFile(const QString& lastFileName)
-{
+int fcitx::FileListModel::findFile(const QString &lastFileName) {
     int idx = m_fileList.indexOf(lastFileName);
     if (idx < 0) {
         return 0;

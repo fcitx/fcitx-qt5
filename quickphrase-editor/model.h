@@ -21,36 +21,37 @@
 #define FCITX_TOOLS_GUI_MODEL_H_
 
 #include <QAbstractTableModel>
+#include <QFutureWatcher>
 #include <QSet>
 #include <QTextStream>
-#include <QFutureWatcher>
 
 class QFile;
-namespace fcitx
-{
+namespace fcitx {
 
-typedef QList< QPair< QString , QString> > QStringPairList;
+typedef QList<QPair<QString, QString>> QStringPairList;
 
-class QuickPhraseModel : public QAbstractTableModel
-{
+class QuickPhraseModel : public QAbstractTableModel {
     Q_OBJECT
 public:
-    explicit QuickPhraseModel(QObject* parent = 0);
+    explicit QuickPhraseModel(QObject *parent = 0);
     virtual ~QuickPhraseModel();
 
-    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-    void load(const QString& file, bool append);
-    void loadData(QTextStream& stream);
-    void addItem(const QString& macro, const QString& word);
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value,
+                         int role = Qt::EditRole);
+    virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index,
+                          int role = Qt::DisplayRole) const;
+    void load(const QString &file, bool append);
+    void loadData(QTextStream &stream);
+    void addItem(const QString &macro, const QString &word);
     void deleteItem(int row);
     void deleteAllItem();
-    QFutureWatcher< bool >* save(const QString& file);
-    void saveData(QTextStream& dev);
+    QFutureWatcher<bool> *save(const QString &file);
+    void saveData(QTextStream &dev);
     bool needSave();
 
 signals:
@@ -61,14 +62,13 @@ private slots:
     void saveFinished();
 
 private:
-    QStringPairList parse(const QString& file);
-    bool saveData(const QString& file, const fcitx::QStringPairList& list);
+    QStringPairList parse(const QString &file);
+    bool saveData(const QString &file, const fcitx::QStringPairList &list);
     void setNeedSave(bool needSave);
     bool m_needSave;
     QStringPairList m_list;
-    QFutureWatcher< QStringPairList >* m_futureWatcher;
+    QFutureWatcher<QStringPairList> *m_futureWatcher;
 };
-
 }
 
 #endif // FCITX_TOOLS_GUI_MODEL_H_

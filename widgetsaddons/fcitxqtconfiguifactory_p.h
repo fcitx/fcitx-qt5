@@ -20,20 +20,20 @@
 #ifndef FCITXQTCONFIGUIFACTORY_P_H
 #define FCITXQTCONFIGUIFACTORY_P_H
 
-#include <QObject>
 #include "fcitxqtconfiguifactory.h"
+#include <QObject>
 
 class FcitxQtConfigUIFactoryPrivate : public QObject {
     Q_OBJECT
 public:
-    FcitxQtConfigUIFactoryPrivate(FcitxQtConfigUIFactory* conn);
+    FcitxQtConfigUIFactoryPrivate(FcitxQtConfigUIFactory *conn);
     virtual ~FcitxQtConfigUIFactoryPrivate();
-    FcitxQtConfigUIFactory * const q_ptr;
+    FcitxQtConfigUIFactory *const q_ptr;
     Q_DECLARE_PUBLIC(FcitxQtConfigUIFactory);
 
 private:
     void scan();
-    QMap<QString, FcitxQtConfigUIFactoryInterface*> plugins;
+    QMap<QString, FcitxQtConfigUIFactoryInterface *> plugins;
 };
 
 #endif // FCITXQTCONFIGUIFACTORY_P_H

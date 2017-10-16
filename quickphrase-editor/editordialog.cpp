@@ -17,44 +17,27 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "editordialog.h"
 #include "common.h"
 #include "ui_editordialog.h"
-#include "editordialog.h"
 
-namespace fcitx
-{
-EditorDialog::EditorDialog(QWidget* parent): QDialog(parent),
-    m_ui(new Ui::EditorDialog)
-{
+namespace fcitx {
+EditorDialog::EditorDialog(QWidget *parent)
+    : QDialog(parent), m_ui(new Ui::EditorDialog) {
     m_ui->setupUi(this);
     m_ui->keyLabel->setText(_("Keyword:"));
     m_ui->valueLabel->setText(_("Phrase:"));
 }
 
-EditorDialog::~EditorDialog()
-{
-    delete m_ui;
-}
+EditorDialog::~EditorDialog() { delete m_ui; }
 
-void EditorDialog::setKey(const QString& s)
-{
-    m_ui->keyLineEdit->setText(s);
-}
+void EditorDialog::setKey(const QString &s) { m_ui->keyLineEdit->setText(s); }
 
-void EditorDialog::setValue(const QString& s)
-{
+void EditorDialog::setValue(const QString &s) {
     m_ui->valueLineEdit->setText(s);
 }
 
-QString EditorDialog::key() const
-{
-    return m_ui->keyLineEdit->text();
-}
+QString EditorDialog::key() const { return m_ui->keyLineEdit->text(); }
 
-QString EditorDialog::value() const
-{
-    return m_ui->valueLineEdit->text();
-}
-
-
+QString EditorDialog::value() const { return m_ui->valueLineEdit->text(); }
 }

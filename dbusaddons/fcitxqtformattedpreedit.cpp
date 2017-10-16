@@ -21,42 +21,30 @@
 
 #include "fcitxqtformattedpreedit.h"
 
-void FcitxQtFormattedPreedit::registerMetaType()
-{
+void FcitxQtFormattedPreedit::registerMetaType() {
     qRegisterMetaType<FcitxQtFormattedPreedit>("FcitxQtFormattedPreedit");
     qDBusRegisterMetaType<FcitxQtFormattedPreedit>();
-    qRegisterMetaType<FcitxQtFormattedPreeditList>("FcitxQtFormattedPreeditList");
+    qRegisterMetaType<FcitxQtFormattedPreeditList>(
+        "FcitxQtFormattedPreeditList");
     qDBusRegisterMetaType<FcitxQtFormattedPreeditList>();
 }
 
-qint32 FcitxQtFormattedPreedit::format() const
-{
-    return m_format;
-}
+qint32 FcitxQtFormattedPreedit::format() const { return m_format; }
 
-const QString& FcitxQtFormattedPreedit::string() const
-{
-    return m_string;
-}
+const QString &FcitxQtFormattedPreedit::string() const { return m_string; }
 
-void FcitxQtFormattedPreedit::setFormat(qint32 format)
-{
-    m_format = format;
-}
+void FcitxQtFormattedPreedit::setFormat(qint32 format) { m_format = format; }
 
-void FcitxQtFormattedPreedit::setString(const QString& str)
-{
-    m_string = str;
-}
+void FcitxQtFormattedPreedit::setString(const QString &str) { m_string = str; }
 
-bool FcitxQtFormattedPreedit::operator==(const FcitxQtFormattedPreedit& preedit) const
-{
+bool FcitxQtFormattedPreedit::
+operator==(const FcitxQtFormattedPreedit &preedit) const {
     return (preedit.m_format == m_format) && (preedit.m_string == m_string);
 }
 
 FCITXQTDBUSADDONS_EXPORT
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtFormattedPreedit& preedit)
-{
+QDBusArgument &operator<<(QDBusArgument &argument,
+                          const FcitxQtFormattedPreedit &preedit) {
     argument.beginStructure();
     argument << preedit.string();
     argument << preedit.format();
@@ -65,8 +53,8 @@ QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtFormattedPreedit
 }
 
 FCITXQTDBUSADDONS_EXPORT
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtFormattedPreedit& preedit)
-{
+const QDBusArgument &operator>>(const QDBusArgument &argument,
+                                FcitxQtFormattedPreedit &preedit) {
     QString str;
     qint32 format;
     argument.beginStructure();

@@ -21,8 +21,8 @@
 #define FCITXQTCONFIGPLUGIN_H
 
 #include "fcitxqtwidgetsaddons_export.h"
-#include <QtCore/QString>
 #include <QtCore/QObject>
+#include <QtCore/QString>
 #include <QtCore/QStringList>
 
 class FcitxQtConfigUIWidget;
@@ -30,8 +30,7 @@ class FcitxQtConfigUIWidget;
 /**
  * interface for qt config ui
  */
-struct FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIFactoryInterface
-{
+struct FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIFactoryInterface {
     /**
      *  return the name for plugin
      */
@@ -44,7 +43,7 @@ struct FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIFactoryInterface
      *
      * @return plugin name
      */
-    virtual FcitxQtConfigUIWidget *create( const QString &key ) = 0;
+    virtual FcitxQtConfigUIWidget *create(const QString &key) = 0;
 
     /**
      * return a list that this plugin will handle, need to be consist with
@@ -55,28 +54,31 @@ struct FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIFactoryInterface
     virtual QStringList files() = 0;
 
     /**
-     * return gettext domain, due to some reason, fcitx doesn't use qt's i18n feature
+     * return gettext domain, due to some reason, fcitx doesn't use qt's i18n
+     * feature
      * but gettext
      *
      * @return domain of gettext
      */
     virtual QString domain() = 0;
-
 };
 
-#define FcitxQtConfigUIFactoryInterface_iid "org.fcitx.Fcitx.FcitxQtConfigUIFactoryInterface"
-Q_DECLARE_INTERFACE(FcitxQtConfigUIFactoryInterface, FcitxQtConfigUIFactoryInterface_iid)
+#define FcitxQtConfigUIFactoryInterface_iid                                    \
+    "org.fcitx.Fcitx.FcitxQtConfigUIFactoryInterface"
+Q_DECLARE_INTERFACE(FcitxQtConfigUIFactoryInterface,
+                    FcitxQtConfigUIFactoryInterface_iid)
 
 /**
  * base class for qt config ui
  */
-class FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIPlugin : public QObject, public FcitxQtConfigUIFactoryInterface {
+class FCITXQTWIDGETSADDONS_EXPORT FcitxQtConfigUIPlugin
+    : public QObject,
+      public FcitxQtConfigUIFactoryInterface {
     Q_OBJECT
     Q_INTERFACES(FcitxQtConfigUIFactoryInterface)
 public:
-    explicit FcitxQtConfigUIPlugin(QObject* parent = 0);
+    explicit FcitxQtConfigUIPlugin(QObject *parent = 0);
     virtual ~FcitxQtConfigUIPlugin();
 };
-
 
 #endif // FCITXCONFIGPLUGIN_H

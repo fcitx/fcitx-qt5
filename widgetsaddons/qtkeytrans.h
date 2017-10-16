@@ -21,8 +21,10 @@
 #define QTKEYTRANS_H
 #include <qnamespace.h>
 
-bool keyQtToSym(int qtcode, Qt::KeyboardModifiers mod, int& sym, unsigned int& state);
+bool keyQtToSym(int qtcode, Qt::KeyboardModifiers mod, int &sym,
+                unsigned int &state);
 
-bool symToKeyQt(int sym, unsigned int state, int& qtcode, Qt::KeyboardModifiers& mod);
+bool symToKeyQt(int sym, unsigned int state, int &qtcode,
+                Qt::KeyboardModifiers &mod);
 
 #endif

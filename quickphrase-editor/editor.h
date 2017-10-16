@@ -20,29 +20,26 @@
 #ifndef FCITX_TOOLS_GUI_EDITOR_H
 #define FCITX_TOOLS_GUI_EDITOR_H
 
-#include <QMainWindow>
-#include <QDir>
-#include <QMutex>
 #include "fcitxqtconfiguiwidget.h"
 #include "model.h"
+#include <QDir>
+#include <QMainWindow>
+#include <QMutex>
 
 class QAbstractItemModel;
 class CMacroTable;
-namespace Ui
-{
+namespace Ui {
 class Editor;
 }
 
-namespace fcitx
-{
+namespace fcitx {
 
 class FileListModel;
 
-class ListEditor : public FcitxQtConfigUIWidget
-{
+class ListEditor : public FcitxQtConfigUIWidget {
     Q_OBJECT
 public:
-    explicit ListEditor(QWidget* parent = 0);
+    explicit ListEditor(QWidget *parent = 0);
     virtual ~ListEditor();
 
     virtual void load();
@@ -71,15 +68,16 @@ private slots:
     void exportData();
     void importFileSelected();
     void exportFileSelected();
+
 private:
-    void load(const QString& file);
-    void save(const QString& file);
+    void load(const QString &file);
+    void save(const QString &file);
     QString currentFile();
     QString currentName();
-    Ui::Editor* m_ui;
-    QuickPhraseModel* m_model;
-    FileListModel* m_fileListModel;
-    QMenu* m_operationMenu;
+    Ui::Editor *m_ui;
+    QuickPhraseModel *m_model;
+    FileListModel *m_fileListModel;
+    QMenu *m_operationMenu;
     QString m_lastFile;
 };
 }

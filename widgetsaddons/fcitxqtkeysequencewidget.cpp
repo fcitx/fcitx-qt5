@@ -44,36 +44,34 @@
 #include "fcitxqtkeysequencewidget.h"
 #include "fcitxqtkeysequencewidget_p.h"
 
-#include <QKeyEvent>
-#include <QTimer>
-#include <QHash>
-#include <QHBoxLayout>
-#include <QToolButton>
 #include <QApplication>
-#include <QMessageBox>
 #include <QDebug>
-#include <libintl.h>
+#include <QHBoxLayout>
+#include <QHash>
+#include <QKeyEvent>
+#include <QMessageBox>
+#include <QTimer>
+#include <QToolButton>
 #include <fcitx-utils/keysymgen.h>
+#include <libintl.h>
 
 #include "qtkeytrans.h"
 
 #define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
 
-class FcitxQtKeySequenceWidgetPrivate
-{
+class FcitxQtKeySequenceWidgetPrivate {
 public:
     FcitxQtKeySequenceWidgetPrivate(FcitxQtKeySequenceWidget *q);
 
     void init();
 
-    static QKeySequence appendToSequence(const QKeySequence& seq, int keyQt);
+    static QKeySequence appendToSequence(const QKeySequence &seq, int keyQt);
     static bool isOkWhenModifierless(int keyQt);
 
     void updateShortcutDisplay();
     void startRecording();
 
-    void controlModifierlessTimout()
-    {
+    void controlModifierlessTimout() {
         if (nKey != 0 && !modifierKeys) {
             // No modifier key pressed currently. Start the timout
             modifierlessTimeout.start(600);
@@ -81,21 +79,18 @@ public:
             // A modifier is pressed. Stop the timeout
             modifierlessTimeout.stop();
         }
-
     }
 
-
-    void cancelRecording()
-    {
+    void cancelRecording() {
         keySequence = oldKeySequence;
         side = oldSide;
         doneRecording();
     }
 
-//private slot
+    // private slot
     void doneRecording(bool validate = true);
 
-//members
+    // members
     FcitxQtKeySequenceWidget *const q;
     QHBoxLayout *layout;
     FcitxQtKeySequenceButton *keyButton;
@@ -114,41 +109,31 @@ public:
     FcitxQtModifierSide oldSide;
 };
 
-FcitxQtKeySequenceWidgetPrivate::FcitxQtKeySequenceWidgetPrivate(FcitxQtKeySequenceWidget *q)
-    : q(q)
-     ,layout(nullptr)
-     ,keyButton(nullptr)
-     ,clearButton(nullptr)
-     ,allowModifierless(false)
-     ,nKey(0)
-     ,modifierKeys(0)
-     ,isRecording(false)
-     ,multiKeyShortcutsAllowed(true)
-     ,allowModifierOnly(false)
-     ,side(MS_Unknown)
-{}
+FcitxQtKeySequenceWidgetPrivate::FcitxQtKeySequenceWidgetPrivate(
+    FcitxQtKeySequenceWidget *q)
+    : q(q), layout(nullptr), keyButton(nullptr), clearButton(nullptr),
+      allowModifierless(false), nKey(0), modifierKeys(0), isRecording(false),
+      multiKeyShortcutsAllowed(true), allowModifierOnly(false),
+      side(MS_Unknown) {}
 
 FcitxQtKeySequenceWidget::FcitxQtKeySequenceWidget(QWidget *parent)
- : QWidget(parent),
-   d(new FcitxQtKeySequenceWidgetPrivate(this))
-{
+    : QWidget(parent), d(new FcitxQtKeySequenceWidgetPrivate(this)) {
     d->init();
-    setFocusProxy( d->keyButton );
-    connect(d->keyButton, &QPushButton::clicked, this, &FcitxQtKeySequenceWidget::captureKeySequence);
-    connect(d->clearButton, &QPushButton::clicked, this, &FcitxQtKeySequenceWidget::clearKeySequence);
-    connect(&d->modifierlessTimeout, &QTimer::timeout, this, [this] () {
-        d->doneRecording();
-    });
-    //TODO: how to adopt style changes at runtime?
+    setFocusProxy(d->keyButton);
+    connect(d->keyButton, &QPushButton::clicked, this,
+            &FcitxQtKeySequenceWidget::captureKeySequence);
+    connect(d->clearButton, &QPushButton::clicked, this,
+            &FcitxQtKeySequenceWidget::clearKeySequence);
+    connect(&d->modifierlessTimeout, &QTimer::timeout, this,
+            [this]() { d->doneRecording(); });
+    // TODO: how to adopt style changes at runtime?
     /*QFont modFont = d->clearButton->font();
     modFont.setStyleHint(QFont::TypeWriter);
     d->clearButton->setFont(modFont);*/
     d->updateShortcutDisplay();
 }
 
-
-void FcitxQtKeySequenceWidgetPrivate::init()
-{
+void FcitxQtKeySequenceWidgetPrivate::init() {
     layout = new QHBoxLayout(q);
     layout->setMargin(0);
 
@@ -170,72 +155,55 @@ void FcitxQtKeySequenceWidgetPrivate::init()
 #endif
 }
 
+FcitxQtKeySequenceWidget::~FcitxQtKeySequenceWidget() { delete d; }
 
-FcitxQtKeySequenceWidget::~FcitxQtKeySequenceWidget ()
-{
-    delete d;
-}
-
-bool FcitxQtKeySequenceWidget::multiKeyShortcutsAllowed() const
-{
+bool FcitxQtKeySequenceWidget::multiKeyShortcutsAllowed() const {
     return d->multiKeyShortcutsAllowed;
 }
 
-
-void FcitxQtKeySequenceWidget::setMultiKeyShortcutsAllowed(bool allowed)
-{
+void FcitxQtKeySequenceWidget::setMultiKeyShortcutsAllowed(bool allowed) {
     d->multiKeyShortcutsAllowed = allowed;
 }
 
-void FcitxQtKeySequenceWidget::setModifierlessAllowed(bool allow)
-{
+void FcitxQtKeySequenceWidget::setModifierlessAllowed(bool allow) {
     d->allowModifierless = allow;
 }
 
-bool FcitxQtKeySequenceWidget::isModifierlessAllowed()
-{
+bool FcitxQtKeySequenceWidget::isModifierlessAllowed() {
     return d->allowModifierless;
 }
 
-bool FcitxQtKeySequenceWidget::isModifierOnlyAllowed()
-{
+bool FcitxQtKeySequenceWidget::isModifierOnlyAllowed() {
     return d->allowModifierOnly;
 }
 
-void FcitxQtKeySequenceWidget::setModifierOnlyAllowed(bool allow)
-{
+void FcitxQtKeySequenceWidget::setModifierOnlyAllowed(bool allow) {
     d->allowModifierOnly = allow;
 }
 
-FcitxQtModifierSide FcitxQtKeySequenceWidget::modifierSide()
-{
-    return d->side;
-}
+FcitxQtModifierSide FcitxQtKeySequenceWidget::modifierSide() { return d->side; }
 
-void FcitxQtKeySequenceWidget::setClearButtonShown(bool show)
-{
+void FcitxQtKeySequenceWidget::setClearButtonShown(bool show) {
     d->clearButton->setVisible(show);
 }
 
-//slot
-void FcitxQtKeySequenceWidget::captureKeySequence()
-{
-    d->startRecording();
-}
+// slot
+void FcitxQtKeySequenceWidget::captureKeySequence() { d->startRecording(); }
 
-
-QKeySequence FcitxQtKeySequenceWidget::keySequence() const
-{
+QKeySequence FcitxQtKeySequenceWidget::keySequence() const {
     return d->keySequence;
 }
 
-
-//slot
-void FcitxQtKeySequenceWidget::setKeySequence(const QKeySequence& seq, FcitxQtModifierSide side, FcitxQtKeySequenceWidget::Validation validate)
-{
-    // oldKeySequence holds the key sequence before recording started, if setKeySequence()
-    // is called while not recording then set oldKeySequence to the existing sequence so
-    // that the keySequenceChanged() signal is emitted if the new and previous key
+// slot
+void FcitxQtKeySequenceWidget::setKeySequence(
+    const QKeySequence &seq, FcitxQtModifierSide side,
+    FcitxQtKeySequenceWidget::Validation validate) {
+    // oldKeySequence holds the key sequence before recording started, if
+    // setKeySequence()
+    // is called while not recording then set oldKeySequence to the existing
+    // sequence so
+    // that the keySequenceChanged() signal is emitted if the new and previous
+    // key
     // sequences are different
     if (!d->isRecording) {
         d->oldKeySequence = d->keySequence;
@@ -247,16 +215,13 @@ void FcitxQtKeySequenceWidget::setKeySequence(const QKeySequence& seq, FcitxQtMo
     d->doneRecording(validate == Validate);
 }
 
-
-//slot
-void FcitxQtKeySequenceWidget::clearKeySequence()
-{
+// slot
+void FcitxQtKeySequenceWidget::clearKeySequence() {
     setKeySequence(QKeySequence());
     d->side = MS_Unknown;
 }
 
-void FcitxQtKeySequenceWidgetPrivate::startRecording()
-{
+void FcitxQtKeySequenceWidgetPrivate::startRecording() {
     nKey = 0;
     modifierKeys = 0;
     oldKeySequence = keySequence;
@@ -267,22 +232,22 @@ void FcitxQtKeySequenceWidgetPrivate::startRecording()
     keyButton->grabKeyboard();
 
     if (!QWidget::keyboardGrabber()) {
-        qWarning() << "Failed to grab the keyboard! Most likely qt's nograb option is active";
+        qWarning() << "Failed to grab the keyboard! Most likely qt's nograb "
+                      "option is active";
     }
 
     keyButton->setDown(true);
     updateShortcutDisplay();
 }
 
-
-void FcitxQtKeySequenceWidgetPrivate::doneRecording(bool validate)
-{
+void FcitxQtKeySequenceWidgetPrivate::doneRecording(bool validate) {
     modifierlessTimeout.stop();
     isRecording = false;
     keyButton->releaseKeyboard();
     keyButton->setDown(false);
 
-    if (keySequence==oldKeySequence && (oldSide == side || !allowModifierOnly)) {
+    if (keySequence == oldKeySequence &&
+        (oldSide == side || !allowModifierOnly)) {
         // The sequence hasn't changed
         updateShortcutDisplay();
         return;
@@ -293,24 +258,24 @@ void FcitxQtKeySequenceWidgetPrivate::doneRecording(bool validate)
     updateShortcutDisplay();
 }
 
-
-void FcitxQtKeySequenceWidgetPrivate::updateShortcutDisplay()
-{
+void FcitxQtKeySequenceWidgetPrivate::updateShortcutDisplay() {
     do {
         if (keySequence.count() != 1) {
             break;
         }
         int key = keySequence[0] & (~Qt::KeyboardModifierMask);
-        if (key == Qt::Key_Shift
-            || key == Qt::Key_Control
-            || key == Qt::Key_Meta
-            || key == Qt::Key_Alt) {
+        if (key == Qt::Key_Shift || key == Qt::Key_Control ||
+            key == Qt::Key_Meta || key == Qt::Key_Alt) {
             QString s;
             int mod = keySequence[0] & (Qt::KeyboardModifierMask);
-            if (mod & Qt::META && key != Qt::Key_Meta)  s += "Meta+";
-            if (mod & Qt::CTRL && key != Qt::Key_Control)  s += "Ctrl+";
-            if (mod & Qt::ALT && key != Qt::Key_Alt)   s += "Alt+";
-            if (mod & Qt::SHIFT && key != Qt::Key_Shift) s += "Shift+";
+            if (mod & Qt::META && key != Qt::Key_Meta)
+                s += "Meta+";
+            if (mod & Qt::CTRL && key != Qt::Key_Control)
+                s += "Ctrl+";
+            if (mod & Qt::ALT && key != Qt::Key_Alt)
+                s += "Alt+";
+            if (mod & Qt::SHIFT && key != Qt::Key_Shift)
+                s += "Shift+";
 
             if (side == MS_Left) {
                 s += _("Left") + " ";
@@ -318,41 +283,46 @@ void FcitxQtKeySequenceWidgetPrivate::updateShortcutDisplay()
                 s += _("Right") + " ";
             }
 
-            switch(key) {
-                case Qt::Key_Shift:
-                    s += "Shift";
-                    break;
-                case Qt::Key_Control:
-                    s += "Ctrl";
-                    break;
-                case Qt::Key_Meta:
-                    s += "Meta";
-                    break;
-                case Qt::Key_Alt:
-                    s += "Alt";
-                    break;
+            switch (key) {
+            case Qt::Key_Shift:
+                s += "Shift";
+                break;
+            case Qt::Key_Control:
+                s += "Ctrl";
+                break;
+            case Qt::Key_Meta:
+                s += "Meta";
+                break;
+            case Qt::Key_Alt:
+                s += "Alt";
+                break;
             }
             keyButton->setText(s);
             return;
         }
-    } while(0);
+    } while (0);
 
-    //empty string if no non-modifier was pressed
+    // empty string if no non-modifier was pressed
     QString s = keySequence.toString(QKeySequence::NativeText);
     s.replace('&', QLatin1String("&&"));
 
     if (isRecording) {
         if (modifierKeys) {
-            if (!s.isEmpty()) s.append(",");
-            if (modifierKeys & Qt::META)  s += "Meta+";
-            if (modifierKeys & Qt::CTRL)  s += "Ctrl+";
-            if (modifierKeys & Qt::ALT)   s += "Alt+";
-            if (modifierKeys & Qt::SHIFT) s += "Shift+";
+            if (!s.isEmpty())
+                s.append(",");
+            if (modifierKeys & Qt::META)
+                s += "Meta+";
+            if (modifierKeys & Qt::CTRL)
+                s += "Ctrl+";
+            if (modifierKeys & Qt::ALT)
+                s += "Alt+";
+            if (modifierKeys & Qt::SHIFT)
+                s += "Shift+";
 
         } else if (nKey == 0) {
             s = "...";
         }
-        //make it clear that input is still going on
+        // make it clear that input is still going on
         s.append(" ...");
     }
 
@@ -365,15 +335,10 @@ void FcitxQtKeySequenceWidgetPrivate::updateShortcutDisplay()
     keyButton->setText(s);
 }
 
+FcitxQtKeySequenceButton::~FcitxQtKeySequenceButton() {}
 
-FcitxQtKeySequenceButton::~FcitxQtKeySequenceButton()
-{
-}
-
-
-//prevent Qt from special casing Tab and Backtab
-bool FcitxQtKeySequenceButton::event (QEvent* e)
-{
+// prevent Qt from special casing Tab and Backtab
+bool FcitxQtKeySequenceButton::event(QEvent *e) {
     if (d->isRecording && e->type() == QEvent::KeyPress) {
         keyPressEvent(static_cast<QKeyEvent *>(e));
         return true;
@@ -391,25 +356,28 @@ bool FcitxQtKeySequenceButton::event (QEvent* e)
     return QPushButton::event(e);
 }
 
-
-void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e)
-{
+void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e) {
     int keyQt = e->key();
     if (keyQt == -1) {
-        // Qt sometimes returns garbage keycodes, I observed -1, if it doesn't know a key.
-        // We cannot do anything useful with those (several keys have -1, indistinguishable)
+        // Qt sometimes returns garbage keycodes, I observed -1, if it doesn't
+        // know a key.
+        // We cannot do anything useful with those (several keys have -1,
+        // indistinguishable)
         // and QKeySequence.toString() will also yield a garbage string.
-        QMessageBox::warning(this,
-                _("The key you just pressed is not supported by Qt."),
-                _("Unsupported Key"));
+        QMessageBox::warning(
+            this, _("The key you just pressed is not supported by Qt."),
+            _("Unsupported Key"));
         return d->cancelRecording();
     }
 
-    uint newModifiers = e->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
+    uint newModifiers =
+        e->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
 
-    //don't have the return or space key appear as first key of the sequence when they
-    //were pressed to start editing - catch and them and imitate their effect
-    if (!d->isRecording && ((keyQt == Qt::Key_Return || keyQt == Qt::Key_Space))) {
+    // don't have the return or space key appear as first key of the sequence
+    // when they
+    // were pressed to start editing - catch and them and imitate their effect
+    if (!d->isRecording &&
+        ((keyQt == Qt::Key_Return || keyQt == Qt::Key_Space))) {
         d->startRecording();
         d->modifierKeys = newModifiers;
         d->updateShortcutDisplay();
@@ -423,15 +391,14 @@ void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e)
     e->accept();
     d->modifierKeys = newModifiers;
 
-
-    switch(keyQt) {
-    case Qt::Key_AltGr: //or else we get unicode salad
+    switch (keyQt) {
+    case Qt::Key_AltGr: // or else we get unicode salad
         return;
     case Qt::Key_Shift:
     case Qt::Key_Control:
     case Qt::Key_Alt:
     case Qt::Key_Meta:
-    case Qt::Key_Menu: //unused (yes, but why?)
+    case Qt::Key_Menu: // unused (yes, but why?)
         d->controlModifierlessTimout();
         d->updateShortcutDisplay();
         break;
@@ -440,8 +407,9 @@ void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e)
         if (d->nKey == 0 && !(d->modifierKeys & ~Qt::SHIFT)) {
             // It's the first key and no modifier pressed. Check if this is
             // allowed
-            if (!(FcitxQtKeySequenceWidgetPrivate::isOkWhenModifierless(keyQt)
-                            || d->allowModifierless)) {
+            if (!(FcitxQtKeySequenceWidgetPrivate::isOkWhenModifierless(
+                      keyQt) ||
+                  d->allowModifierless)) {
                 // No it's not
                 return;
             }
@@ -451,8 +419,7 @@ void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e)
         if (keyQt) {
             if ((keyQt == Qt::Key_Backtab) && (d->modifierKeys & Qt::SHIFT)) {
                 keyQt = Qt::Key_Tab | d->modifierKeys;
-            }
-            else {
+            } else {
                 keyQt |= d->modifierKeys;
             }
 
@@ -460,7 +427,8 @@ void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e)
                 d->keySequence = QKeySequence(keyQt);
             } else {
                 d->keySequence =
-                  FcitxQtKeySequenceWidgetPrivate::appendToSequence(d->keySequence, keyQt);
+                    FcitxQtKeySequenceWidgetPrivate::appendToSequence(
+                        d->keySequence, keyQt);
             }
 
             d->nKey++;
@@ -474,9 +442,7 @@ void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e)
     }
 }
 
-
-void FcitxQtKeySequenceButton::keyReleaseEvent(QKeyEvent *e)
-{
+void FcitxQtKeySequenceButton::keyReleaseEvent(QKeyEvent *e) {
     if (e->key() == -1) {
         // ignore garbage, see keyPressEvent()
         return;
@@ -487,26 +453,23 @@ void FcitxQtKeySequenceButton::keyReleaseEvent(QKeyEvent *e)
 
     e->accept();
 
-    if (!d->multiKeyShortcutsAllowed
-        && d->allowModifierOnly
-        && (e->key() == Qt::Key_Shift
-            || e->key() == Qt::Key_Control
-            || e->key() == Qt::Key_Meta
-            || e->key() == Qt::Key_Alt)) {
+    if (!d->multiKeyShortcutsAllowed && d->allowModifierOnly &&
+        (e->key() == Qt::Key_Shift || e->key() == Qt::Key_Control ||
+         e->key() == Qt::Key_Meta || e->key() == Qt::Key_Alt)) {
         d->side = MS_Unknown;
 
         if (qApp->platformName() == "xcb") {
 
-            if (e->nativeVirtualKey() == FcitxKey_Control_L
-            || e->nativeVirtualKey() == FcitxKey_Alt_L
-            || e->nativeVirtualKey() == FcitxKey_Shift_L
-            || e->nativeVirtualKey() == FcitxKey_Super_L) {
+            if (e->nativeVirtualKey() == FcitxKey_Control_L ||
+                e->nativeVirtualKey() == FcitxKey_Alt_L ||
+                e->nativeVirtualKey() == FcitxKey_Shift_L ||
+                e->nativeVirtualKey() == FcitxKey_Super_L) {
                 d->side = MS_Left;
             }
-            if (e->nativeVirtualKey() == FcitxKey_Control_R
-            || e->nativeVirtualKey() == FcitxKey_Alt_R
-            || e->nativeVirtualKey() == FcitxKey_Shift_R
-            || e->nativeVirtualKey() == FcitxKey_Super_R) {
+            if (e->nativeVirtualKey() == FcitxKey_Control_R ||
+                e->nativeVirtualKey() == FcitxKey_Alt_R ||
+                e->nativeVirtualKey() == FcitxKey_Shift_R ||
+                e->nativeVirtualKey() == FcitxKey_Super_R) {
                 d->side = MS_Right;
             }
         }
@@ -516,10 +479,10 @@ void FcitxQtKeySequenceButton::keyReleaseEvent(QKeyEvent *e)
         return;
     }
 
+    uint newModifiers =
+        e->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
 
-    uint newModifiers = e->modifiers() & (Qt::SHIFT | Qt::CTRL | Qt::ALT | Qt::META);
-
-    //if a modifier that belongs to the shortcut was released...
+    // if a modifier that belongs to the shortcut was released...
     if ((newModifiers & d->modifierKeys) < d->modifierKeys) {
         d->modifierKeys = newModifiers;
         d->controlModifierlessTimout();
@@ -527,10 +490,10 @@ void FcitxQtKeySequenceButton::keyReleaseEvent(QKeyEvent *e)
     }
 }
 
-
-//static
-QKeySequence FcitxQtKeySequenceWidgetPrivate::appendToSequence(const QKeySequence& seq, int keyQt)
-{
+// static
+QKeySequence
+FcitxQtKeySequenceWidgetPrivate::appendToSequence(const QKeySequence &seq,
+                                                  int keyQt) {
     switch (seq.count()) {
     case 0:
         return QKeySequence(keyQt);
@@ -545,11 +508,9 @@ QKeySequence FcitxQtKeySequenceWidgetPrivate::appendToSequence(const QKeySequenc
     }
 }
 
-
-//static
-bool FcitxQtKeySequenceWidgetPrivate::isOkWhenModifierless(int keyQt)
-{
-    //this whole function is a hack, but especially the first line of code
+// static
+bool FcitxQtKeySequenceWidgetPrivate::isOkWhenModifierless(int keyQt) {
+    // this whole function is a hack, but especially the first line of code
     if (QKeySequence(keyQt).toString().length() == 1)
         return false;
 
@@ -557,7 +518,7 @@ bool FcitxQtKeySequenceWidgetPrivate::isOkWhenModifierless(int keyQt)
     case Qt::Key_Return:
     case Qt::Key_Space:
     case Qt::Key_Tab:
-    case Qt::Key_Backtab: //does this ever happen?
+    case Qt::Key_Backtab: // does this ever happen?
     case Qt::Key_Backspace:
     case Qt::Key_Delete:
         return false;
@@ -566,41 +527,39 @@ bool FcitxQtKeySequenceWidgetPrivate::isOkWhenModifierless(int keyQt)
     }
 }
 
-void FcitxQtKeySequenceWidget::keyQtToFcitx(int keyQt, FcitxQtModifierSide side, int& outsym, uint& outstate)
-{
+void FcitxQtKeySequenceWidget::keyQtToFcitx(int keyQt, FcitxQtModifierSide side,
+                                            int &outsym, uint &outstate) {
     int key = keyQt & (~Qt::KeyboardModifierMask);
     int state = keyQt & Qt::KeyboardModifierMask;
     int sym = 0;
     keyQtToSym(key, Qt::KeyboardModifiers(state), sym, outstate);
     if (side == MS_Right) {
         switch (sym) {
-            case FcitxKey_Control_L:
-                sym = FcitxKey_Control_R;
-                break;
-            case FcitxKey_Alt_L:
-                sym = FcitxKey_Alt_R;
-                break;
-            case FcitxKey_Shift_L:
-                sym = FcitxKey_Shift_R;
-                break;
-            case FcitxKey_Super_L:
-                sym = FcitxKey_Super_R;
-                break;
+        case FcitxKey_Control_L:
+            sym = FcitxKey_Control_R;
+            break;
+        case FcitxKey_Alt_L:
+            sym = FcitxKey_Alt_R;
+            break;
+        case FcitxKey_Shift_L:
+            sym = FcitxKey_Shift_R;
+            break;
+        case FcitxKey_Super_L:
+            sym = FcitxKey_Super_R;
+            break;
         }
     }
 
     outsym = sym;
 }
 
-int FcitxQtKeySequenceWidget::keyFcitxToQt(int sym, uint state)
-{
+int FcitxQtKeySequenceWidget::keyFcitxToQt(int sym, uint state) {
     Qt::KeyboardModifiers qstate = Qt::NoModifier;
 
     int key;
-    symToKeyQt((int) sym, state, key, qstate);
+    symToKeyQt((int)sym, state, key, qstate);
 
     return key | qstate;
 }
-
 
 #include "moc_fcitxqtkeysequencewidget.cpp"

@@ -24,27 +24,28 @@
 
 #include <QMainWindow>
 
-#include "ui_mainwindow.h"
 #include "fcitxqtconfiguiwidget.h"
+#include "ui_mainwindow.h"
 
 class FcitxQtInputMethodProxy;
 class FcitxQtConnection;
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    explicit MainWindow(FcitxQtConfigUIWidget* pluginWidget, QWidget* parent = 0);
+    explicit MainWindow(FcitxQtConfigUIWidget *pluginWidget,
+                        QWidget *parent = 0);
     virtual ~MainWindow();
 public slots:
     void changed(bool changed);
-    void clicked(QAbstractButton* button);
+    void clicked(QAbstractButton *button);
     void connected();
     void saveFinished();
 
 private:
-    Ui::MainWindow* m_ui;
-    FcitxQtConnection* m_connection;
-    FcitxQtConfigUIWidget* m_pluginWidget;
-    FcitxQtInputMethodProxy* m_proxy;
+    Ui::MainWindow *m_ui;
+    FcitxQtConnection *m_connection;
+    FcitxQtConfigUIWidget *m_pluginWidget;
+    FcitxQtInputMethodProxy *m_proxy;
 };
 
 #endif // FCITXQT5_GUIWRAPPER_MAINWINDOW_H

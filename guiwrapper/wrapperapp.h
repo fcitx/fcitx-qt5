@@ -22,21 +22,22 @@
 #ifndef FCITXQT5_GUIWRAPPER_WRAPPERAPP_H
 #define FCITXQT5_GUIWRAPPER_WRAPPERAPP_H
 
-#include <QApplication>
 #include "mainwindow.h"
+#include <QApplication>
 
 class FcitxQtConfigUIFactory;
 class WrapperApp : public QApplication {
     Q_OBJECT
 public:
-    WrapperApp(int& argc, char** argv);
+    WrapperApp(int &argc, char **argv);
     virtual ~WrapperApp();
 
 private slots:
     void errorExit();
+
 private:
-    FcitxQtConfigUIFactory* m_factory;
-    MainWindow* m_mainWindow;
+    FcitxQtConfigUIFactory *m_factory;
+    MainWindow *m_mainWindow;
 };
 
 #endif // FCITXQT5_GUIWRAPPER_WRAPPERAPP_H

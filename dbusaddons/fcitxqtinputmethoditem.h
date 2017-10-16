@@ -23,29 +23,29 @@
 #include "fcitxqtdbusaddons_export.h"
 
 // Qt
-#include <QtCore/QString>
 #include <QtCore/QMetaType>
+#include <QtCore/QString>
 #include <QtDBus/QDBusArgument>
 
-class FCITXQTDBUSADDONS_EXPORT FcitxQtInputMethodItem
-{
+class FCITXQTDBUSADDONS_EXPORT FcitxQtInputMethodItem {
 public:
-    const QString& name() const;
-    const QString& uniqueName() const;
-    const QString& langCode() const;
+    const QString &name() const;
+    const QString &uniqueName() const;
+    const QString &langCode() const;
     bool enabled() const;
 
-    void setName(const QString& name);
-    void setUniqueName(const QString& name);
-    void setLangCode(const QString& name);
+    void setName(const QString &name);
+    void setUniqueName(const QString &name);
+    void setLangCode(const QString &name);
     void setEnabled(bool name);
     static void registerMetaType();
 
-    inline bool operator < (const FcitxQtInputMethodItem& im) const {
+    inline bool operator<(const FcitxQtInputMethodItem &im) const {
         if (m_enabled == true && im.m_enabled == false)
             return true;
         return false;
     }
+
 private:
     QString m_name;
     QString m_uniqueName;
@@ -55,8 +55,10 @@ private:
 
 typedef QList<FcitxQtInputMethodItem> FcitxQtInputMethodItemList;
 
-QDBusArgument& operator<<(QDBusArgument& argument, const FcitxQtInputMethodItem& im);
-const QDBusArgument& operator>>(const QDBusArgument& argument, FcitxQtInputMethodItem& im);
+QDBusArgument &operator<<(QDBusArgument &argument,
+                          const FcitxQtInputMethodItem &im);
+const QDBusArgument &operator>>(const QDBusArgument &argument,
+                                FcitxQtInputMethodItem &im);
 
 Q_DECLARE_METATYPE(FcitxQtInputMethodItem)
 Q_DECLARE_METATYPE(FcitxQtInputMethodItemList)

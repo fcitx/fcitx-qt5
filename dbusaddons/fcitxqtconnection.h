@@ -28,7 +28,6 @@ class QDBusConnection;
 
 class FcitxQtConnectionPrivate;
 
-
 /**
  * dbus connection to fcitx
  **/
@@ -36,7 +35,7 @@ class FCITXQTDBUSADDONS_EXPORT FcitxQtConnection : public QObject {
     Q_OBJECT
     Q_PROPERTY(bool autoReconnect READ autoReconnect WRITE setAutoReconnect)
     Q_PROPERTY(bool connected READ isConnected)
-    Q_PROPERTY(QDBusConnection* connection READ connection)
+    Q_PROPERTY(QDBusConnection *connection READ connection)
     Q_PROPERTY(QString serviceName READ serviceName)
 public:
     /**
@@ -44,7 +43,7 @@ public:
      *
      * @param parent
      **/
-    explicit FcitxQtConnection(QObject* parent = 0);
+    explicit FcitxQtConnection(QObject *parent = 0);
 
     /**
      * destroy the connection
@@ -79,13 +78,13 @@ public:
      *
      * @return QDBusConnection*
      **/
-    QDBusConnection* connection();
+    QDBusConnection *connection();
     /**
      * current fcitx dbus service name, can be used for create DBus proxy
      *
      * @return service name
      **/
-    const QString& serviceName();
+    const QString &serviceName();
     /**
      * check its connected or not
      **/
@@ -104,7 +103,7 @@ Q_SIGNALS:
     void disconnected();
 
 private:
-    FcitxQtConnectionPrivate * const d_ptr;
+    FcitxQtConnectionPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(FcitxQtConnection);
 };
 
