@@ -21,11 +21,11 @@
 #include <QDBusInterface>
 #include <QDBusMetaType>
 #include <QDBusConnectionInterface>
-#include <fcitx-utils/utils.h>
 #include "fcitxwatcher.h"
 #include <QFileInfo>
 #include <QCoreApplication>
 #include <QTimer>
+#include <unistd.h>
 
 FcitxInputContextProxy::FcitxInputContextProxy(FcitxWatcher *watcher, QObject *parent) : QObject(parent), m_fcitxWatcher(watcher), m_portal(false)
 {
