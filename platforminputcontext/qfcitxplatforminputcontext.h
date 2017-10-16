@@ -30,8 +30,9 @@
 #include <QRect>
 #include <unordered_map>
 #include <xkbcommon/xkbcommon-compose.h>
-#include "fcitxqtformattedpreedit.h"
-#include "fcitxqtinputcontextproxy.h"
+#include "fcitxqtdbustypes.h"
+#include "fcitxwatcher.h"
+#include "fcitxinputcontextproxy.h"
 
 class FcitxQtConnection;
 class QFileSystemWatcher;
@@ -109,18 +110,15 @@ enum FcitxKeyState {
 };
 
 struct FcitxQtICData {
-    FcitxQtICData() : capability(0), proxy(nullptr), surroundingAnchor(-1), surroundingCursor(-1) {}
+    FcitxQtICData(FcitxWatcher *watcher) : capability(0), proxy(new FcitxInputContextProxy(watcher, watcher)), surroundingAnchor(-1), surroundingCursor(-1) {}
     FcitxQtICData(const FcitxQtICData& that) = delete;
     ~FcitxQtICData() {
         if (proxy) {
-            if (proxy->isValid()) {
-                proxy->DestroyIC();
-            }
             delete proxy;
         }
     }
     QFlags<FcitxCapabilityFlags> capability;
-    FcitxQtInputContextProxy *proxy;
+    FcitxInputContextProxy *proxy;
     QRect rect;
     QString surroundingText;
     int surroundingAnchor;
@@ -202,18 +200,16 @@ public:
 public Q_SLOTS:
     void cursorRectChanged();
     void commitString(const QString& str);
-    void updateFormattedPreedit(const FcitxQtFormattedPreeditList& preeditList, int cursorPos);
+    void updateFormattedPreedit(const FcitxFormattedPreeditList& preeditList, int cursorPos);
     void deleteSurroundingText(int offset, uint nchar);
     void forwardKey(uint keyval, uint state, int type);
-    void createInputContextFinished(QDBusPendingCallWatcher* watcher);
-    void connected();
+    void createInputContextFinished();
     void cleanUp();
     void windowDestroyed(QObject* object);
     void updateCurrentIM(const QString &name, const QString &uniqueName, const QString &langCode);
 
 
 private:
-    void createInputContext(QWindow *w);
     bool processCompose(uint keyval, uint state, FcitxKeyEventType event);
     QKeyEvent* createKeyEvent(uint keyval, uint state, int type);
 
@@ -238,15 +234,14 @@ private:
     void updateCapability(const FcitxQtICData &data);
     void commitPreedit();
     void createICData(QWindow* w);
-    FcitxQtInputContextProxy* validIC();
-    FcitxQtInputContextProxy* validICByWindow(QWindow* window);
+    FcitxInputContextProxy* validIC();
+    FcitxInputContextProxy* validICByWindow(QWindow* window);
     bool filterEventFallback(uint keyval, uint keycode, uint state, bool press);
 
-    FcitxQtConnection* m_connection;
-    FcitxQtInputMethodProxy* m_improxy;
+    FcitxWatcher* m_watcher;
     QString m_preedit;
     QString m_commitPreedit;
-    FcitxQtFormattedPreeditList m_preeditList;
+    FcitxFormattedPreeditList m_preeditList;
     int m_cursorPos;
     bool m_useSurroundingText;
     bool m_syncMode;

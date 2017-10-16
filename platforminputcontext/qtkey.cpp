@@ -1,21 +1,21 @@
-/*
-* Copyright (C) 2017~2017 by CSSlayer
-* wengxt@gmail.com
-*
-* This library is free software; you can redistribute it and/or modify
-* it under the terms of the GNU Lesser General Public License as
-* published by the Free Software Foundation; either version 2.1 of the
-* License, or (at your option) any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library; see the file COPYING. If not,
-* see <http://www.gnu.org/licenses/>.
-*/
+/***************************************************************************
+ *   Copyright (C) 2017~2017 by CSSlayer                                   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
+ ***************************************************************************/
 
 #include "qtkey.h"
 
@@ -25,9 +25,10 @@
 #include <X11/XF86keysym.h>
 #include <ctype.h>
 #include <QString>
+#include <unordered_map>
 
-const QHash<uint32_t, int> &KeyTbl() {
-    static QHash<uint32_t, int> keyTbl{
+const std::unordered_map<uint32_t, int> &KeyTbl() {
+    static std::unordered_map<uint32_t, int> keyTbl{
         std::make_pair(XK_KP_Space, Qt::Key_Space),
         std::make_pair(XK_KP_Tab, Qt::Key_Tab),
         std::make_pair(XK_KP_Enter, Qt::Key_Enter),
@@ -330,21 +331,6 @@ const QHash<uint32_t, int> &KeyTbl() {
         std::make_pair(XF86XK_LaunchE, Qt::Key_LaunchG),
         std::make_pair(XF86XK_LaunchF, Qt::Key_LaunchH),
 
-        std::make_pair(XF86XK_TouchpadToggle, Qt::Key_TouchpadToggle),
-        std::make_pair(XF86XK_TouchpadOn, Qt::Key_TouchpadOn),
-        std::make_pair(XF86XK_TouchpadOff, Qt::Key_TouchpadOff),
-
-        std::make_pair(XF86XK_AudioMicMute, Qt::Key_MicMute),
-
-        std::make_pair(XF86XK_Red, Qt::Key_Red),
-        std::make_pair(XF86XK_Green, Qt::Key_Green),
-        std::make_pair(XF86XK_Yellow, Qt::Key_Yellow),
-        std::make_pair(XF86XK_Blue, Qt::Key_Blue),
-        std::make_pair(XF86XK_New, Qt::Key_New),
-        std::make_pair(XF86XK_Open, Qt::Key_Open),
-        std::make_pair(XK_Find, Qt::Key_Find),
-        std::make_pair(XK_Undo, Qt::Key_Undo),
-        std::make_pair(XK_Redo, Qt::Key_Redo),
         std::make_pair(XF86XK_Select, Qt::Key_Select),
         std::make_pair(XK_Cancel, Qt::Key_Cancel),
         std::make_pair(XK_Execute, Qt::Key_Execute),
@@ -354,7 +340,11 @@ const QHash<uint32_t, int> &KeyTbl() {
 }
 
 int keysymToQtKey(uint32_t key) {
-    return KeyTbl().value(key, 0);
+    auto iter = KeyTbl().find(key);
+    if (iter != KeyTbl().end()) {
+        return iter->second;
+    }
+    return 0;
 }
 
 int keysymToQtKey(uint32_t keysym, const QString &text)
