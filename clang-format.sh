@@ -1,2 +1,2 @@
 #!/bin/sh
-find . \( -not \( -name '*proxy.h' -o -name '*proxy.cpp' \) \) -a \( -name '*.h' -o -name '*.cpp' \)  | xargs clang-format -i
+find . \( -not \( -name 'fcitxqt*proxy.h' -o -name 'fcitxqt*proxy.cpp' \) \) -a \( -name '*.h' -o -name '*.cpp' \)  | xargs clang-format -i
