@@ -76,6 +76,19 @@ struct xkb_context *_xkb_context_new_helper() {
     return context;
 }
 
+static bool objectAcceptsInputMethod()
+{
+    bool enabled = false;
+    QObject *object = qApp->focusObject();
+    if (object) {
+        QInputMethodQueryEvent query(Qt::ImEnabled);
+        QGuiApplication::sendEvent(object, &query);
+        enabled = query.value(Qt::ImEnabled).toBool();
+    }
+
+    return enabled;
+}
+
 QFcitxPlatformInputContext::QFcitxPlatformInputContext()
     : m_watcher(new FcitxWatcher(this)), m_cursorPos(0),
       m_useSurroundingText(false),
@@ -614,7 +627,7 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
             break;
         }
 
-        if (!inputMethodAccepted())
+        if (!inputMethodAccepted() && !objectAcceptsInputMethod())
             break;
 
         QObject *input = qApp->focusObject();
