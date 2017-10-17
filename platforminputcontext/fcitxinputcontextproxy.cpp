@@ -31,10 +31,10 @@ FcitxInputContextProxy::FcitxInputContextProxy(FcitxWatcher *watcher, QObject *p
 {
     FcitxFormattedPreedit::registerMetaType();
     FcitxInputContextArgument::registerMetaType();
-    connect(m_fcitxWatcher, SIGNAL(availibilityChanged(bool)), this, SLOT(availabilityChanged(bool)));
-    availabilityChanged(m_fcitxWatcher->availability());
+    connect(m_fcitxWatcher, SIGNAL(availibilityChanged(bool)), this, SLOT(availabilityChanged()));
     m_watcher.setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
-    connect(&m_watcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(serviceUnregistered()));
+    connect(&m_watcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(availabilityChanged()));
+    availabilityChanged();
 }
 
 FcitxInputContextProxy::~FcitxInputContextProxy()
@@ -55,7 +55,7 @@ void FcitxInputContextProxy::setDisplay(const QString& display)
 }
 
 
-void FcitxInputContextProxy::availabilityChanged(bool avail) {
+void FcitxInputContextProxy::availabilityChanged() {
     QTimer::singleShot(100, this, SLOT(recheck()));
 }
 
@@ -173,10 +173,6 @@ void FcitxInputContextProxy::createInputContextFinished() {
 bool FcitxInputContextProxy::isValid() const
 {
     return (m_icproxy && m_icproxy->isValid()) || (m_ic1proxy && m_ic1proxy->isValid());
-}
-
-void FcitxInputContextProxy::serviceUnregistered() {
-    cleanUp();
 }
 
 void FcitxInputContextProxy::forwardKeyWrapper(uint keyval, uint state, int type) {

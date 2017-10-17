@@ -59,10 +59,9 @@ signals:
     void inputContextCreated();
 
 private slots:
-    void availabilityChanged(bool avail);
+    void availabilityChanged();
     void createInputContext();
     void createInputContextFinished();
-    void serviceUnregistered();
     void recheck();
     void forwardKeyWrapper(uint keyval, uint state, int type);
     void updateFormattedPreeditWrapper(const FcitxFormattedPreeditList &str, int cursorpos);
