@@ -1,1 +1,4 @@
 Fcitx Qt5 Input Context
+
+The platform input context plugin is released under 3-Clause BSD License.
+Other libraries are released under GPL2+.
