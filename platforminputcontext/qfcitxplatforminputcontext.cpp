@@ -362,6 +362,10 @@ void QFcitxPlatformInputContext::createInputContextFinished() {
     if (m_useSurroundingText)
         flag |= CAPACITY_SURROUNDING_TEXT;
 
+    if (qApp && qApp->platformName() == "wayland") {
+        flag |= CAPACITY_RELATIVE_CURSOR_RECT;
+    }
+
     addCapability(*data, flag, true);
 }
 
