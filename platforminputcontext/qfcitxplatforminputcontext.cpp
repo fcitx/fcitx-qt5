@@ -30,10 +30,6 @@
 #include <qpa/qplatformscreen.h>
 #include <qpa/qwindowsysteminterface.h>
 
-#include <errno.h>
-#include <signal.h>
-#include <unistd.h>
-
 #include "qtkey.h"
 
 #include "fcitxinputcontextproxy.h"
@@ -77,8 +73,7 @@ struct xkb_context *_xkb_context_new_helper() {
     return context;
 }
 
-static bool objectAcceptsInputMethod()
-{
+static bool objectAcceptsInputMethod() {
     bool enabled = false;
     QObject *object = qApp->focusObject();
     if (object) {

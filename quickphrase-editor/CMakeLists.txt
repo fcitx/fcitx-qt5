@@ -32,6 +32,7 @@ target_link_libraries(fcitx-quickphrase-editor5
   Qt5::Gui
   Qt5::Concurrent
   FcitxQt5::WidgetsAddons
+  LibIntl::LibIntl
   ${FCITX4_FCITX_UTILS_LIBRARIES}
   ${FCITX4_FCITX_CONFIG_LIBRARIES}
 )

@@ -24,7 +24,9 @@
 #include <QDBusServiceWatcher>
 #include <QDir>
 #include <QFileSystemWatcher>
+#include <errno.h>
 #include <signal.h>
+#include <unistd.h>
 
 // utils function in fcitx-utils and fcitx-config
 bool _pid_exists(pid_t pid) {
@@ -147,7 +149,7 @@ void FcitxWatcher::unwatch() {
     unwatchSocketFile();
     cleanUpConnection();
     m_mainPresent = false;
-    m_portalPresent =false;
+    m_portalPresent = false;
     m_watched = false;
     updateAvailability();
 }
