@@ -19,6 +19,7 @@
 */
 
 #include <QDBusConnection>
+#include <QDebug>
 #include <QGuiApplication>
 #include <QInputMethod>
 #include <QKeyEvent>
@@ -64,15 +65,6 @@ static inline const char *get_locale() {
     return locale;
 }
 
-struct xkb_context *_xkb_context_new_helper() {
-    struct xkb_context *context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
-    if (context) {
-        xkb_context_set_log_level(context, XKB_LOG_LEVEL_CRITICAL);
-    }
-
-    return context;
-}
-
 static bool objectAcceptsInputMethod() {
     bool enabled = false;
     QObject *object = qApp->focusObject();
@@ -83,6 +75,15 @@ static bool objectAcceptsInputMethod() {
     }
 
     return enabled;
+}
+
+struct xkb_context *_xkb_context_new_helper() {
+    struct xkb_context *context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+    if (context) {
+        xkb_context_set_log_level(context, XKB_LOG_LEVEL_CRITICAL);
+    }
+
+    return context;
 }
 
 QFcitxPlatformInputContext::QFcitxPlatformInputContext()
@@ -705,7 +706,7 @@ void QFcitxPlatformInputContext::processKeyEventFinished(
 
     if (!proxy->processKeyEventResult(*watcher)) {
         filtered =
-            filterEventFallback(sym, code, state, type == QEvent::KeyPress);
+            filterEventFallback(sym, code, state, type == QEvent::KeyRelease);
     } else {
         filtered = true;
     }
