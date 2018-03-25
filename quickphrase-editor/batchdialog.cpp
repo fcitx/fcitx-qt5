@@ -17,6 +17,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QIcon>
 #include "batchdialog.h"
 #include "common.h"
 #include "ui_batchdialog.h"
