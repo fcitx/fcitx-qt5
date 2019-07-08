@@ -257,8 +257,12 @@ void FcitxWatcher::watchSocketFile() {
 }
 
 void FcitxWatcher::unwatchSocketFile() {
-    m_fsWatcher->removePaths(m_fsWatcher->files());
-    m_fsWatcher->removePaths(m_fsWatcher->directories());
+    if (!m_fsWatcher->files().isEmpty()) {
+        m_fsWatcher->removePaths(m_fsWatcher->files());
+    }
+    if (!m_fsWatcher->directories().isEmpty()) {
+        m_fsWatcher->removePaths(m_fsWatcher->directories());
+    }
     m_fsWatcher->disconnect(SIGNAL(fileChanged(QString)));
     m_fsWatcher->disconnect(SIGNAL(directoryChanged(QString)));
 }
