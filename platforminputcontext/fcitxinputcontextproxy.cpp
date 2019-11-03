@@ -138,7 +138,7 @@ void FcitxInputContextProxy::createInputContext() {
                 SLOT(createInputContextFinished()));
     } else {
         m_portal = false;
-        m_improxy = new org::fcitx::Fcitx::InputMethod(owner, "/inputmethod",
+        m_improxy = new org::fcitx::Fcitx::InputMethod(owner, "/org/freedesktop/portal/inputmethod",
                                                        connection, this);
         auto result = m_improxy->CreateICv3(info.fileName(), getpid());
         m_createInputContextWatcher = new QDBusPendingCallWatcher(result);
