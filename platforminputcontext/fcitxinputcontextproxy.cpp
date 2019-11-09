@@ -117,7 +117,7 @@ void FcitxInputContextProxy::createInputContext() {
     QFileInfo info(QCoreApplication::applicationFilePath());
     if (service == "org.freedesktop.portal.Fcitx") {
         m_portal = true;
-        m_im1proxy = new org::fcitx::Fcitx::InputMethod1(owner, "/inputmethod",
+        m_im1proxy = new org::fcitx::Fcitx::InputMethod1(owner, "/org/freedesktop/portal/inputmethod",
                                                          connection, this);
         FcitxInputContextArgumentList list;
         FcitxInputContextArgument arg;
@@ -138,7 +138,7 @@ void FcitxInputContextProxy::createInputContext() {
                 SLOT(createInputContextFinished()));
     } else {
         m_portal = false;
-        m_improxy = new org::fcitx::Fcitx::InputMethod(owner, "/org/freedesktop/portal/inputmethod",
+        m_improxy = new org::fcitx::Fcitx::InputMethod(owner, "/inputmethod",
                                                        connection, this);
         auto result = m_improxy->CreateICv3(info.fileName(), getpid());
         m_createInputContextWatcher = new QDBusPendingCallWatcher(result);
