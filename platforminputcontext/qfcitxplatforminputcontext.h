@@ -35,7 +35,6 @@
 #include <unordered_map>
 #include <xkbcommon/xkbcommon-compose.h>
 
-class FcitxQtConnection;
 class QFileSystemWatcher;
 enum FcitxKeyEventType { FCITX_PRESS_KEY, FCITX_RELEASE_KEY };
 

@@ -71,9 +71,10 @@ QString socketFile() {
     return QString("%1/fcitx/dbus/%2").arg(home).arg(filename);
 }
 
-FcitxWatcher::FcitxWatcher(QObject *parent)
+FcitxWatcher::FcitxWatcher(QDBusConnection sessionBus, QObject *parent)
     : QObject(parent), m_fsWatcher(new QFileSystemWatcher(this)),
       m_serviceWatcher(new QDBusServiceWatcher(this)), m_connection(nullptr),
+      m_sessionBus(sessionBus),
       m_socketFile(socketFile()),
       m_serviceName(QString("org.fcitx.Fcitx-%2").arg(displayNumber())),
       m_availability(false) {}
@@ -90,7 +91,7 @@ QDBusConnection FcitxWatcher::connection() const {
     if (m_connection) {
         return *m_connection;
     }
-    return QDBusConnection::sessionBus();
+    return m_sessionBus;
 }
 
 QString FcitxWatcher::service() const {
@@ -121,15 +122,15 @@ void FcitxWatcher::watch() {
     connect(m_serviceWatcher,
             SIGNAL(serviceOwnerChanged(QString, QString, QString)), this,
             SLOT(imChanged(QString, QString, QString)));
-    m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
+    m_serviceWatcher->setConnection(m_sessionBus);
     m_serviceWatcher->addWatchedService(m_serviceName);
     m_serviceWatcher->addWatchedService("org.freedesktop.portal.Fcitx");
 
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(
+    if (m_sessionBus.interface()->isServiceRegistered(
             m_serviceName)) {
         m_mainPresent = true;
     }
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(
+    if (m_sessionBus.interface()->isServiceRegistered(
             "org.freedesktop.portal.Fcitx")) {
         m_portalPresent = true;
     }

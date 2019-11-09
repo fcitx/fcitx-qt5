@@ -87,7 +87,7 @@ struct xkb_context *_xkb_context_new_helper() {
 }
 
 QFcitxPlatformInputContext::QFcitxPlatformInputContext()
-    : m_watcher(new FcitxWatcher(this)), m_cursorPos(0),
+    : m_watcher(new FcitxWatcher(QDBusConnection::connectToBus(QDBusConnection::SessionBus, "fcitx-platform-input-context"), this)), m_cursorPos(0),
       m_useSurroundingText(false),
       m_syncMode(get_boolean_env("FCITX_QT_USE_SYNC", false)), m_destroy(false),
       m_xkbContext(_xkb_context_new_helper()),
@@ -258,7 +258,7 @@ void QFcitxPlatformInputContext::update(Qt::InputMethodQueries queries) {
         if (!setSurrounding) {
             data.surroundingAnchor = -1;
             data.surroundingCursor = -1;
-            data.surroundingText = QString::null;
+            data.surroundingText = QString();
             removeCapability(data, CAPACITY_SURROUNDING_TEXT);
         }
     } while (0);

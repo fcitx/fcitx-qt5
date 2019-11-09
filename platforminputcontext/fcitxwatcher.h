@@ -22,6 +22,7 @@
 #define FCITXWATCHER_H_
 
 #include <QObject>
+#include <QDBusConnection>
 
 class QDBusConnection;
 class QFileSystemWatcher;
@@ -33,7 +34,7 @@ class QDBusServiceWatcher;
 class FcitxWatcher : public QObject {
     Q_OBJECT
 public:
-    explicit FcitxWatcher(QObject *parent = nullptr);
+    explicit FcitxWatcher(QDBusConnection sessionBus, QObject *parent = nullptr);
     ~FcitxWatcher();
     void watch();
     void unwatch();
@@ -64,6 +65,7 @@ private:
     QFileSystemWatcher *m_fsWatcher;
     QDBusServiceWatcher *m_serviceWatcher;
     QDBusConnection *m_connection;
+    QDBusConnection m_sessionBus;
     QString m_socketFile;
     QString m_serviceName;
     bool m_availability = false;
