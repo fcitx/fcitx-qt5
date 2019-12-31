@@ -560,9 +560,9 @@ void QFcitxPlatformInputContext::createICData(QWindow *w) {
             data.proxy->setDisplay("wayland:");
         }
         data.proxy->setProperty("wid",
-                                qVariantFromValue(static_cast<void *>(w)));
+                                QVariant::fromValue(static_cast<void *>(w)));
         data.proxy->setProperty("icData",
-                                qVariantFromValue(static_cast<void *>(&data)));
+                                QVariant::fromValue(static_cast<void *>(&data)));
         connect(data.proxy, &FcitxInputContextProxy::inputContextCreated, this,
                 &QFcitxPlatformInputContext::createInputContextFinished);
         connect(data.proxy, &FcitxInputContextProxy::commitString, this,
