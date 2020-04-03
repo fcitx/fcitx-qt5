@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2020-03-25 00:03-0700\n"
+"POT-Creation-Date: 2020-04-03 00:03-0700\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
 "Last-Translator: MarongHappy <daemul72@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/fcitx/teams/12005/ko/)\n"
@@ -75,7 +75,7 @@ msgstr "파일 %1을 만들수 없습니다."
 
 #: quickphrase-editor/editor.cpp:299
 msgid "Cannot remove system file"
-msgstr "시스템 파일을 지울 수 없음"
+msgstr "시스템 파일을 제거할 수 없음"
 
 #: quickphrase-editor/editor.cpp:310
 msgid "Confirm deletion"
@@ -144,7 +144,7 @@ msgstr "목록 갱신"
 
 #: quickphrase-editor/editor.cpp:66
 msgid "Remove File"
-msgstr "파일 지우기"
+msgstr "파일 제거"
 
 #: quickphrase-editor/editor.cpp:122
 msgid "Save Changes"
