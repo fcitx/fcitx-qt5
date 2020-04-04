@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2020-04-03 00:03-0700\n"
+"POT-Creation-Date: 2020-04-04 00:03-0700\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
 "Last-Translator: MarongHappy <daemul72@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/fcitx/teams/12005/ko/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: quickphrase-editor/editor.cpp:300
 #, kde-format
 msgid "%1 is a system file, do you want to delete all phrases instead?"
-msgstr "%1 은 시스템 파일입니다. 모든 구절을 대신 지우겠습니까?"
+msgstr "%1은(는) 시스템 파일입니다. 대신 모든 문구를 삭제하시겠습니까?"
 
 #: quickphrase-editor/editor.cpp:48
 msgid "&Add"
@@ -41,7 +41,7 @@ msgstr "닫기(&C)"
 
 #: quickphrase-editor/editor.cpp:50
 msgid "&Delete"
-msgstr "지우기(&D)"
+msgstr "삭제(&D)"
 
 #: quickphrase-editor/editor.cpp:52
 msgid "&Import"
@@ -66,7 +66,7 @@ msgstr "파일 추가"
 #: quickphrase-editor/editor.cpp:311
 #, kde-format
 msgid "Are you sure to delete %1?"
-msgstr "%1을(를) 지우시겠습니까?"
+msgstr "%1을(를) 삭제하시겠습니까?"
 
 #: quickphrase-editor/editor.cpp:277
 #, kde-format
