@@ -10,6 +10,8 @@ find_package(ECM 1.4.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 option(ENABLE_LIBRARY "Qt library" On)
+option(STATIC_PLUGIN "Build Qt plugin statically" Off)
+option(PLUGINDIR "Path to the plugin directory")
 
 include(GNUInstallDirs)
 include(FeatureSummary)

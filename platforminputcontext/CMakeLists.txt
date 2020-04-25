@@ -24,7 +24,11 @@ qt5_add_dbus_interface(plugin_SRCS org.fcitx.Fcitx.InputContext1.xml inputcontex
 qt5_add_dbus_interface(plugin_SRCS org.fcitx.Fcitx.InputMethod.xml inputmethodproxy)
 qt5_add_dbus_interface(plugin_SRCS org.fcitx.Fcitx.InputMethod1.xml inputmethod1proxy)
 
+if (STATIC_PLUGIN)
+add_library(fcitxplatforminputcontextplugin STATIC ${plugin_SRCS})
+else()
 add_library(fcitxplatforminputcontextplugin MODULE ${plugin_SRCS})
+endif()
 set_target_properties(fcitxplatforminputcontextplugin PROPERTIES
                          AUTOMOC TRUE
                          COMPILE_FLAGS "-fvisibility=hidden"
@@ -39,8 +43,14 @@ target_link_libraries(fcitxplatforminputcontextplugin
                           Qt5::DBus
                           XKBCommon::XKBCommon
                          )
+if (STATIC_PLUGIN)
+target_compile_definitions(fcitxplatforminputcontextplugin PRIVATE QT_STATICPLUGIN)
+endif()
 
 include(ECMQueryQmake)
+if (PLUGINDIR)
+set(CMAKE_INSTALL_QTPLUGINDIR ${PLUGINDIR})
+endif()
 if (NOT CMAKE_INSTALL_QTPLUGINDIR)
 query_qmake(CMAKE_INSTALL_QTPLUGINDIR QT_INSTALL_PLUGINS)
 endif()
