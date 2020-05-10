@@ -277,16 +277,21 @@ void QFcitxPlatformInputContext::setFocusObject(QObject *object) {
     QWindow *window = qApp->focusWindow();
     m_lastWindow = window;
     m_lastObject = object;
+    // Always create IC Data for window.
+    if (window) {
+        proxy = validICByWindow(window);
+        if (!proxy) {
+            createICData(window);
+        }
+    }
     if (!window || (!inputMethodAccepted() && !objectAcceptsInputMethod())) {
         m_lastWindow = nullptr;
         m_lastObject = nullptr;
         return;
     }
-    proxy = validICByWindow(window);
-    if (proxy)
+    if (proxy) {
+        cursorRectChanged();
         proxy->focusIn();
-    else {
-        createICData(window);
     }
 }
 
