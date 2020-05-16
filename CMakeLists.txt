@@ -20,13 +20,13 @@ include(ECMGenerateHeaders)
 
 include(CheckCXXCompilerFlag)
 
-check_cxx_compiler_flag("-std=c++11" SUPPORT_CXX11)
+check_cxx_compiler_flag("-std=gnu++11" SUPPORT_CXX11)
 
 if(NOT SUPPORT_CXX11)
     message(FATAL_ERROR "need c++ 11 compatible compiler to compile")
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall")
 
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core DBus Widgets Concurrent)
 find_package(Qt5Gui ${REQUIRED_QT_VERSION} REQUIRED Private)
