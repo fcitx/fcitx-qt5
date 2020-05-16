@@ -37,7 +37,7 @@ find_package(Fcitx 4.2.8 REQUIRED)
 find_package(LibIntl REQUIRED)
 endif ()
 
-set(FcitxQt5_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_FULL_INCLUDEDIR}/FcitxQt5)
+set(FcitxQt5_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/FcitxQt5)
 
 if (ENABLE_LIBRARY)
 add_subdirectory(dbusaddons)
