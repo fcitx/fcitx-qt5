@@ -51,7 +51,8 @@ generate_export_header(FcitxQt5DBusAddons BASE_NAME FcitxQtDBusAddons)
 add_library(FcitxQt5::DBusAddons ALIAS FcitxQt5DBusAddons)
 
 target_include_directories(FcitxQt5DBusAddons PUBLIC "$<BUILD_INTERFACE:${fcitxqtdbusaddons_INCLUDE_DIRS}>")
-target_include_directories(FcitxQt5DBusAddons INTERFACE "$<INSTALL_INTERFACE:${FcitxQt5_INCLUDE_INSTALL_DIR}/FcitxQtDBusAddons>")
+target_include_directories(FcitxQt5DBusAddons
+                           INTERFACE $<INSTALL_INTERFACE:include/FcitxQt5/FcitxQtDBusAddons>)
 
 set_target_properties(FcitxQt5DBusAddons
                       PROPERTIES VERSION 1.0
