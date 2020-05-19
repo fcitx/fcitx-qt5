@@ -341,17 +341,17 @@ void QFcitxPlatformInputContext::createInputContextFinished() {
     if (!proxy) {
         return;
     }
-    auto w =
-        reinterpret_cast<QWindow *>(proxy->property("wid").value<void *>());
+    auto w = static_cast<QWindow *>(proxy->property("wid").value<void *>());
     FcitxQtICData *data =
         static_cast<FcitxQtICData *>(proxy->property("icData").value<void *>());
     data->rect = QRect();
 
     if (proxy->isValid()) {
         QWindow *window = qApp->focusWindow();
-        if (window && window == w) {
-            proxy->focusIn();
+        if (window && window == w && inputMethodAccepted() &&
+            objectAcceptsInputMethod()) {
             cursorRectChanged();
+            proxy->focusIn();
         }
     }
 
@@ -362,8 +362,9 @@ void QFcitxPlatformInputContext::createInputContextFinished() {
     flag |= CAPACITY_GET_IM_INFO_ON_FOCUS;
     m_useSurroundingText =
         get_boolean_env("FCITX_QT_ENABLE_SURROUNDING_TEXT", true);
-    if (m_useSurroundingText)
+    if (m_useSurroundingText) {
         flag |= CAPACITY_SURROUNDING_TEXT;
+    }
 
     if (qApp && qApp->platformName() == "wayland") {
         flag |= CAPACITY_RELATIVE_CURSOR_RECT;
