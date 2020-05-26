@@ -103,6 +103,8 @@ struct FcitxQtICData {
     QFlags<FcitxCapabilityFlags> capability;
     FcitxInputContextProxy *proxy;
     QRect rect;
+    // Last key event forwarded.
+    std::unique_ptr<QKeyEvent> event;
     QString surroundingText;
     int surroundingAnchor;
     int surroundingCursor;
@@ -185,7 +187,8 @@ public Q_SLOTS:
 
 private:
     bool processCompose(uint keyval, uint state, bool isRelaese);
-    QKeyEvent *createKeyEvent(uint keyval, uint state, bool isRelaese);
+    QKeyEvent *createKeyEvent(uint keyval, uint state, bool isRelaese,
+                              const QKeyEvent *event);
 
     void addCapability(FcitxQtICData &data,
                        QFlags<FcitxCapabilityFlags> capability,

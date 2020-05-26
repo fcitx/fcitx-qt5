@@ -530,10 +530,17 @@ void QFcitxPlatformInputContext::deleteSurroundingText(int offset,
 
 void QFcitxPlatformInputContext::forwardKey(uint keyval, uint state,
                                             bool type) {
+    auto proxy = qobject_cast<FcitxInputContextProxy *>(sender());
+    if (!proxy) {
+        return;
+    }
+    FcitxQtICData &data = *static_cast<FcitxQtICData *>(
+        proxy->property("icData").value<void *>());
     QObject *input = qApp->focusObject();
     if (input != nullptr) {
         key_filtered = true;
-        QKeyEvent *keyevent = createKeyEvent(keyval, state, type);
+        QKeyEvent *keyevent =
+            createKeyEvent(keyval, state, type, data.event.get());
 
         QCoreApplication::sendEvent(input, keyevent);
         delete keyevent;
@@ -592,38 +599,46 @@ void QFcitxPlatformInputContext::createICData(QWindow *w) {
 }
 
 QKeyEvent *QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state,
-                                                      bool isRelease) {
-    Qt::KeyboardModifiers qstate = Qt::NoModifier;
+                                                      bool isRelease,
+                                                      const QKeyEvent *event) {
+    QKeyEvent *newEvent = nullptr;
+    if (event && event->nativeVirtualKey() == keyval &&
+        event->nativeModifiers() == state &&
+        isRelease == (event->type() == QEvent::KeyRelease)) {
+        newEvent = new QKeyEvent(*event);
+    } else {
+        Qt::KeyboardModifiers qstate = Qt::NoModifier;
 
-    int count = 1;
-    if (state & FcitxKeyState_Alt) {
-        qstate |= Qt::AltModifier;
-        count++;
+        int count = 1;
+        if (state & FcitxKeyState_Alt) {
+            qstate |= Qt::AltModifier;
+            count++;
+        }
+
+        if (state & FcitxKeyState_Shift) {
+            qstate |= Qt::ShiftModifier;
+            count++;
+        }
+
+        if (state & FcitxKeyState_Ctrl) {
+            qstate |= Qt::ControlModifier;
+            count++;
+        }
+
+        auto unicode = xkb_keysym_to_utf32(keyval);
+        QString text;
+        if (unicode) {
+            text = QString::fromUcs4(&unicode, 1);
+        }
+
+        int key = keysymToQtKey(keyval, text);
+
+        newEvent =
+            new QKeyEvent(isRelease ? (QEvent::KeyRelease) : (QEvent::KeyPress),
+                          key, qstate, 0, keyval, state, text, false, count);
     }
 
-    if (state & FcitxKeyState_Shift) {
-        qstate |= Qt::ShiftModifier;
-        count++;
-    }
-
-    if (state & FcitxKeyState_Ctrl) {
-        qstate |= Qt::ControlModifier;
-        count++;
-    }
-
-    auto unicode = xkb_keysym_to_utf32(keyval);
-    QString text;
-    if (unicode) {
-        text = QString::fromUcs4(&unicode, 1);
-    }
-
-    int key = keysymToQtKey(keyval, text);
-
-    QKeyEvent *keyevent =
-        new QKeyEvent(isRelease ? (QEvent::KeyRelease) : (QEvent::KeyPress),
-                      key, qstate, 0, keyval, state, text, false, count);
-
-    return keyevent;
+    return newEvent;
 }
 
 bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
@@ -744,6 +759,14 @@ void QFcitxPlatformInputContext::processKeyEventFinished(
         QWindowSystemInterface::handleExtendedKeyEvent(
             window, time, type, qtcode, modifiers, code, sym, state, string,
             isAutoRepeat);
+    } else {
+        auto proxy =
+            qobject_cast<FcitxInputContextProxy *>(watcher->parent());
+        if (proxy) {
+            FcitxQtICData &data = *static_cast<FcitxQtICData *>(
+                proxy->property("icData").value<void *>());
+            data.event.reset(new QKeyEvent(keyEvent));
+        }
     }
 
     delete watcher;
