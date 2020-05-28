@@ -37,8 +37,6 @@
 #include "fcitxwatcher.h"
 #include "qfcitxplatforminputcontext.h"
 
-static bool key_filtered = false;
-
 static bool get_boolean_env(const char *name, bool defval) {
     const char *value = getenv(name);
 
@@ -538,15 +536,14 @@ void QFcitxPlatformInputContext::forwardKey(uint keyval, uint state,
     }
     FcitxQtICData &data = *static_cast<FcitxQtICData *>(
         proxy->property("icData").value<void *>());
+    auto w = static_cast<QWindow *>(proxy->property("wid").value<void *>());
     QObject *input = qApp->focusObject();
-    if (input != nullptr) {
-        key_filtered = true;
-        QKeyEvent *keyevent =
-            createKeyEvent(keyval, state, type, data.event.get());
+    auto window = qApp->focusWindow();
+    if (input && window && w == window) {
+        std::unique_ptr<QKeyEvent> keyevent{
+            createKeyEvent(keyval, state, type, data.event.get())};
 
-        QCoreApplication::sendEvent(input, keyevent);
-        delete keyevent;
-        key_filtered = false;
+        forwardEvent(window, *keyevent);
     }
 }
 
@@ -638,9 +635,39 @@ QKeyEvent *QFcitxPlatformInputContext::createKeyEvent(uint keyval, uint state,
         newEvent =
             new QKeyEvent(isRelease ? (QEvent::KeyRelease) : (QEvent::KeyPress),
                           key, qstate, 0, keyval, state, text, false, count);
+        if (event) {
+            newEvent->setTimestamp(event->timestamp());
+        }
     }
 
     return newEvent;
+}
+
+void QFcitxPlatformInputContext::forwardEvent(QWindow *window,
+                                              const QKeyEvent &keyEvent) {
+    // use same variable name as in QXcbKeyboard::handleKeyEvent
+    QEvent::Type type = keyEvent.type();
+    int qtcode = keyEvent.key();
+    Qt::KeyboardModifiers modifiers = keyEvent.modifiers();
+    quint32 code = keyEvent.nativeScanCode();
+    quint32 sym = keyEvent.nativeVirtualKey();
+    quint32 state = keyEvent.nativeModifiers();
+    QString string = keyEvent.text();
+    bool isAutoRepeat = keyEvent.isAutoRepeat();
+    ulong time = keyEvent.timestamp();
+    // copied from QXcbKeyboard::handleKeyEvent()
+    if (type == QEvent::KeyPress && qtcode == Qt::Key_Menu) {
+        QPoint globalPos, pos;
+        if (window->screen()) {
+            globalPos = window->screen()->handle()->cursor()->pos();
+            pos = window->mapFromGlobal(globalPos);
+        }
+        QWindowSystemInterface::handleContextMenuEvent(window, false, pos,
+                                                       globalPos, modifiers);
+    }
+    QWindowSystemInterface::handleExtendedKeyEvent(window, time, type, qtcode,
+                                                   modifiers, code, sym, state,
+                                                   string, isAutoRepeat);
 }
 
 bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
@@ -655,10 +682,6 @@ bool QFcitxPlatformInputContext::filterEvent(const QEvent *event) {
         quint32 keycode = keyEvent->nativeScanCode();
         quint32 state = keyEvent->nativeModifiers();
         bool isRelease = keyEvent->type() == QEvent::KeyRelease;
-
-        if (key_filtered) {
-            break;
-        }
 
         if (!inputMethodAccepted() && !objectAcceptsInputMethod())
             break;
@@ -727,14 +750,10 @@ void QFcitxPlatformInputContext::processKeyEventFinished(
 
     // use same variable name as in QXcbKeyboard::handleKeyEvent
     QEvent::Type type = keyEvent.type();
-    int qtcode = keyEvent.key();
-    Qt::KeyboardModifiers modifiers = keyEvent.modifiers();
     quint32 code = keyEvent.nativeScanCode();
     quint32 sym = keyEvent.nativeVirtualKey();
     quint32 state = keyEvent.nativeModifiers();
     QString string = keyEvent.text();
-    bool isAutoRepeat = keyEvent.isAutoRepeat();
-    ulong time = keyEvent.timestamp();
 
     if (!proxy->processKeyEventResult(*watcher)) {
         filtered =
@@ -748,19 +767,7 @@ void QFcitxPlatformInputContext::processKeyEventFinished(
     }
 
     if (!filtered) {
-        // copied from QXcbKeyboard::handleKeyEvent()
-        if (type == QEvent::KeyPress && qtcode == Qt::Key_Menu) {
-            QPoint globalPos, pos;
-            if (window->screen()) {
-                globalPos = window->screen()->handle()->cursor()->pos();
-                pos = window->mapFromGlobal(globalPos);
-            }
-            QWindowSystemInterface::handleContextMenuEvent(
-                window, false, pos, globalPos, modifiers);
-        }
-        QWindowSystemInterface::handleExtendedKeyEvent(
-            window, time, type, qtcode, modifiers, code, sym, state, string,
-            isAutoRepeat);
+        forwardEvent(window, keyEvent);
     } else {
         auto proxy =
             qobject_cast<FcitxInputContextProxy *>(watcher->parent());
