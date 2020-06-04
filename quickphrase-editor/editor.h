@@ -80,6 +80,6 @@ private:
     QMenu *m_operationMenu;
     QString m_lastFile;
 };
-}
+} // namespace fcitx
 
 #endif // FCITX_TOOLS_GUI_EDITOR_H

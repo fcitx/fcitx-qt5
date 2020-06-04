@@ -37,8 +37,8 @@ void FcitxQtFormattedPreedit::setFormat(qint32 format) { m_format = format; }
 
 void FcitxQtFormattedPreedit::setString(const QString &str) { m_string = str; }
 
-bool FcitxQtFormattedPreedit::
-operator==(const FcitxQtFormattedPreedit &preedit) const {
+bool FcitxQtFormattedPreedit::operator==(
+    const FcitxQtFormattedPreedit &preedit) const {
     return (preedit.m_format == m_format) && (preedit.m_string == m_string);
 }
 

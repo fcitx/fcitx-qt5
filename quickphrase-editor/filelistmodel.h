@@ -44,6 +44,6 @@ public:
 private:
     QStringList m_fileList;
 };
-}
+} // namespace fcitx
 
 #endif // FCITX_TOOLS_GUI_FILE_LIST_MODEL_H_

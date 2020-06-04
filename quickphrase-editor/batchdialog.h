@@ -40,6 +40,6 @@ public:
 private:
     Ui::BatchDialog *m_ui;
 };
-}
+} // namespace fcitx
 
 #endif // FCITX_TOOLS_GUI_

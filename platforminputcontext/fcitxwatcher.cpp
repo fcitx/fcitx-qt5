@@ -1,22 +1,22 @@
 /*
-* Copyright (C) 2011~2017 by CSSlayer
-* wengxt@gmail.com
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions
-* are met:
-*
-* 1. Redistributions of source code must retain the above Copyright
-*    notice, this list of conditions and the following disclaimer.
-*
-* 2. Redistributions in binary form must reproduce the above Copyright
-*    notice, this list of conditions and the following disclaimer in the
-*    documentation and/or other materials provided with the distribution.
-*
-* 3. Neither the name of the authors nor the names of its contributors
-*    may be used to endorse or promote products derived from this
-*    software without specific prior written permission.
-*/
+ * Copyright (C) 2011~2017 by CSSlayer
+ * wengxt@gmail.com
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above Copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above Copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the authors nor the names of its contributors
+ *    may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ */
 
 #include "fcitxwatcher.h"
 #include <QDBusConnection>
@@ -74,8 +74,7 @@ QString socketFile() {
 FcitxWatcher::FcitxWatcher(QDBusConnection sessionBus, QObject *parent)
     : QObject(parent), m_fsWatcher(new QFileSystemWatcher(this)),
       m_serviceWatcher(new QDBusServiceWatcher(this)), m_connection(nullptr),
-      m_sessionBus(sessionBus),
-      m_socketFile(socketFile()),
+      m_sessionBus(sessionBus), m_socketFile(socketFile()),
       m_serviceName(QString("org.fcitx.Fcitx-%2").arg(displayNumber())),
       m_availability(false) {}
 
@@ -126,8 +125,7 @@ void FcitxWatcher::watch() {
     m_serviceWatcher->addWatchedService(m_serviceName);
     m_serviceWatcher->addWatchedService("org.freedesktop.portal.Fcitx");
 
-    if (m_sessionBus.interface()->isServiceRegistered(
-            m_serviceName)) {
+    if (m_sessionBus.interface()->isServiceRegistered(m_serviceName)) {
         m_mainPresent = true;
     }
     if (m_sessionBus.interface()->isServiceRegistered(

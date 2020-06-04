@@ -59,8 +59,8 @@ public:
 
 protected:
     /**
-    * Reimplemented for internal reasons.
-    */
+     * Reimplemented for internal reasons.
+     */
     virtual bool event(QEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);

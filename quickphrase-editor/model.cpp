@@ -265,4 +265,4 @@ void QuickPhraseModel::setNeedSave(bool needSave) {
         emit needSaveChanged(m_needSave);
     }
 }
-}
+} // namespace fcitx

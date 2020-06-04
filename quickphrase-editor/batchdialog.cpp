@@ -17,10 +17,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QIcon>
 #include "batchdialog.h"
 #include "common.h"
 #include "ui_batchdialog.h"
+#include <QIcon>
 
 namespace fcitx {
 BatchDialog::BatchDialog(QWidget *parent)
@@ -38,4 +38,4 @@ void BatchDialog::setText(const QString &s) {
 }
 
 QString BatchDialog::text() const { return m_ui->plainTextEdit->toPlainText(); }
-}
+} // namespace fcitx

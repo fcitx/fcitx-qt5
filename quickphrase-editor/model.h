@@ -69,6 +69,6 @@ private:
     QStringPairList m_list;
     QFutureWatcher<QStringPairList> *m_futureWatcher;
 };
-}
+} // namespace fcitx
 
 #endif // FCITX_TOOLS_GUI_MODEL_H_

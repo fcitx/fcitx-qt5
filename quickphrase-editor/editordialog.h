@@ -42,6 +42,6 @@ public:
 private:
     Ui::EditorDialog *m_ui;
 };
-}
+} // namespace fcitx
 
 #endif // FCITX_TOOLS_GUI_

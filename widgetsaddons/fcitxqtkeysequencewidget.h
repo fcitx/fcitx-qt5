@@ -69,13 +69,13 @@ public:
     enum Validation { Validate = 0, NoValidate = 1 };
 
     /**
-    * Constructor.
-    */
+     * Constructor.
+     */
     explicit FcitxQtKeySequenceWidget(QWidget *parent = 0);
 
     /**
-    * Destructs the widget.
-    */
+     * Destructs the widget.
+     */
     virtual ~FcitxQtKeySequenceWidget();
 
     void setMultiKeyShortcutsAllowed(bool);

@@ -1,22 +1,22 @@
 /*
-* Copyright (C) 2011~2017 by CSSlayer
-* wengxt@gmail.com
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions
-* are met:
-*
-* 1. Redistributions of source code must retain the above Copyright
-*    notice, this list of conditions and the following disclaimer.
-*
-* 2. Redistributions in binary form must reproduce the above Copyright
-*    notice, this list of conditions and the following disclaimer in the
-*    documentation and/or other materials provided with the distribution.
-*
-* 3. Neither the name of the authors nor the names of its contributors
-*    may be used to endorse or promote products derived from this
-*    software without specific prior written permission.
-*/
+ * Copyright (C) 2011~2017 by CSSlayer
+ * wengxt@gmail.com
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above Copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above Copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the authors nor the names of its contributors
+ *    may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ */
 
 #include <QDBusConnection>
 #include <QDebug>
@@ -85,8 +85,11 @@ struct xkb_context *_xkb_context_new_helper() {
 }
 
 QFcitxPlatformInputContext::QFcitxPlatformInputContext()
-    : m_watcher(new FcitxWatcher(QDBusConnection::connectToBus(QDBusConnection::SessionBus, "fcitx-platform-input-context"), this)), m_cursorPos(0),
-      m_useSurroundingText(false),
+    : m_watcher(new FcitxWatcher(
+          QDBusConnection::connectToBus(QDBusConnection::SessionBus,
+                                        "fcitx-platform-input-context"),
+          this)),
+      m_cursorPos(0), m_useSurroundingText(false),
       m_syncMode(get_boolean_env("FCITX_QT_USE_SYNC", false)), m_destroy(false),
       m_xkbContext(_xkb_context_new_helper()),
       m_xkbComposeTable(m_xkbContext ? xkb_compose_table_new_from_locale(
@@ -580,8 +583,8 @@ void QFcitxPlatformInputContext::createICData(QWindow *w) {
         }
         data.proxy->setProperty("wid",
                                 QVariant::fromValue(static_cast<void *>(w)));
-        data.proxy->setProperty("icData",
-                                QVariant::fromValue(static_cast<void *>(&data)));
+        data.proxy->setProperty(
+            "icData", QVariant::fromValue(static_cast<void *>(&data)));
         connect(data.proxy, &FcitxInputContextProxy::inputContextCreated, this,
                 &QFcitxPlatformInputContext::createInputContextFinished);
         connect(data.proxy, &FcitxInputContextProxy::commitString, this,
@@ -769,8 +772,7 @@ void QFcitxPlatformInputContext::processKeyEventFinished(
     if (!filtered) {
         forwardEvent(window, keyEvent);
     } else {
-        auto proxy =
-            qobject_cast<FcitxInputContextProxy *>(watcher->parent());
+        auto proxy = qobject_cast<FcitxInputContextProxy *>(watcher->parent());
         if (proxy) {
             FcitxQtICData &data = *static_cast<FcitxQtICData *>(
                 proxy->property("icData").value<void *>());
