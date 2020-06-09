@@ -93,7 +93,7 @@ enum FcitxKeyState {
 
 struct FcitxQtICData {
     FcitxQtICData(FcitxWatcher *watcher)
-        : capability(0), proxy(new FcitxInputContextProxy(watcher, watcher)),
+        : proxy(new FcitxInputContextProxy(watcher, watcher)),
           surroundingAnchor(-1), surroundingCursor(-1) {}
     FcitxQtICData(const FcitxQtICData &that) = delete;
     ~FcitxQtICData() {
