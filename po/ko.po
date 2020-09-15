@@ -5,16 +5,16 @@
 #
 # Translators:
 # csslayer <wengxt@gmail.com>, 2017
-# MarongHappy <daemul72@gmail.com>, 2020
+# JungHee Lee <daemul72@gmail.com>, 2020
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2020-04-04 00:03-0700\n"
+"POT-Creation-Date: 2020-09-15 00:02-0700\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
-"Last-Translator: MarongHappy <daemul72@gmail.com>, 2020\n"
+"Last-Translator: JungHee Lee <daemul72@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/fcitx/teams/12005/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "작동(&O)"
 
 #: guiwrapper/mainwindow.cpp:41
 msgid "&Reset"
-msgstr "초기화(&R)"
+msgstr "재설정(&R)"
 
 #: guiwrapper/mainwindow.cpp:40
 msgid "&Save"
