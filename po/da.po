@@ -5,16 +5,16 @@
 #
 # Translators:
 # csslayer <wengxt@gmail.com>, 2017
-# scootergrisen, 2017
+# scootergrisen, 2020
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2019-11-03 12:28-0800\n"
+"POT-Creation-Date: 2020-10-15 00:02-0700\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
-"Last-Translator: scootergrisen, 2017\n"
+"Last-Translator: scootergrisen, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/fcitx/teams/12005/da/)\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "&Tilføj"
 
 #: quickphrase-editor/editor.cpp:49
 msgid "&Batch Edit"
-msgstr "&Batch-redigering"
+msgstr "&Batchredigering"
 
 #: guiwrapper/mainwindow.cpp:42
 msgid "&Close"
