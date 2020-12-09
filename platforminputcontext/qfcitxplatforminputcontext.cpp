@@ -531,7 +531,7 @@ void QFcitxPlatformInputContext::deleteSurroundingText(int offset,
             start = cursor;
             len = offset;
         } else {
-            start = cursor;
+            start = cursor + offset;
             len = -offset;
         }
 
