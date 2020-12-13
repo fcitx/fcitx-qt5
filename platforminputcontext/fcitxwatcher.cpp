@@ -75,7 +75,7 @@ FcitxWatcher::FcitxWatcher(QDBusConnection sessionBus, QObject *parent)
     : QObject(parent), m_fsWatcher(new QFileSystemWatcher(this)),
       m_serviceWatcher(new QDBusServiceWatcher(this)), m_connection(nullptr),
       m_sessionBus(sessionBus), m_socketFile(socketFile()),
-      m_serviceName(QString("org.fcitx.Fcitx-%2").arg(displayNumber())),
+      m_serviceName(QString("org.fcitx.Fcitx-%1").arg(displayNumber())),
       m_availability(false) {}
 
 FcitxWatcher::~FcitxWatcher() {
