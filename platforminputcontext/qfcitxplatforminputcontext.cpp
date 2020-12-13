@@ -301,7 +301,7 @@ void QFcitxPlatformInputContext::setFocusObject(QObject *object) {
                 if (window != m_lastWindow) {
                     return;
                 }
-                if (auto *proxy = validICByWindow(window.data())) {
+                if (validICByWindow(window.data())) {
                     cursorRectChanged();
                 }
             },
