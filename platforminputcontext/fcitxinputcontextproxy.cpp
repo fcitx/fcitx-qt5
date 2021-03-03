@@ -195,7 +195,7 @@ void FcitxInputContextProxy::createInputContextFinished() {
 
     delete m_createInputContextWatcher;
     m_createInputContextWatcher = nullptr;
-    emit inputContextCreated();
+    Q_EMIT inputContextCreated();
 }
 
 bool FcitxInputContextProxy::isValid() const {
@@ -205,7 +205,7 @@ bool FcitxInputContextProxy::isValid() const {
 
 void FcitxInputContextProxy::forwardKeyWrapper(uint keyval, uint state,
                                                int type) {
-    emit forwardKey(keyval, state, type == 1);
+    Q_EMIT forwardKey(keyval, state, type == 1);
 }
 
 void FcitxInputContextProxy::updateFormattedPreeditWrapper(
@@ -217,7 +217,7 @@ void FcitxInputContextProxy::updateFormattedPreeditWrapper(
         item.setFormat(item.format() ^ underlineBit);
     }
 
-    emit updateFormattedPreedit(list, cursorpos);
+    Q_EMIT updateFormattedPreedit(list, cursorpos);
 }
 
 QDBusPendingReply<> FcitxInputContextProxy::focusIn() {

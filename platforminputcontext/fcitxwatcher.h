@@ -45,10 +45,10 @@ public:
     QDBusConnection connection() const;
     QString service() const;
 
-signals:
+Q_SIGNALS:
     void availabilityChanged(bool);
 
-private slots:
+private Q_SLOTS:
     void dbusDisconnected();
     void socketFileChanged();
     void imChanged(const QString &service, const QString &oldOwner,

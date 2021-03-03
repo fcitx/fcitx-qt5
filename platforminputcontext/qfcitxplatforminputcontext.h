@@ -240,7 +240,7 @@ private:
     QScopedPointer<struct xkb_compose_state, XkbComposeStateDeleter>
         m_xkbComposeState;
     QLocale m_locale;
-private slots:
+private Q_SLOTS:
     void processKeyEventFinished(QDBusPendingCallWatcher *);
 };
 

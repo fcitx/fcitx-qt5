@@ -53,7 +53,7 @@ public:
     QDBusPendingReply<> setSurroundingTextPosition(uint cursor, uint anchor);
     void setDisplay(const QString &display);
 
-signals:
+Q_SIGNALS:
     void commitString(const QString &str);
     void currentIM(const QString &name, const QString &uniqueName,
                    const QString &langCode);
@@ -63,7 +63,7 @@ signals:
                                 int cursorpos);
     void inputContextCreated();
 
-private slots:
+private Q_SLOTS:
     void availabilityChanged();
     void createInputContext();
     void createInputContextFinished();

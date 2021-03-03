@@ -50,14 +50,14 @@ public:
 
     void loadFileList();
 
-public slots:
+public Q_SLOTS:
     void batchEditAccepted();
     void removeFileTriggered();
     void addFileTriggered();
     void refreshListTriggered();
     void changeFile(int);
 
-private slots:
+private Q_SLOTS:
     void addWord();
     void batchEditWord();
     void deleteWord();

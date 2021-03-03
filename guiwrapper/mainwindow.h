@@ -35,7 +35,7 @@ public:
     explicit MainWindow(FcitxQtConfigUIWidget *pluginWidget,
                         QWidget *parent = 0);
     virtual ~MainWindow();
-public slots:
+public Q_SLOTS:
     void changed(bool changed);
     void clicked(QAbstractButton *button);
     void connected();
