@@ -32,7 +32,7 @@ public:
     WrapperApp(int &argc, char **argv);
     virtual ~WrapperApp();
 
-private slots:
+private Q_SLOTS:
     void errorExit();
 
 private:

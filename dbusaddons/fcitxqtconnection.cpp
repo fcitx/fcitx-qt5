@@ -271,7 +271,7 @@ void FcitxQtConnectionPrivate::createConnection() {
                               "org.freedesktop.DBus.Local", "Disconnected",
                               this, SLOT(dbusDisconnected()));
         m_connectedOnce = true;
-        emit q->connected();
+        Q_EMIT q->connected();
     }
 }
 
@@ -314,7 +314,7 @@ void FcitxQtConnectionPrivate::cleanUp() {
      * and startConnection can be called in slot
      */
     if (doemit)
-        emit q->disconnected();
+        Q_EMIT q->disconnected();
 }
 
 bool FcitxQtConnectionPrivate::isConnected() {

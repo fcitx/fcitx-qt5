@@ -109,7 +109,7 @@ QString FcitxWatcher::service() const {
 void FcitxWatcher::setAvailability(bool availability) {
     if (m_availability != availability) {
         m_availability = availability;
-        emit availabilityChanged(m_availability);
+        Q_EMIT availabilityChanged(m_availability);
     }
 }
 
