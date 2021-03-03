@@ -31,10 +31,10 @@
 #include <QPointer>
 #include <QRect>
 #include <QWindow>
+#include <memory>
 #include <qpa/qplatforminputcontext.h>
 #include <unordered_map>
 #include <xkbcommon/xkbcommon-compose.h>
-#include <memory>
 
 class QFileSystemWatcher;
 enum FcitxKeyEventType { FCITX_PRESS_KEY, FCITX_RELEASE_KEY };

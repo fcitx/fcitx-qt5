@@ -38,6 +38,7 @@ find_package(LibIntl REQUIRED)
 endif ()
 
 set(FcitxQt5_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/FcitxQt5)
+add_definitions(-DQT_NO_KEYWORDS)
 
 if (ENABLE_LIBRARY)
 add_subdirectory(dbusaddons)
