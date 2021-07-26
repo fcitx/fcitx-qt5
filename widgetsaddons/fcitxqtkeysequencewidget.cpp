@@ -394,6 +394,11 @@ void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e) {
     switch (keyQt) {
     case Qt::Key_AltGr: // or else we get unicode salad
         return;
+    case Qt::Key_Super_L:
+    case Qt::Key_Super_R:
+        // Qt doesn't properly recognize Super_L/Super_R as MetaModifier
+        d->modifierKeys |= Qt::MetaModifier;
+        Q_FALLTHROUGH();
     case Qt::Key_Shift:
     case Qt::Key_Control:
     case Qt::Key_Alt:
