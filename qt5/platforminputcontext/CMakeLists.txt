@@ -41,7 +41,6 @@ target_link_libraries(fcitxplatforminputcontextplugin
                          )
 
 include(ECMQueryQmake)
-if (NOT CMAKE_INSTALL_QTPLUGINDIR)
-query_qmake(CMAKE_INSTALL_QTPLUGINDIR QT_INSTALL_PLUGINS)
-endif()
+query_qmake(_QT5PLUGINDIR QT_INSTALL_PLUGINS)
+set(CMAKE_INSTALL_QTPLUGINDIR ${_QT5PLUGINDIR} CACHE PATH "Qt5 plugin dir")
 install(TARGETS fcitxplatforminputcontextplugin DESTINATION ${CMAKE_INSTALL_QTPLUGINDIR}/platforminputcontexts)
