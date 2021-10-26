@@ -116,7 +116,7 @@ QString ListEditor::addon() { return "fcitx-quickphrase"; }
 
 bool ListEditor::asyncSave() { return true; }
 
-void ListEditor::changeFile(int newIndex) {
+void ListEditor::changeFile(int) {
     if (m_model->needSave()) {
         int ret = QMessageBox::question(
             this, _("Save Changes"),

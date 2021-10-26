@@ -23,6 +23,7 @@
 #include <QTextCodec>
 #include <ctype.h>
 #include <fcitx-config/hotkey.h>
+#include <algorithm>
 
 #define _ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define _ARRAY_END(a) (a + _ARRAY_SIZE(a))
@@ -36,14 +37,14 @@ void qEventToSym(int key, const QString &text, Qt::KeyboardModifiers mod,
             break;
         int uni = text[0].unicode();
         int *result =
-            qBinaryFind(unicodeHasKey, _ARRAY_END(unicodeHasKey), uni);
+            std::lower_bound(unicodeHasKey, _ARRAY_END(unicodeHasKey), uni);
         if (result != _ARRAY_END(unicodeHasKey)) {
             sym = *result + 0x1000000;
             break;
         }
 
         Unicode2Key *keyMap =
-            qBinaryFind(unicodeKeyMap, _ARRAY_END(unicodeKeyMap), uni);
+            std::lower_bound(unicodeKeyMap, _ARRAY_END(unicodeKeyMap), uni);
         if (keyMap != _ARRAY_END(unicodeKeyMap)) {
             sym = keyMap->key;
             break;
@@ -56,26 +57,26 @@ void qEventToSym(int key, const QString &text, Qt::KeyboardModifiers mod,
 
         QtCode2Key *result = nullptr;
         if (mod & Qt::KeypadModifier) {
-            result = qBinaryFind(keyPadQtCodeToKey,
+            result = std::lower_bound(keyPadQtCodeToKey,
                                  _ARRAY_END(keyPadQtCodeToKey), key);
             if (result == _ARRAY_END(keyPadQtCodeToKey))
                 result = nullptr;
         } else {
             if (text.isNull()) {
-                result = qBinaryFind(qtCodeToKeyBackup,
+                result = std::lower_bound(qtCodeToKeyBackup,
                                      _ARRAY_END(qtCodeToKeyBackup), key);
                 if (result == _ARRAY_END(qtCodeToKeyBackup))
                     result = nullptr;
             }
             if (!result) {
-                result = qBinaryFind(qtCodeToKey, _ARRAY_END(qtCodeToKey), key);
+                result = std::lower_bound(qtCodeToKey, _ARRAY_END(qtCodeToKey), key);
 
                 if (result == _ARRAY_END(qtCodeToKey))
                     result = nullptr;
             }
 
             if (!result) {
-                result = qBinaryFind(keyPadQtCodeToKey,
+                result = std::lower_bound(keyPadQtCodeToKey,
                                      _ARRAY_END(keyPadQtCodeToKey), key);
                 if (result == _ARRAY_END(keyPadQtCodeToKey))
                     result = nullptr;

@@ -28,7 +28,7 @@ fcitx::FileListModel::FileListModel(QObject *parent)
 
 fcitx::FileListModel::~FileListModel() {}
 
-int fcitx::FileListModel::rowCount(const QModelIndex &parent) const {
+int fcitx::FileListModel::rowCount(const QModelIndex &) const {
     return m_fileList.size();
 }
 

@@ -265,7 +265,7 @@ void FcitxWatcher::unwatchSocketFile() {
     m_fsWatcher->disconnect(SIGNAL(directoryChanged(QString)));
 }
 
-void FcitxWatcher::imChanged(const QString &service, const QString &oldOwner,
+void FcitxWatcher::imChanged(const QString &service, const QString &,
                              const QString &newOwner) {
     if (service == m_serviceName) {
         if (!newOwner.isEmpty()) {

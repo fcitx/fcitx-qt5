@@ -88,7 +88,7 @@ public:
     }
 
     // private slot
-    void doneRecording(bool validate = true);
+    void doneRecording();
 
     // members
     FcitxQtKeySequenceWidget *const q;
@@ -198,6 +198,7 @@ QKeySequence FcitxQtKeySequenceWidget::keySequence() const {
 void FcitxQtKeySequenceWidget::setKeySequence(
     const QKeySequence &seq, FcitxQtModifierSide side,
     FcitxQtKeySequenceWidget::Validation validate) {
+    Q_UNUSED(validate);
     // oldKeySequence holds the key sequence before recording started, if
     // setKeySequence()
     // is called while not recording then set oldKeySequence to the existing
@@ -212,7 +213,7 @@ void FcitxQtKeySequenceWidget::setKeySequence(
 
     d->side = side;
     d->keySequence = seq;
-    d->doneRecording(validate == Validate);
+    d->doneRecording();
 }
 
 // slot
@@ -240,7 +241,7 @@ void FcitxQtKeySequenceWidgetPrivate::startRecording() {
     updateShortcutDisplay();
 }
 
-void FcitxQtKeySequenceWidgetPrivate::doneRecording(bool validate) {
+void FcitxQtKeySequenceWidgetPrivate::doneRecording() {
     modifierlessTimeout.stop();
     isRecording = false;
     keyButton->releaseKeyboard();
