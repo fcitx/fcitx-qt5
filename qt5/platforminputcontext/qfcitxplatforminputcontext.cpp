@@ -331,21 +331,23 @@ void QFcitxPlatformInputContext::cursorRectChanged() {
         return;
     }
 
-    if (data.capability & CAPACITY_RELATIVE_CURSOR_RECT) {
-        auto margins = inputWindow->frameMargins();
-        r.translate(margins.left(), margins.top());
-        if (data.rect != r) {
-            data.rect = r;
-            proxy->setCursorRect(r.x(), r.y(), r.width(), r.height());
-        }
-        return;
-    }
     qreal scale = inputWindow->devicePixelRatio();
     auto screenGeometry = inputWindow->screen()->geometry();
     auto point = inputWindow->mapToGlobal(r.topLeft());
     auto native =
         (point - screenGeometry.topLeft()) * scale + screenGeometry.topLeft();
     QRect newRect(native, r.size() * scale);
+
+    if (data.capability & CAPACITY_RELATIVE_CURSOR_RECT) {
+        auto margins = inputWindow->frameMargins();
+        r.translate(margins.left(), margins.top());
+        QRect newRect(native, r.size() * scale);
+        if (data.rect != newRect) {
+            data.rect = newRect;
+            proxy->setCursorRect(newRect.x(), newRect.y(), newRect.width(), newRect.height());
+        }
+        return;
+    }
 
     if (data.rect != newRect) {
         data.rect = newRect;
