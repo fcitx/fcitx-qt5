@@ -799,7 +799,7 @@ void QFcitxPlatformInputContext::processKeyEventFinished(
                 keyEvent.nativeModifiers(), keyEvent.text(),
                 keyEvent.isAutoRepeat(), keyEvent.count(), keyEvent.device());
 #else
-            data.event = std::make_unique<QKeyEvent>(keyEvent);
+            data.event = std::unique_ptr<QKeyEvent>(new QKeyEvent(keyEvent));
 #endif
         }
     }
