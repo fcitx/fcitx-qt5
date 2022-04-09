@@ -5,16 +5,16 @@
 #
 # Translators:
 # csslayer <wengxt@gmail.com>, 2017
-# Jung Hee Lee <daemul72@gmail.com>, 2021
+# Junghee Lee <daemul72@gmail.com>, 2022
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2021-06-05 20:27+0000\n"
+"POT-Creation-Date: 2022-04-09 20:28+0000\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
-"Last-Translator: Jung Hee Lee <daemul72@gmail.com>, 2021\n"
+"Last-Translator: Junghee Lee <daemul72@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/fcitx/teams/12005/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -22,135 +22,135 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: quickphrase-editor/editor.cpp:300
+#: qt5/quickphrase-editor/editor.cpp:300
 #, kde-format
 msgid "%1 is a system file, do you want to delete all phrases instead?"
 msgstr "%1은(는) 시스템 파일입니다. 대신 모든 문구를 삭제하시겠습니까?"
 
-#: quickphrase-editor/editor.cpp:48
+#: qt5/quickphrase-editor/editor.cpp:48
 msgid "&Add"
 msgstr "추가(&A)"
 
-#: quickphrase-editor/editor.cpp:49
+#: qt5/quickphrase-editor/editor.cpp:49
 msgid "&Batch Edit"
 msgstr "일괄수정(&B)"
 
-#: guiwrapper/mainwindow.cpp:42
+#: qt5/guiwrapper/mainwindow.cpp:42
 msgid "&Close"
 msgstr "닫기(&C)"
 
-#: quickphrase-editor/editor.cpp:50
+#: qt5/quickphrase-editor/editor.cpp:50
 msgid "&Delete"
 msgstr "삭제(&D)"
 
-#: quickphrase-editor/editor.cpp:52
+#: qt5/quickphrase-editor/editor.cpp:52
 msgid "&Import"
 msgstr "가져오기(&I)"
 
-#: quickphrase-editor/editor.cpp:54
+#: qt5/quickphrase-editor/editor.cpp:54
 msgid "&Operation"
 msgstr "작동(&O)"
 
-#: guiwrapper/mainwindow.cpp:41
+#: qt5/guiwrapper/mainwindow.cpp:41
 msgid "&Reset"
 msgstr "재설정(&R)"
 
-#: guiwrapper/mainwindow.cpp:40
+#: qt5/guiwrapper/mainwindow.cpp:40
 msgid "&Save"
 msgstr "저장(&S)"
 
-#: quickphrase-editor/editor.cpp:65
+#: qt5/quickphrase-editor/editor.cpp:65
 msgid "Add File"
 msgstr "파일 추가"
 
-#: quickphrase-editor/editor.cpp:311
+#: qt5/quickphrase-editor/editor.cpp:311
 #, kde-format
 msgid "Are you sure to delete %1?"
 msgstr "%1을(를) 삭제하시겠습니까?"
 
-#: quickphrase-editor/editor.cpp:277
+#: qt5/quickphrase-editor/editor.cpp:277
 #, kde-format
 msgid "Cannot create file %1."
 msgstr "파일 %1을 만들수 없습니다."
 
-#: quickphrase-editor/editor.cpp:299
+#: qt5/quickphrase-editor/editor.cpp:299
 msgid "Cannot remove system file"
 msgstr "시스템 파일을 제거할 수 없음"
 
-#: quickphrase-editor/editor.cpp:310
+#: qt5/quickphrase-editor/editor.cpp:310
 msgid "Confirm deletion"
 msgstr "지우기 확인"
 
-#: quickphrase-editor/editor.cpp:260
+#: qt5/quickphrase-editor/editor.cpp:260
 msgid "Create new file"
 msgstr "새로운 파일 생성"
 
-#: quickphrase-editor/editor.cpp:51
+#: qt5/quickphrase-editor/editor.cpp:51
 msgid "De&lete All"
 msgstr "모두 지우기(&l)"
 
-#: quickphrase-editor/filelistmodel.cpp:42
+#: qt5/quickphrase-editor/filelistmodel.cpp:42
 msgid "Default"
 msgstr "기본값"
 
-#: quickphrase-editor/editor.cpp:53
+#: qt5/quickphrase-editor/editor.cpp:53
 msgid "E&xport"
 msgstr "가저오기(&x)"
 
-#: quickphrase-editor/editor.cpp:318
+#: qt5/quickphrase-editor/editor.cpp:318
 #, kde-format
 msgid "Error while deleting %1."
 msgstr "%1을 지우는 중 오류 발생"
 
-#: quickphrase-editor/editor.cpp:276 quickphrase-editor/editor.cpp:317
+#: qt5/quickphrase-editor/editor.cpp:276 qt5/quickphrase-editor/editor.cpp:317
 msgid "File Operation Failed"
 msgstr "파일 작업 실패"
 
-#: quickphrase-editor/editor.cpp:265
+#: qt5/quickphrase-editor/editor.cpp:265
 msgid "File name should not contain '/'."
 msgstr "파일명에 '/'가 포함되지 않아야 합니다."
 
-#: quickphrase-editor/editor.cpp:264
+#: qt5/quickphrase-editor/editor.cpp:264
 msgid "Invalid filename"
 msgstr "잘못된 파일명"
 
-#: quickphrase-editor/model.cpp:47
+#: qt5/quickphrase-editor/model.cpp:47
 msgid "Keyword"
 msgstr "키워드"
 
-#: quickphrase-editor/editordialog.cpp:28
+#: qt5/quickphrase-editor/editordialog.cpp:28
 msgid "Keyword:"
 msgstr "키워드:"
 
-#: quickphrase-editor/model.cpp:49
+#: qt5/quickphrase-editor/model.cpp:49
 msgid "Phrase"
 msgstr "문구"
 
-#: quickphrase-editor/editordialog.cpp:29
+#: qt5/quickphrase-editor/editordialog.cpp:29
 msgid "Phrase:"
-msgstr "문장:"
+msgstr "문구:"
 
-#: quickphrase-editor/editor.cpp:260
+#: qt5/quickphrase-editor/editor.cpp:260
 msgid "Please input a filename for newfile"
 msgstr "새 파일의 이름을 입력"
 
-#: quickphrase-editor/editor.cpp:138
+#: qt5/quickphrase-editor/editor.cpp:138
 msgid "Quick Phrase Editor"
 msgstr "상용구 편집기"
 
-#: quickphrase-editor/editor.cpp:68
+#: qt5/quickphrase-editor/editor.cpp:68
 msgid "Refresh List"
 msgstr "목록 갱신"
 
-#: quickphrase-editor/editor.cpp:66
+#: qt5/quickphrase-editor/editor.cpp:66
 msgid "Remove File"
 msgstr "파일 제거"
 
-#: quickphrase-editor/editor.cpp:122
+#: qt5/quickphrase-editor/editor.cpp:122
 msgid "Save Changes"
 msgstr "변경 저장"
 
-#: quickphrase-editor/editor.cpp:123
+#: qt5/quickphrase-editor/editor.cpp:123
 msgid ""
 "The content has changed.\n"
 "Do you want to save the changes or discard them?"
@@ -158,6 +158,6 @@ msgstr ""
 "내용이 변했습니다.\n"
 "변경사항을 저장할까요?"
 
-#: quickphrase-editor/batchdialog.cpp:31
+#: qt5/quickphrase-editor/batchdialog.cpp:31
 msgid "Use <Keyword> <Phrase> format on every line."
-msgstr "모든 행에 <Keyword> <Phrase> 형식을 사용합니다."
+msgstr "모든 줄에 <Keyword> <Phrase> 형식을 사용합니다."
