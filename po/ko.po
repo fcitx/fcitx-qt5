@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2022-04-09 20:28+0000\n"
+"POT-Creation-Date: 2022-04-10 20:28+0000\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
 "Last-Translator: Junghee Lee <daemul72@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/fcitx/teams/12005/ko/)\n"
@@ -33,7 +33,7 @@ msgstr "추가(&A)"
 
 #: qt5/quickphrase-editor/editor.cpp:49
 msgid "&Batch Edit"
-msgstr "일괄수정(&B)"
+msgstr "일괄 편집(&B)"
 
 #: qt5/guiwrapper/mainwindow.cpp:42
 msgid "&Close"
@@ -87,7 +87,7 @@ msgstr "새로운 파일 생성"
 
 #: qt5/quickphrase-editor/editor.cpp:51
 msgid "De&lete All"
-msgstr "모두 지우기(&l)"
+msgstr "모두 삭제(&L)"
 
 #: qt5/quickphrase-editor/filelistmodel.cpp:42
 msgid "Default"
@@ -95,7 +95,7 @@ msgstr "기본값"
 
 #: qt5/quickphrase-editor/editor.cpp:53
 msgid "E&xport"
-msgstr "가저오기(&x)"
+msgstr "내보내기(&X)"
 
 #: qt5/quickphrase-editor/editor.cpp:318
 #, kde-format
