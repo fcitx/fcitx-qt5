@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2022-04-10 20:28+0000\n"
+"POT-Creation-Date: 2022-04-13 20:27+0000\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
 "Last-Translator: Junghee Lee <daemul72@gmail.com>, 2022\n"
 "Language-Team: Korean (https://www.transifex.com/fcitx/teams/12005/ko/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: qt5/quickphrase-editor/editor.cpp:300
 #, kde-format
 msgid "%1 is a system file, do you want to delete all phrases instead?"
-msgstr "%1은(는) 시스템 파일입니다. 대신 모든 문구를 삭제하시겠습니까?"
+msgstr "%1은(는) 시스템 파일입니다. 대신 모든 구문을 삭제하시겠습니까?"
 
 #: qt5/quickphrase-editor/editor.cpp:48
 msgid "&Add"
@@ -124,11 +124,11 @@ msgstr "키워드:"
 
 #: qt5/quickphrase-editor/model.cpp:49
 msgid "Phrase"
-msgstr "문구"
+msgstr "구문"
 
 #: qt5/quickphrase-editor/editordialog.cpp:29
 msgid "Phrase:"
-msgstr "문구:"
+msgstr "구문:"
 
 #: qt5/quickphrase-editor/editor.cpp:260
 msgid "Please input a filename for newfile"
