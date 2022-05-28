@@ -3,13 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# roxfr <roxfr@outlook.fr>, 2022
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2022-05-23 20:28+0000\n"
+"POT-Creation-Date: 2022-05-28 20:27+0000\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
+"Last-Translator: roxfr <roxfr@outlook.fr>, 2022\n"
 "Language-Team: French (https://www.transifex.com/fcitx/teams/12005/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -22,136 +26,139 @@ msgstr ""
 #, kde-format
 msgid "%1 is a system file, do you want to delete all phrases instead?"
 msgstr ""
+"%1 est un fichier système, voulez-vous plutôt supprimer toutes les phrases ?"
 
 #: qt5/quickphrase-editor/editor.cpp:48
 msgid "&Add"
-msgstr ""
+msgstr "&Ajouter"
 
 #: qt5/quickphrase-editor/editor.cpp:49
 msgid "&Batch Edit"
-msgstr ""
+msgstr "&Éditer par lots"
 
 #: qt5/guiwrapper/mainwindow.cpp:42
 msgid "&Close"
-msgstr ""
+msgstr "&Fermer"
 
 #: qt5/quickphrase-editor/editor.cpp:50
 msgid "&Delete"
-msgstr ""
+msgstr "&Effacer"
 
 #: qt5/quickphrase-editor/editor.cpp:52
 msgid "&Import"
-msgstr ""
+msgstr "&Importer"
 
 #: qt5/quickphrase-editor/editor.cpp:54
 msgid "&Operation"
-msgstr ""
+msgstr "&Opération"
 
 #: qt5/guiwrapper/mainwindow.cpp:41
 msgid "&Reset"
-msgstr ""
+msgstr "&Réinitialiser"
 
 #: qt5/guiwrapper/mainwindow.cpp:40
 msgid "&Save"
-msgstr ""
+msgstr "&Sauvegarder"
 
 #: qt5/quickphrase-editor/editor.cpp:65
 msgid "Add File"
-msgstr ""
+msgstr "Ajouter un fichier"
 
 #: qt5/quickphrase-editor/editor.cpp:311
 #, kde-format
 msgid "Are you sure to delete %1?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer %1 ?"
 
 #: qt5/quickphrase-editor/editor.cpp:277
 #, kde-format
 msgid "Cannot create file %1."
-msgstr ""
+msgstr "Impossible de créer le fichier %1."
 
 #: qt5/quickphrase-editor/editor.cpp:299
 msgid "Cannot remove system file"
-msgstr ""
+msgstr "Impossible de supprimer le fichier système"
 
 #: qt5/quickphrase-editor/editor.cpp:310
 msgid "Confirm deletion"
-msgstr ""
+msgstr "Confirmer la suppression"
 
 #: qt5/quickphrase-editor/editor.cpp:260
 msgid "Create new file"
-msgstr ""
+msgstr "Créer un nouveau fichier"
 
 #: qt5/quickphrase-editor/editor.cpp:51
 msgid "De&lete All"
-msgstr ""
+msgstr "&Tout supprimer"
 
 #: qt5/quickphrase-editor/filelistmodel.cpp:42
 msgid "Default"
-msgstr ""
+msgstr "Par défaut"
 
 #: qt5/quickphrase-editor/editor.cpp:53
 msgid "E&xport"
-msgstr ""
+msgstr "&Exporter"
 
 #: qt5/quickphrase-editor/editor.cpp:318
 #, kde-format
 msgid "Error while deleting %1."
-msgstr ""
+msgstr "Erreur lors de la suppression %1."
 
 #: qt5/quickphrase-editor/editor.cpp:276 qt5/quickphrase-editor/editor.cpp:317
 msgid "File Operation Failed"
-msgstr ""
+msgstr "Échec de l'opération du fichier"
 
 #: qt5/quickphrase-editor/editor.cpp:265
 msgid "File name should not contain '/'."
-msgstr ""
+msgstr "Le nom du fichier ne doit pas contenir '/'."
 
 #: qt5/quickphrase-editor/editor.cpp:264
 msgid "Invalid filename"
-msgstr ""
+msgstr "Nom de fichier invalide"
 
 #: qt5/quickphrase-editor/model.cpp:47
 msgid "Keyword"
-msgstr ""
+msgstr "Mot-clé"
 
 #: qt5/quickphrase-editor/editordialog.cpp:28
 msgid "Keyword:"
-msgstr ""
+msgstr "Mot-clé :"
 
 #: qt5/quickphrase-editor/model.cpp:49
 msgid "Phrase"
-msgstr ""
+msgstr "Phrase"
 
 #: qt5/quickphrase-editor/editordialog.cpp:29
 msgid "Phrase:"
-msgstr ""
+msgstr "Phrase :"
 
 #: qt5/quickphrase-editor/editor.cpp:260
 msgid "Please input a filename for newfile"
-msgstr ""
+msgstr "Veuillez saisir un nom de fichier pour le nouveau fichier"
 
 #: qt5/quickphrase-editor/editor.cpp:138
 msgid "Quick Phrase Editor"
-msgstr ""
+msgstr "Éditeur de phrases rapide"
 
 #: qt5/quickphrase-editor/editor.cpp:68
 msgid "Refresh List"
-msgstr ""
+msgstr "Rafraîchir la liste"
 
 #: qt5/quickphrase-editor/editor.cpp:66
 msgid "Remove File"
-msgstr ""
+msgstr "Effacer un fichier"
 
 #: qt5/quickphrase-editor/editor.cpp:122
 msgid "Save Changes"
-msgstr ""
+msgstr "Sauvegarder les modifications"
 
 #: qt5/quickphrase-editor/editor.cpp:123
 msgid ""
 "The content has changed.\n"
 "Do you want to save the changes or discard them?"
 msgstr ""
+"Le contenu a changé.\n"
+"Voulez-vous enregistrer les modifications ou les annuler ?"
 
 #: qt5/quickphrase-editor/batchdialog.cpp:31
 msgid "Use <Keyword> <Phrase> format on every line."
-msgstr ""
+msgstr "Utiliser<Keyword> <Phrase> format sur chaque ligne."
