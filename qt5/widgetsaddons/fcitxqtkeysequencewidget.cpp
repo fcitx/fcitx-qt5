@@ -59,6 +59,12 @@
 
 #define _(x) QString::fromUtf8(dgettext("fcitx-qt5", x))
 
+bool isX11LikePlatform() {
+    return QGuiApplication::platformName() == "xcb" ||
+           QGuiApplication::platformName().startsWith("wayland");
+}
+
+
 class FcitxQtKeySequenceWidgetPrivate {
 public:
     FcitxQtKeySequenceWidgetPrivate(FcitxQtKeySequenceWidget *q);
@@ -398,6 +404,10 @@ void FcitxQtKeySequenceButton::keyPressEvent(QKeyEvent *e) {
     case Qt::Key_Shift:
     case Qt::Key_Control:
     case Qt::Key_Alt:
+    case Qt::Key_Super_L:
+    case Qt::Key_Super_R:
+    case Qt::Key_Hyper_L:
+    case Qt::Key_Hyper_R:
     case Qt::Key_Meta:
     case Qt::Key_Menu: // unused (yes, but why?)
         d->controlModifierlessTimout();
@@ -459,7 +469,7 @@ void FcitxQtKeySequenceButton::keyReleaseEvent(QKeyEvent *e) {
          e->key() == Qt::Key_Meta || e->key() == Qt::Key_Alt)) {
         d->side = MS_Unknown;
 
-        if (qApp->platformName() == "xcb") {
+        if (isX11LikePlatform()) {
 
             if (e->nativeVirtualKey() == FcitxKey_Control_L ||
                 e->nativeVirtualKey() == FcitxKey_Alt_L ||
