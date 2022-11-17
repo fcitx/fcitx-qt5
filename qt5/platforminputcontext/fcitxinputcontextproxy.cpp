@@ -217,7 +217,7 @@ void FcitxInputContextProxy::updateFormattedPreeditWrapper(
         item.setFormat(item.format() ^ underlineBit);
     }
 
-    Q_EMIT updateFormattedPreedit(list, cursorpos);
+    Q_EMIT updateFormattedPreedit(newList, cursorpos);
 }
 
 QDBusPendingReply<> FcitxInputContextProxy::focusIn() {
