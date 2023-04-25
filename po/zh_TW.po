@@ -5,16 +5,17 @@
 #
 # Translators:
 # csslayer <wengxt@gmail.com>, 2017
+# Lau YeeYu, 2023
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: fcitx-dev@googlegroups.com\n"
-"POT-Creation-Date: 2019-11-03 12:28-0800\n"
+"POT-Creation-Date: 2023-04-25 20:27+0000\n"
 "PO-Revision-Date: 2017-09-30 02:01+0000\n"
-"Last-Translator: csslayer <wengxt@gmail.com>, 2017\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/fcitx/teams/12005/"
+"Last-Translator: Lau YeeYu, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/fcitx/teams/12005/"
 "zh_TW/)\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -22,135 +23,135 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: quickphrase-editor/editor.cpp:300
+#: qt5/quickphrase-editor/editor.cpp:300
 #, kde-format
 msgid "%1 is a system file, do you want to delete all phrases instead?"
 msgstr "%1 是系統檔，您是否想要改為清空所有字詞？"
 
-#: quickphrase-editor/editor.cpp:48
+#: qt5/quickphrase-editor/editor.cpp:48
 msgid "&Add"
-msgstr "新增 (&A)"
+msgstr "新增(&A)"
 
-#: quickphrase-editor/editor.cpp:49
+#: qt5/quickphrase-editor/editor.cpp:49
 msgid "&Batch Edit"
-msgstr "批次編輯 (&B)"
+msgstr "批次編輯(&B)"
 
-#: guiwrapper/mainwindow.cpp:42
+#: qt5/guiwrapper/mainwindow.cpp:42
 msgid "&Close"
-msgstr "關閉 (&C)"
+msgstr "關閉(&C)"
 
-#: quickphrase-editor/editor.cpp:50
+#: qt5/quickphrase-editor/editor.cpp:50
 msgid "&Delete"
-msgstr "刪除 (&D)"
+msgstr "刪除(&D)"
 
-#: quickphrase-editor/editor.cpp:52
+#: qt5/quickphrase-editor/editor.cpp:52
 msgid "&Import"
-msgstr "匯入 (&I)"
+msgstr "匯入(&I)"
 
-#: quickphrase-editor/editor.cpp:54
+#: qt5/quickphrase-editor/editor.cpp:54
 msgid "&Operation"
-msgstr "操作 (&O)"
+msgstr "操作(&O)"
 
-#: guiwrapper/mainwindow.cpp:41
+#: qt5/guiwrapper/mainwindow.cpp:41
 msgid "&Reset"
-msgstr "重新設定 (&R)"
+msgstr "重新設定(&R)"
 
-#: guiwrapper/mainwindow.cpp:40
+#: qt5/guiwrapper/mainwindow.cpp:40
 msgid "&Save"
-msgstr "儲存 (&S)"
+msgstr "儲存(&S)"
 
-#: quickphrase-editor/editor.cpp:65
+#: qt5/quickphrase-editor/editor.cpp:65
 msgid "Add File"
 msgstr "加入檔案"
 
-#: quickphrase-editor/editor.cpp:311
+#: qt5/quickphrase-editor/editor.cpp:311
 #, kde-format
 msgid "Are you sure to delete %1?"
 msgstr "您確定要刪除 %1？"
 
-#: quickphrase-editor/editor.cpp:277
+#: qt5/quickphrase-editor/editor.cpp:277
 #, kde-format
 msgid "Cannot create file %1."
 msgstr "無法建立檔案 %1。"
 
-#: quickphrase-editor/editor.cpp:299
+#: qt5/quickphrase-editor/editor.cpp:299
 msgid "Cannot remove system file"
 msgstr "無法移除系統檔案"
 
-#: quickphrase-editor/editor.cpp:310
+#: qt5/quickphrase-editor/editor.cpp:310
 msgid "Confirm deletion"
 msgstr "確定刪除"
 
-#: quickphrase-editor/editor.cpp:260
+#: qt5/quickphrase-editor/editor.cpp:260
 msgid "Create new file"
 msgstr "建立新檔"
 
-#: quickphrase-editor/editor.cpp:51
+#: qt5/quickphrase-editor/editor.cpp:51
 msgid "De&lete All"
-msgstr "全部刪除 (&L)"
+msgstr "全部刪除(&L)"
 
-#: quickphrase-editor/filelistmodel.cpp:42
+#: qt5/quickphrase-editor/filelistmodel.cpp:42
 msgid "Default"
 msgstr "預設"
 
-#: quickphrase-editor/editor.cpp:53
+#: qt5/quickphrase-editor/editor.cpp:53
 msgid "E&xport"
-msgstr "匯出 (&X)"
+msgstr "匯出(&X)"
 
-#: quickphrase-editor/editor.cpp:318
+#: qt5/quickphrase-editor/editor.cpp:318
 #, kde-format
 msgid "Error while deleting %1."
 msgstr "刪除 %1 時出錯。"
 
-#: quickphrase-editor/editor.cpp:276 quickphrase-editor/editor.cpp:317
+#: qt5/quickphrase-editor/editor.cpp:276 qt5/quickphrase-editor/editor.cpp:317
 msgid "File Operation Failed"
 msgstr "檔案操作失敗"
 
-#: quickphrase-editor/editor.cpp:265
+#: qt5/quickphrase-editor/editor.cpp:265
 msgid "File name should not contain '/'."
 msgstr "檔案名稱不能有「/」。"
 
-#: quickphrase-editor/editor.cpp:264
+#: qt5/quickphrase-editor/editor.cpp:264
 msgid "Invalid filename"
 msgstr "無效的檔案名稱"
 
-#: quickphrase-editor/model.cpp:47
+#: qt5/quickphrase-editor/model.cpp:47
 msgid "Keyword"
 msgstr "關鍵字"
 
-#: quickphrase-editor/editordialog.cpp:28
+#: qt5/quickphrase-editor/editordialog.cpp:28
 msgid "Keyword:"
 msgstr "關鍵字："
 
-#: quickphrase-editor/model.cpp:49
+#: qt5/quickphrase-editor/model.cpp:49
 msgid "Phrase"
 msgstr "字詞"
 
-#: quickphrase-editor/editordialog.cpp:29
+#: qt5/quickphrase-editor/editordialog.cpp:29
 msgid "Phrase:"
 msgstr "字詞："
 
-#: quickphrase-editor/editor.cpp:260
+#: qt5/quickphrase-editor/editor.cpp:260
 msgid "Please input a filename for newfile"
 msgstr "請輸入新檔案的名稱"
 
-#: quickphrase-editor/editor.cpp:138
+#: qt5/quickphrase-editor/editor.cpp:138
 msgid "Quick Phrase Editor"
 msgstr "快速輸入編輯器"
 
-#: quickphrase-editor/editor.cpp:68
+#: qt5/quickphrase-editor/editor.cpp:68
 msgid "Refresh List"
 msgstr "更新列表"
 
-#: quickphrase-editor/editor.cpp:66
+#: qt5/quickphrase-editor/editor.cpp:66
 msgid "Remove File"
 msgstr "移除檔案"
 
-#: quickphrase-editor/editor.cpp:122
+#: qt5/quickphrase-editor/editor.cpp:122
 msgid "Save Changes"
 msgstr "儲存修改"
 
-#: quickphrase-editor/editor.cpp:123
+#: qt5/quickphrase-editor/editor.cpp:123
 msgid ""
 "The content has changed.\n"
 "Do you want to save the changes or discard them?"
@@ -158,6 +159,6 @@ msgstr ""
 "內容已修改。\n"
 "您想要儲存還是放棄這些修改？"
 
-#: quickphrase-editor/batchdialog.cpp:31
+#: qt5/quickphrase-editor/batchdialog.cpp:31
 msgid "Use <Keyword> <Phrase> format on every line."
 msgstr "每一行請使用 <Keyword> <Phrase> 格式。"
