@@ -63,8 +63,8 @@ private:
     void setAvailability(bool availability);
     void updateAvailability();
 
-    QFileSystemWatcher *m_fsWatcher;
-    QDBusServiceWatcher *m_serviceWatcher;
+    QFileSystemWatcher *m_fsWatcher = nullptr;
+    QDBusServiceWatcher *m_serviceWatcher = nullptr;
     QDBusConnection *m_connection;
     QDBusConnection m_sessionBus;
     QString m_socketFile;
