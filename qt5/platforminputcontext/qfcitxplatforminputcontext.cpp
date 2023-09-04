@@ -26,6 +26,7 @@
 #include <QPalette>
 #include <QTextCharFormat>
 #include <QWindow>
+#include <qnamespace.h>
 #include <qpa/qplatformcursor.h>
 #include <qpa/qplatformscreen.h>
 #include <qpa/qwindowsysteminterface.h>
@@ -99,7 +100,8 @@ QFcitxPlatformInputContext::QFcitxPlatformInputContext()
                             ? xkb_compose_state_new(m_xkbComposeTable.data(),
                                                     XKB_COMPOSE_STATE_NO_FLAGS)
                             : 0) {
-    m_watcher->watch();
+    QMetaObject::invokeMethod(
+        this, [this]() { m_watcher->watch(); }, Qt::QueuedConnection);
 }
 
 QFcitxPlatformInputContext::~QFcitxPlatformInputContext() {

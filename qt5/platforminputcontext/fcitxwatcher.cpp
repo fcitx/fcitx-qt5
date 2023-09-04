@@ -72,9 +72,8 @@ QString socketFile() {
 }
 
 FcitxWatcher::FcitxWatcher(QDBusConnection sessionBus, QObject *parent)
-    : QObject(parent), m_fsWatcher(new QFileSystemWatcher(this)),
-      m_serviceWatcher(new QDBusServiceWatcher(this)), m_connection(nullptr),
-      m_sessionBus(sessionBus), m_socketFile(socketFile()),
+    : QObject(parent), m_connection(nullptr), m_sessionBus(sessionBus),
+      m_socketFile(socketFile()),
       m_serviceName(QString("org.fcitx.Fcitx-%1").arg(displayNumber())),
       m_availability(false) {}
 
@@ -118,6 +117,7 @@ void FcitxWatcher::watch() {
         return;
     }
 
+    m_serviceWatcher = new QDBusServiceWatcher(this);
     connect(m_serviceWatcher,
             SIGNAL(serviceOwnerChanged(QString, QString, QString)), this,
             SLOT(imChanged(QString, QString, QString)));
@@ -145,6 +145,8 @@ void FcitxWatcher::unwatch() {
     disconnect(m_serviceWatcher,
                SIGNAL(serviceOwnerChanged(QString, QString, QString)), this,
                SLOT(imChanged(QString, QString, QString)));
+    delete m_serviceWatcher;
+    m_serviceWatcher = nullptr;
     unwatchSocketFile();
     cleanUpConnection();
     m_mainPresent = false;
@@ -243,6 +245,7 @@ void FcitxWatcher::watchSocketFile() {
         QDir rt(QDir::root());
         rt.mkpath(info.path());
     }
+    m_fsWatcher = new QFileSystemWatcher(this);
     m_fsWatcher->addPath(info.path());
     if (info.exists()) {
         m_fsWatcher->addPath(info.filePath());
@@ -255,14 +258,8 @@ void FcitxWatcher::watchSocketFile() {
 }
 
 void FcitxWatcher::unwatchSocketFile() {
-    if (!m_fsWatcher->files().isEmpty()) {
-        m_fsWatcher->removePaths(m_fsWatcher->files());
-    }
-    if (!m_fsWatcher->directories().isEmpty()) {
-        m_fsWatcher->removePaths(m_fsWatcher->directories());
-    }
-    m_fsWatcher->disconnect(SIGNAL(fileChanged(QString)));
-    m_fsWatcher->disconnect(SIGNAL(directoryChanged(QString)));
+    delete m_fsWatcher;
+    m_fsWatcher = nullptr;
 }
 
 void FcitxWatcher::imChanged(const QString &service, const QString &,
